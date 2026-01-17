@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Étude UX – Annonces type Leboncoin</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f6f6f6;
+  margin: 0;
+}
+
+header {
+  background: #ff6e14;
+  color: white;
+  padding: 15px 20px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 6px;
+}
+
+.price {
+  color: #ff6e14;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.badges span {
+  background: #eee;
+  padding: 4px 8px;
+  margin-right: 6px;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 15px 0;
+}
+
+.gallery img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.description {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.seller {
+  background: #fafafa;
+  padding: 12px;
+  border-radius: 4px;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+button {
+  background: #ff6e14;
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  margin-top: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* MODAL QUESTIONNAIRE */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  width: 380px;
+  border-radius: 6px;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+}
+
+.modal-content label {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<header>leboncoin — Étude UX</header>
+
+<div class="container" id="listing"></div>
+
+<!-- POP-UP QUESTIONNAIRE -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3>Votre impression</h3>
+
+    <label>
+      Annonce digne de confiance :
+      <select id="trust">
+        <option value=""></option>
+        <option>1</option><option>2</option><option>3</option>
+        <option>4</option><option>5</option>
+      </select>
+    </label>
+
+    <label>
+      Vendeur digne de confiance :
+      <select id="sellerTrust">
+        <option value=""></option>
+        <option>1</option><option>2</option><option>3</option>
+        <option>4</option><option>5</option>
+      </select>
+    </label>
+
+    <label>
+      Annonce populaire / attractive :
+      <select id="popularity">
+        <option value=""></option>
+        <option>1</option><option>2</option><option>3</option>
+        <option>4</option><option>5</option>
+      </select>
+    </label>
+
+    <label>
+      Élément ayant le PLUS influencé votre confiance :
+      <select id="element">
+        <option>Photos</option>
+        <option>Description</option>
+        <option>Prix</option>
+        <option>Vendeur</option>
+        <option>Badges</option>
+      </select>
+    </label>
+
+    <button onclick="submitSurvey()">Valider</button>
+  </div>
+</div>
+
+<script>
+// =====================
+// CONFIG
+// =====================
+const participantId = "P_" + Date.now();
+
+const listings = [
+  {
+    title: "iPhone 12 – Très bon état",
+    price: "420 €",
+    badges: ["Particulier"],
+    photos: [
+      "https://images.unsplash.com/photo-1603898037225-04c0d1fa2c6e",
+      "https://images.unsplash.com/photo-1605236453806-6ff36851218e"
+    ],
+    seller: "Jean – Particulier",
+    rating: null,
+    description: "Téléphone en très bon état, toujours protégé. Remise en main propre possible."
+  },
+  {
+    title: "iPhone 12 – Reconditionné",
+    price: "399 €",
+    badges: ["Professionnel", "Livraison"],
+    photos: [
+      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab",
+      "https://images.unsplash.com/photo-1580910051074-7b3e3f5e3c5b",
+      "https://images.unsplash.com/photo-1616410011236-7a42121dd981"
+    ],
+    seller: "MobilePro33",
+    rating: "★★★★☆ 4.6",
+    description: "Produit reconditionné, testé et nettoyé. Garantie 6 mois."
+  },
+  {
+    title: "iPhone 12 – Comme neuf",
+    price: "450 €",
+    badges: ["Professionnel"],
+    photos: [
+      "https://images.unsplash.com/photo-1601972599720-bc2c47e1c8ad",
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
+      "https://images.unsplash.com/photo-1603899122634-f086ca5f5ddd"
+    ],
+    seller: "TechStore",
+    rating: "★★★★★ 4.9",
+    description: "Produit comme neuf, facture fournie, envoi rapide et soigné."
+  }
+];
+
+let currentIndex = 0;
+let responses = [];
+
+// =====================
+// RENDER ANNONCE
+// =====================
+function renderListing() {
+  const l = listings[currentIndex];
+  document.getElementById("listing").innerHTML = `
+    <h1>${l.title}</h1>
+    <div class="price">${l.price}</div>
+
+    <div class="badges">
+      ${l.badges.map(b => `<span>${b}</span>`).join("")}
+    </div>
+
+    <div class="gallery">
+      ${l.photos.map(p => `<img src="${p}">`).join("")}
+    </div>
+
+    <p class="description">${l.description}</p>
+
+    <div class="seller">
+      <strong>Vendeur :</strong> ${l.seller}<br>
+      ${l.rating ? `<strong>Note :</strong> ${l.rating}` : ""}
+    </div>
+
+    <button onclick="openModal()">Suivant</button>
+  `;
+}
+
+// =====================
+// QUESTIONNAIRE
+// =====================
+function openModal() {
+  document.getElementById("modal").style.display = "flex";
+}
+
+function submitSurvey() {
+  responses.push({
+    participant_id: participantId,
+    listing_id: currentIndex,
+    trust: trust.value,
+    seller_trust: sellerTrust.value,
+    popularity: popularity.value,
+    element: element.value,
+    timestamp: new Date().toISOString()
+  });
+
+  document.getElementById("modal").style.display = "none";
+  trust.value = sellerTrust.value = popularity.value = "";
+
+  currentIndex++;
+
+  if (currentIndex < listings.length) {
+    renderListing();
+  } else {
+    exportCSV();
+    document.getElementById("listing").innerHTML = `
+      <h2>Merci pour ta participation 🙏</h2>
+      <p>L’étude est terminée.</p>
+    `;
+  }
+}
+
+// =====================
+// EXPORT CSV
+// =====================
+function exportCSV() {
+  let csv = "participant_id,listing_id,trust,seller_trust,popularity,element,timestamp\n";
+  responses.forEach(r => {
+    csv += `${r.participant_id},${r.listing_id},${r.trust},${r.seller_trust},${r.popularity},${r.element},${r.timestamp}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "donnees_etude_ux.csv";
+  a.click();
+}
+
+// =====================
+renderListing();
+</script>
+
+</body>
+</html>
