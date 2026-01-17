@@ -1,299 +1,306 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Étude UX – Annonces type Leboncoin</title>
-
+<title>UX Study – Classified Listings</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f6f6f6;
-  margin: 0;
-}
-
-header {
-  background: #ff6e14;
-  color: white;
-  padding: 15px 20px;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.container {
-  max-width: 900px;
-  margin: 20px auto;
-  background: white;
-  padding: 20px;
-  border-radius: 6px;
-}
-
-.price {
-  color: #ff6e14;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.badges span {
-  background: #eee;
-  padding: 4px 8px;
-  margin-right: 6px;
-  font-size: 12px;
-  border-radius: 4px;
-}
-
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin: 15px 0;
-}
-
-.gallery img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-.description {
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.seller {
-  background: #fafafa;
-  padding: 12px;
-  border-radius: 4px;
-  margin-top: 15px;
-  font-size: 14px;
-}
-
-button {
-  background: #ff6e14;
-  color: white;
-  border: none;
-  padding: 12px 16px;
-  margin-top: 20px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-/* MODAL QUESTIONNAIRE */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background: white;
-  padding: 20px;
-  width: 380px;
-  border-radius: 6px;
-}
-
-.modal-content h3 {
-  margin-top: 0;
-}
-
-.modal-content label {
-  display: block;
-  margin-top: 10px;
-  font-size: 14px;
-}
+body {font-family: Arial; background:#f6f6f6; margin:0;}
+header{background:#ff6e14; color:white; padding:15px; font-size:22px;}
+.container{max-width:900px;margin:20px auto;background:white;padding:20px;border-radius:6px;}
+button{background:#ff6e14;color:white;border:none;padding:10px 15px;margin-top:15px;cursor:pointer;border-radius:4px;}
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:15px 0;}
+.gallery img{width:100%;height:160px;object-fit:cover;border-radius:4px;}
+.badges span{background:#eee;padding:4px 8px;margin-right:6px;font-size:12px;border-radius:4px;}
+.seller{background:#fafafa;padding:12px;border-radius:4px;margin-top:15px;}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;}
+.modal-content{background:white;padding:20px;width:400px;border-radius:6px;}
+.modal-content h3{margin-top:0;}
+.modal-content label{display:block;margin-top:10px;font-size:14px;}
+textarea{width:100%;height:50px;margin-top:5px;}
 </style>
 </head>
-
 <body>
+<header>UX Study – Classified Listings</header>
+<div class="container" id="content"></div>
 
-<header>leboncoin — Étude UX</header>
-
-<div class="container" id="listing"></div>
-
-<!-- POP-UP QUESTIONNAIRE -->
-<div class="modal" id="modal">
+<!-- MODAL TEMPLATES -->
+<!-- Consent & Screening -->
+<div class="modal" id="modalConsent">
   <div class="modal-content">
-    <h3>Votre impression</h3>
+    <h3>Consent & Screening</h3>
+    <p>We will record mouse movements and clicks. Your data is anonymous and you can withdraw anytime.</p>
+    <label>How often do you use online marketplaces?
+      <select id="marketplaceUse"><option></option><option>Never</option><option>Occasionally</option><option>Often</option></select>
+    </label>
+    <label>Preferred platform (optional)
+      <input type="text" id="preferredPlatform">
+    </label>
+    <button onclick="startWarmUp()">Agree & Continue</button>
+  </div>
+</div>
 
-    <label>
-      Annonce digne de confiance :
-      <select id="trust">
-        <option value=""></option>
-        <option>1</option><option>2</option><option>3</option>
-        <option>4</option><option>5</option>
+<!-- Warm-up -->
+<div class="modal" id="modalWarmUp">
+  <div class="modal-content">
+    <h3>Warm-Up</h3>
+    <p>Move your mouse around to get familiar with the tracking. Click "Start Study" when ready.</p>
+    <button onclick="startSession()">Start Study</button>
+  </div>
+</div>
+
+<!-- Click-to-explain -->
+<div class="modal" id="modalClick">
+  <div class="modal-content">
+    <h3>Click-to-Explain</h3>
+    <p>Click the single element on the page that most influenced your trust.</p>
+    <button onclick="finishClickExplain()">Done</button>
+  </div>
+</div>
+
+<!-- Short per-listing survey -->
+<div class="modal" id="modalSurvey">
+  <div class="modal-content">
+    <h3>Listing Survey</h3>
+    <label>I think this listing is trustworthy:
+      <select id="trust"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    </label>
+    <label>I think this seller is trustworthy:
+      <select id="sellerTrust"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    </label>
+    <label>If I were browsing for this product, I would have contacted this seller:
+      <select id="contact"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    </label>
+    <button onclick="submitTrial()">Submit</button>
+  </div>
+</div>
+
+<!-- Phase C survey -->
+<div class="modal" id="modalPhaseC">
+  <div class="modal-content">
+    <h3>Phase C: Overall Desirability Survey</h3>
+    <label>Which listing do you trust most?
+      <select id="mostTrusted">
+        <option></option>
       </select>
     </label>
-
-    <label>
-      Vendeur digne de confiance :
-      <select id="sellerTrust">
-        <option value=""></option>
-        <option>1</option><option>2</option><option>3</option>
-        <option>4</option><option>5</option>
-      </select>
+    <label>Overall, how trustworthy did you find the listings?
+      <select id="overallTrust"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
     </label>
-
-    <label>
-      Annonce populaire / attractive :
-      <select id="popularity">
-        <option value=""></option>
-        <option>1</option><option>2</option><option>3</option>
-        <option>4</option><option>5</option>
-      </select>
-    </label>
-
-    <label>
-      Élément ayant le PLUS influencé votre confiance :
-      <select id="element">
+    <label>Which UX element most influenced your trust judgment?
+      <select id="mostInfluential">
+        <option></option>
         <option>Photos</option>
         <option>Description</option>
-        <option>Prix</option>
-        <option>Vendeur</option>
+        <option>Price</option>
+        <option>Seller</option>
         <option>Badges</option>
+        <option>Rating</option>
       </select>
     </label>
-
-    <button onclick="submitSurvey()">Valider</button>
+    <label>Likelihood to contact sellers on marketplaces (1–7):
+      <select id="contactLikely"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select>
+    </label>
+    <label>Which elements most influence your decision to contact a seller? (select up to 3)
+      <input type="text" id="contactElements">
+    </label>
+    <label>Would you prefer listings with more photos or more detailed descriptions?
+      <select id="photosVsDesc"><option></option><option>More Photos</option><option>More Description</option></select>
+    </label>
+    <label>Rate overall visual appeal of the listings (1–7):
+      <select id="visualAppeal"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select>
+    </label>
+    <label>Any additional feedback:
+      <textarea id="openFeedback"></textarea>
+    </label>
+    <button onclick="submitPhaseC()">Submit Phase C</button>
   </div>
 </div>
 
 <script>
-// =====================
-// CONFIG
-// =====================
+// ====================
+// CONFIG / DATA
+// ====================
 const participantId = "P_" + Date.now();
+const prototypeId = "UX_V1";
+let trialOrder = 0;
+let sessionStart = null;
+let sessionEnd = null;
+let mouseData = [];
+let clickData = [];
+let responses = [];
+let clickExplain = {element:null, influence:null, reason:null};
 
-const listings = [
-  {
-    title: "iPhone 12 – Très bon état",
-    price: "420 €",
-    badges: ["Particulier"],
-    photos: [
-      "https://images.unsplash.com/photo-1603898037225-04c0d1fa2c6e",
-      "https://images.unsplash.com/photo-1605236453806-6ff36851218e"
-    ],
-    seller: "Jean – Particulier",
-    rating: null,
-    description: "Téléphone en très bon état, toujours protégé. Remise en main propre possible."
-  },
-  {
-    title: "iPhone 12 – Reconditionné",
-    price: "399 €",
-    badges: ["Professionnel", "Livraison"],
-    photos: [
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab",
-      "https://images.unsplash.com/photo-1580910051074-7b3e3f5e3c5b",
-      "https://images.unsplash.com/photo-1616410011236-7a42121dd981"
-    ],
-    seller: "MobilePro33",
-    rating: "★★★★☆ 4.6",
-    description: "Produit reconditionné, testé et nettoyé. Garantie 6 mois."
-  },
-  {
-    title: "iPhone 12 – Comme neuf",
-    price: "450 €",
-    badges: ["Professionnel"],
-    photos: [
-      "https://images.unsplash.com/photo-1601972599720-bc2c47e1c8ad",
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
-      "https://images.unsplash.com/photo-1603899122634-f086ca5f5ddd"
-    ],
-    seller: "TechStore",
-    rating: "★★★★★ 4.9",
-    description: "Produit comme neuf, facture fournie, envoi rapide et soigné."
-  }
+// 10 example listings
+const allListings = [
+  {title:"iPhone 12 – Very Good Condition", price:"$420", badges:["Individual"], photos:["https://images.unsplash.com/photo-1603898037225-04c0d1fa2c6e","https://images.unsplash.com/photo-1605236453806-6ff36851218e"], seller:"John – Individual", rating:null, description:"Phone in excellent condition. Hand delivery possible."},
+  {title:"iPhone 12 – Refurbished", price:"$399", badges:["Professional","Shipping"], photos:["https://images.unsplash.com/photo-1592750475338-74b7b21085ab","https://images.unsplash.com/photo-1580910051074-7b3e3f5e3c5b"], seller:"MobilePro33", rating:"★★★★☆ 4.6", description:"Refurbished phone, tested and cleaned. 6-month warranty."},
+  {title:"iPhone 12 – Like New", price:"$450", badges:["Professional"], photos:["https://images.unsplash.com/photo-1601972599720-bc2c47e1c8ad","https://images.unsplash.com/photo-1511707171634-5f897ff02aa9"], seller:"TechStore", rating:"★★★★★ 4.9", description:"Like-new iPhone, invoice included, fast shipping."},
+  {title:"Samsung Galaxy S21 – Excellent Condition", price:"$500", badges:["Individual"], photos:["https://images.unsplash.com/photo-1610549061100-97b08b2f40b3","https://images.unsplash.com/photo-1610549061101-112d8fef5db0"], seller:"Alice – Individual", rating:null, description:"Phone in perfect condition, includes charger and case."},
+  {title:"Samsung Galaxy S21 – Refurbished", price:"$470", badges:["Professional","Shipping"], photos:["https://images.unsplash.com/photo-1610550682733-1e86c4ef5bb6","https://images.unsplash.com/photo-1610550682732-9f1c8f0b1e6a"], seller:"PhoneWorld", rating:"★★★★☆ 4.7", description:"Refurbished Galaxy S21, warranty included, tested."},
+  {title:"MacBook Air 2020 – Mint Condition", price:"$950", badges:["Individual"], photos:["https://images.unsplash.com/photo-1585079545500-1f5666a1e3f1","https://images.unsplash.com/photo-1585079545501-3b5b4c8d5a2b"], seller:"Mike – Individual", rating:null, description:"MacBook Air in mint condition, includes charger and bag."},
+  {title:"MacBook Pro 2021 – Excellent Condition", price:"$1500", badges:["Professional"], photos:["https://images.unsplash.com/photo-1612831455541-07e3a81e9ec3","https://images.unsplash.com/photo-1612831455542-5c9e0b3f4a9b"], seller:"TechStore", rating:"★★★★★ 4.8", description:"MacBook Pro 2021, very good condition, invoice included."},
+  {title:"Nintendo Switch – Like New", price:"$300", badges:["Individual"], photos:["https://images.unsplash.com/photo-1606813906478-c3b4de872a0e","https://images.unsplash.com/photo-1606813906479-3c2d6f7c8fef"], seller:"Sara – Individual", rating:null, description:"Nintendo Switch in perfect condition, includes dock and joycons."},
+  {title:"Sony PlayStation 5 – Excellent Condition", price:"$600", badges:["Professional"], photos:["https://images.unsplash.com/photo-1606813912317-5b6f9e5c8df3","https://images.unsplash.com/photo-1606813912316-0d7c4b6f7e6a"], seller:"GameStore", rating:"★★★★☆ 4.9", description:"PS5 console like new, includes controller and cables."},
+  {title:"iPad Air 2020 – Very Good Condition", price:"$400", badges:["Individual"], photos:["https://images.unsplash.com/photo-1585079545510-6c1c2b1d6a6e","https://images.unsplash.com/photo-1585079545511-8f2c1c8b7b0d"], seller:"Tom – Individual", rating:null, description:"iPad Air in very good condition, charger included."}
 ];
 
-let currentIndex = 0;
-let responses = [];
+// ====================
+// UTILITY FUNCTIONS
+// ====================
+function shuffle(array){return array.sort(()=>Math.random()-0.5);}
+let listings = shuffle([...allListings]).slice(0,3);
+let currentTrial=0;
 
-// =====================
-// RENDER ANNONCE
-// =====================
-function renderListing() {
-  const l = listings[currentIndex];
-  document.getElementById("listing").innerHTML = `
-    <h1>${l.title}</h1>
+// ====================
+// INIT PROTOCOL
+// ====================
+document.getElementById("modalConsent").style.display="flex";
+
+function startWarmUp(){
+  document.getElementById("modalConsent").style.display="none";
+  document.getElementById("modalWarmUp").style.display="flex";
+}
+
+function startSession(){
+  document.getElementById("modalWarmUp").style.display="none";
+  sessionStart = new Date();
+  trialOrder=0;
+  renderTrial();
+}
+
+// ====================
+// RENDER LISTING
+// ====================
+function renderTrial(){
+  const l=listings[currentTrial];
+  const content=document.getElementById("content");
+  content.innerHTML=`
+    <h2>${l.title}</h2>
     <div class="price">${l.price}</div>
-
-    <div class="badges">
-      ${l.badges.map(b => `<span>${b}</span>`).join("")}
-    </div>
-
-    <div class="gallery">
-      ${l.photos.map(p => `<img src="${p}">`).join("")}
-    </div>
-
-    <p class="description">${l.description}</p>
-
-    <div class="seller">
-      <strong>Vendeur :</strong> ${l.seller}<br>
-      ${l.rating ? `<strong>Note :</strong> ${l.rating}` : ""}
-    </div>
-
-    <button onclick="openModal()">Suivant</button>
+    <div class="badges">${l.badges.map(b=>`<span>${b}</span>`).join("")}</div>
+    <div class="gallery">${l.photos.map(p=>`<img src="${p}">`).join("")}</div>
+    <p>${l.description}</p>
+    <div class="seller"><strong>Seller:</strong> ${l.seller}<br>${l.rating?`<strong>Rating:</strong>${l.rating}`:""}</div>
+    <button onclick="startClickExplain()">Inspect & Explain</button>
   `;
 }
 
-// =====================
-// QUESTIONNAIRE
-// =====================
-function openModal() {
-  document.getElementById("modal").style.display = "flex";
+// ====================
+// CLICK-TO-EXPLAIN
+// ====================
+function startClickExplain(){
+  document.getElementById("modalClick").style.display="flex";
+  document.addEventListener("click", logClick);
+}
+function logClick(e){
+  if(!e.target.closest(".modal-content") && !e.target.closest("button")){
+    clickExplain.element=e.target.tagName;
+    clickExplain.x=e.clientX;
+    clickExplain.y=e.clientY;
+    clickExplain.timestamp=new Date().toISOString();
+  }
+}
+function finishClickExplain(){
+  document.getElementById("modalClick").style.display="none";
+  document.removeEventListener("click", logClick);
+  let influence=prompt("Did this element increase or decrease your trust? (increase/decrease)");
+  let reason=prompt("Why?");
+  clickExplain.influence=influence;
+  clickExplain.reason=reason;
+  openSurveyModal();
 }
 
-function submitSurvey() {
-  responses.push({
+// ====================
+// SURVEY PER LISTING
+// ====================
+function openSurveyModal(){document.getElementById("modalSurvey").style.display="flex";}
+function submitTrial(){
+  let r = {
     participant_id: participantId,
-    listing_id: currentIndex,
-    trust: trust.value,
-    seller_trust: sellerTrust.value,
-    popularity: popularity.value,
-    element: element.value,
-    timestamp: new Date().toISOString()
-  });
-
-  document.getElementById("modal").style.display = "none";
-  trust.value = sellerTrust.value = popularity.value = "";
-
-  currentIndex++;
-
-  if (currentIndex < listings.length) {
-    renderListing();
+    prototype_id: prototypeId,
+    trial_order: trialOrder,
+    listing_id: currentTrial,
+    clickExplain,
+    trust: document.getElementById("trust").value,
+    sellerTrust: document.getElementById("sellerTrust").value,
+    contact: document.getElementById("contact").value,
+    timestamp_start: sessionStart.toISOString(),
+    timestamp_end: new Date().toISOString()
+  };
+  responses.push(r);
+  // reset clickExplain
+  clickExplain={element:null,influence:null,reason:null};
+  document.getElementById("modalSurvey").style.display="none";
+  trialOrder++;
+  currentTrial++;
+  if(currentTrial<listings.length){
+    renderTrial();
   } else {
-    exportCSV();
-    document.getElementById("listing").innerHTML = `
-      <h2>Merci pour ta participation 🙏</h2>
-      <p>L’étude est terminée.</p>
-    `;
+    startPhaseC();
   }
 }
 
-// =====================
-// EXPORT CSV
-// =====================
-function exportCSV() {
-  let csv = "participant_id,listing_id,trust,seller_trust,popularity,element,timestamp\n";
-  responses.forEach(r => {
-    csv += `${r.participant_id},${r.listing_id},${r.trust},${r.seller_trust},${r.popularity},${r.element},${r.timestamp}\n`;
+// ====================
+// PHASE C SURVEY
+// ====================
+function startPhaseC(){
+  const mostTrusted=document.getElementById("mostTrusted");
+  listings.forEach((l,i)=>{mostTrusted.innerHTML+=`<option value="${i}">${l.title}</option>`});
+  document.getElementById("content").innerHTML="";
+  document.getElementById("modalPhaseC").style.display="flex";
+}
+
+function submitPhaseC(){
+  let phaseC={
+    mostTrusted: document.getElementById("mostTrusted").value,
+    overallTrust: document.getElementById("overallTrust").value,
+    mostInfluential: document.getElementById("mostInfluential").value,
+    contactLikely: document.getElementById("contactLikely").value,
+    contactElements: document.getElementById("contactElements").value,
+    photosVsDesc: document.getElementById("photosVsDesc").value,
+    visualAppeal: document.getElementById("visualAppeal").value,
+    openFeedback: document.getElementById("openFeedback").value
+  };
+  responses.push({phaseC});
+  document.getElementById("modalPhaseC").style.display="none";
+  endSession();
+}
+
+// ====================
+// END SESSION
+// ====================
+function endSession(){
+  sessionEnd=new Date();
+  document.getElementById("content").innerHTML="<h2>Thank you for your participation 🙏</h2><p>The study is complete.</p>";
+  exportCSV();
+}
+
+// ====================
+// CSV EXPORT
+// ====================
+function exportCSV(){
+  let csv="participant_id,prototype_id,trial_order,listing_id,click_element,click_influence,click_reason,trust,sellerTrust,contact,timestamp_start,timestamp_end,phaseC\n";
+  responses.forEach(r=>{
+    if(r.phaseC){
+      csv+=`${participantId},${prototypeId},,,-,-,-,-,-,-,,,"${JSON.stringify(r.phaseC).replace(/"/g,'""')}"\n`;
+    } else {
+      csv+=`${r.participant_id},${r.prototype_id},${r.trial_order},${r.listing_id},${r.clickExplain.element},${r.clickExplain.influence},${r.clickExplain.reason},${r.trust},${r.sellerTrust},${r.contact},${r.timestamp_start},${r.timestamp_end},\n`;
+    }
   });
-
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "donnees_etude_ux.csv";
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="UX_study.csv";
   a.click();
 }
 
-// =====================
-renderListing();
+// ====================
+// MOUSE TRACKING
+// ====================
+document.addEventListener("mousemove", e=>{
+  mouseData.push({x:e.clientX,y:e.clientY,trial:currentTrial,timestamp:new Date().toISOString()});
+});
 </script>
-
 </body>
 </html>
