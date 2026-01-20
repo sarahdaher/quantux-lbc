@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>UX Study – Le bon Coin</title>
 <style>
+
 body {font-family: Arial; background:#f6f6f6; margin:0;}
 header{background:#ff6e14; color:white; padding:15px; font-size:22px;}
 .container{max-width:900px;margin:20px auto;background:white;padding:20px;border-radius:6px;}
@@ -17,14 +18,14 @@ button{background:#ff6e14;color:white;border:none;padding:10px 15px;margin-top:1
 .modal-content h3{margin-top:0;}
 .modal-content label{display:block;margin-top:10px;font-size:14px;}
 textarea{width:100%;height:50px;margin-top:5px;}
+
 </style>
 </head>
 <body>
 <header>UX Study – le bon coin</header>
 <div class="container" id="content"></div>
 
-<!-- MODAL TEMPLATES -->
-<!-- Consent & Screening -->
+<!-- Phase A: consent du debut la-->
 <div class="modal" id="modalConsent">
   <div class="modal-content">
     <h3>Consent & Screening</h3>
@@ -39,7 +40,7 @@ textarea{width:100%;height:50px;margin-top:5px;}
   </div>
 </div>
 
-<!-- Warm-up -->
+<!-- chatgpt??? click tracking???? -->
 <div class="modal" id="modalWarmUp">
   <div class="modal-content">
     <h3>Warm-Up</h3>
@@ -48,7 +49,7 @@ textarea{width:100%;height:50px;margin-top:5px;}
   </div>
 </div>
 
-<!-- Click-to-explain -->
+<!-- chatgpt??? click tracking???? -->
 <div class="modal" id="modalClick">
   <div class="modal-content">
     <h3>Click-to-Explain</h3>
@@ -57,7 +58,7 @@ textarea{width:100%;height:50px;margin-top:5px;}
   </div>
 </div>
 
-<!-- Short per-listing survey -->
+<!-- sondahe milieu -->
 <div class="modal" id="modalSurvey">
   <div class="modal-content">
     <h3>Listing Survey</h3>
@@ -74,7 +75,7 @@ textarea{width:100%;height:50px;margin-top:5px;}
   </div>
 </div>
 
-<!-- Phase C survey -->
+<!-- Phase C: questionnaire de fin -->
 <div class="modal" id="modalPhaseC">
   <div class="modal-content">
     <h3>Phase C: Overall Desirability Survey</h3>
@@ -117,9 +118,9 @@ textarea{width:100%;height:50px;margin-top:5px;}
 </div>
 
 <script>
-// ====================
-// CONFIG / DATA
-// ====================
+
+
+//stock 
 const participantId = "P_" + Date.now();
 const prototypeId = "UX_V1";
 let trialOrder = 0;
@@ -130,7 +131,7 @@ let clickData = [];
 let responses = [];
 let clickExplain = {element:null, influence:null, reason:null};
 
-// 10 example listings
+// 10 example listings -- Naoures va faire 
 const allListings = [
   {title:"iPhone 12 – Very Good Condition", price:"$420", badges:["Individual"], photos:["https://images.unsplash.com/photo-1603898037225-04c0d1fa2c6e","https://images.unsplash.com/photo-1605236453806-6ff36851218e"], seller:"John – Individual", rating:null, description:"Phone in excellent condition. Hand delivery possible."},
   {title:"iPhone 12 – Refurbished", price:"$399", badges:["Professional","Shipping"], photos:["https://images.unsplash.com/photo-1592750475338-74b7b21085ab","https://images.unsplash.com/photo-1580910051074-7b3e3f5e3c5b"], seller:"MobilePro33", rating:"★★★★☆ 4.6", description:"Refurbished phone, tested and cleaned. 6-month warranty."},
@@ -144,18 +145,14 @@ const allListings = [
   {title:"iPad Air 2020 – Very Good Condition", price:"$400", badges:["Individual"], photos:["https://images.unsplash.com/photo-1585079545510-6c1c2b1d6a6e","https://images.unsplash.com/photo-1585079545511-8f2c1c8b7b0d"], seller:"Tom – Individual", rating:null, description:"iPad Air in very good condition, charger included."}
 ];
 
-// ====================
-// UTILITY FUNCTIONS
-// ====================
 function shuffle(array){return array.sort(()=>Math.random()-0.5);}
 let listings = shuffle([...allListings]).slice(0,3);
 let currentTrial=0;
 
-// ====================
-// INIT PROTOCOL
-// ====================
+
 document.getElementById("modalConsent").style.display="flex";
 
+// le click 
 function startWarmUp(){
   document.getElementById("modalConsent").style.display="none";
   document.getElementById("modalWarmUp").style.display="flex";
@@ -168,9 +165,7 @@ function startSession(){
   renderTrial();
 }
 
-// ====================
-// RENDER LISTING
-// ====================
+//le sondage 
 function renderTrial(){
   const l=listings[currentTrial];
   const content=document.getElementById("content");
@@ -185,9 +180,7 @@ function renderTrial(){
   `;
 }
 
-// ====================
-// CLICK-TO-EXPLAIN
-// ====================
+
 function startClickExplain(){
   document.getElementById("modalClick").style.display="flex";
   document.addEventListener("click", logClick);
@@ -210,9 +203,6 @@ function finishClickExplain(){
   openSurveyModal();
 }
 
-// ====================
-// SURVEY PER LISTING
-// ====================
 function openSurveyModal(){document.getElementById("modalSurvey").style.display="flex";}
 function submitTrial(){
   let r = {
@@ -228,7 +218,7 @@ function submitTrial(){
     timestamp_end: new Date().toISOString()
   };
   responses.push(r);
-  // reset clickExplain
+  // reset clickExplain -- chatgot??
   clickExplain={element:null,influence:null,reason:null};
   document.getElementById("modalSurvey").style.display="none";
   trialOrder++;
@@ -240,9 +230,7 @@ function submitTrial(){
   }
 }
 
-// ====================
-// PHASE C SURVEY
-// ====================
+
 function startPhaseC(){
   const mostTrusted=document.getElementById("mostTrusted");
   listings.forEach((l,i)=>{mostTrusted.innerHTML+=`<option value="${i}">${l.title}</option>`});
@@ -266,18 +254,15 @@ function submitPhaseC(){
   endSession();
 }
 
-// ====================
-// END SESSION
-// ====================
+// apres sumbit 
 function endSession(){
   sessionEnd=new Date();
   document.getElementById("content").innerHTML="<h2>Thank you for your participation 🙏</h2><p>The study is complete.</p>";
   exportCSV();
 }
 
-// ====================
-// CSV EXPORT
-// ====================
+
+// fin pour exporter csv
 function exportCSV(){
   let csv="participant_id,prototype_id,trial_order,listing_id,click_element,click_influence,click_reason,trust,sellerTrust,contact,timestamp_start,timestamp_end,phaseC\n";
   responses.forEach(r=>{
@@ -296,7 +281,7 @@ function exportCSV(){
 }
 
 // ====================
-// MOUSE TRACKING
+// MOUSE TRACKING ---- chatgpt???
 // ====================
 document.addEventListener("mousemove", e=>{
   mouseData.push({x:e.clientX,y:e.clientY,trial:currentTrial,timestamp:new Date().toISOString()});
