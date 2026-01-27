@@ -114,15 +114,16 @@
         /* ===== VIDEO WEBCAM ===== */
         #webcam-container {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 200px;
-            height: 150px;
+            bottom: 16px;
+            right: 16px;
+            width: 220px;
+            height: 165px;
             background: #000;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
-            z-index: 999;
+            z-index: 1500;
             border: 2px solid #ff6e14;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
             display: none;
         }
 
@@ -130,6 +131,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            background: #111;
         }
 
         /* ===== SURVEY CONTAINER ===== */
@@ -410,15 +412,44 @@
         /* ===== GAZE POINT (RED DOT) ===== */
         #gaze-point {
             position: fixed;
-            width: 12px;
-            height: 12px;
+            width: 20px;
+            height: 20px;
             background: red;
             border-radius: 50%;
-            border: 2px solid rgba(255, 0, 0, 0.5);
+            border: 3px solid white;
             pointer-events: none;
-            z-index: 9998;
+            z-index: 9999;
             display: none;
-            box-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.9);
+            transform: translate(-50%, -50%);
+        }
+        
+        #debug-overlay {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: lime;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 9999;
+            border-radius: 5px;
+            max-width: 400px;
+            line-height: 1.4;
+        }
+        
+        #debug-overlay div {
+            margin: 2px 0;
+        }
+
+        /* ===== HIDE DEFAULT WEBGAZER ELEMENTS ===== */
+        #webgazerVideoContainer {
+            display: none !important;
+        }
+        
+        #webgazerGazeDot {
+            display: none !important;
         }
 
         /* ===== COMPLETION SCREEN ===== */
@@ -494,17 +525,28 @@
                 <p>Les points changeront de couleur au fur et à mesure.</p>
             </div>
             <div id="calibration-grid">
-                <div id="webcam-container">
-                    <video id="webgazer-video" autoplay playsinline></video>
-                </div>
                 <div class="calibration-counter">
                     <span id="calibration-progress">0/45 clics effectués</span>
                 </div>
             </div>
         </div>
 
+        <div id="webcam-container">
+            <video id="gaze-video" autoplay playsinline muted></video>
+        </div>
+
         <!-- GAZE POINT (RED DOT) -->
         <div id="gaze-point"></div>
+        
+        <!-- DEBUG OVERLAY -->
+        <div id="debug-overlay">
+            <div>🔍 <strong>DEBUG MODE</strong></div>
+            <div id="debug-webgazer">FaceModel: Initialisation...</div>
+            <div id="debug-listener">Polling: En attente...</div>
+            <div id="debug-position">Position: N/A</div>
+            <div id="debug-recording">Enregistrement: Non</div>
+            <div id="debug-events">Événements: 0 gaze / 0 clics</div>
+        </div>
 
         <!-- SURVEY CONTAINER -->
         <div id="survey-container">
@@ -657,7 +699,7 @@
         <button class="nav-btn" id="finish-btn" onclick="finishSurvey()" style="display: none;">✓ Terminer</button>
     </div>
 
-    <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
+    <!-- Scripts chargés dynamiquement avec fallback dans le code -->
 
     <script>
         // ===== DEBUG MODE =====
@@ -678,8 +720,17 @@
         let calibrationComplete = false;
         let calibrationClicks = {}; // { 'point-0': 0, 'point-1': 0, ... }
         let isRecording = false;
-        let webgazerReady = false;
         let webcamActive = false;
+        let faceModel = null;
+        let videoElement = null;
+        let detectionLoopHandle = null;
+        const GAZE_SAMPLE_RATE_MS = 300;
+        let gazeSamplingInterval = null;
+        let lastGazePoint = null;
+        let directoryHandle = null;
+        let gazeListenerCallCount = 0;
+        let lastGazeListenerCall = 0;
+        let libsLoaded = false;
 
         // Initialize calibration clicks counter
         for (let i = 0; i < 9; i++) {
@@ -752,134 +803,337 @@
             }
         }
 
-        // ===== COMPLETE CALIBRATION =====
+        // ===== COMPLETE CALIBRATION (noop) =====
         function completeCalibration() {
-            log('🎉 ✅ CALIBRATION COMPLÈTE!');
-            
+            log('🎉 ✅ Calibration sautée (face-landmarks)');
             calibrationComplete = true;
-            
-            // Hide calibration overlay
             document.getElementById('calibration-overlay').style.display = 'none';
-            log('➡️ Overlay de calibration caché');
-            
-            // Hide webcam video
-            document.getElementById('webcam-container').style.display = 'none';
-            log('➡️ Webcam container caché');
-            
-            // Show survey
-            document.getElementById('survey-container').style.display = 'block';
-            log('➡️ Survey container affiché');
-            
-            // Start recording
-            isRecording = true;
-            log('🔴 Enregistrement DÉMARRÉ');
-            
-            // Start gaze tracking
-            startGazeTracking();
-            
-            log('✅ Calibration complète! Enregistrement des données démarré.');
-        }
-
-        // ===== INITIALIZE WEBGAZER =====
-        function initializeWebGazer() {
-            log('🔧 Initialisation de WebGazer...');
-            
-            // Vérifier que WebGazer est chargé
-            if (typeof webgazer === 'undefined') {
-                log('❌ ERROR: WebGazer n\'est pas chargé!');
-                alert('Erreur: WebGazer n\'a pas pu se charger. Vérifiez votre connexion internet.');
-                return false;
-            }
-
-            log('✅ WebGazer détecté');
-
-            try {
-                webgazer
-                    .setRegression('ridge')
-                    .setTracker('clmtrackr')
-                    .setGazeListener((data, elapsedTime) => {
-                        if (data == null) {
-                            log('⚠️ Données de regard NULL');
-                            return;
-                        }
-                        
-                        if (!isRecording) return;
-
-                        const gazePoint = document.getElementById('gaze-point');
-                        gazePoint.style.left = (data.x - 6) + 'px';
-                        gazePoint.style.top = (data.y - 6) + 'px';
-                        gazePoint.style.display = 'block';
-
-                        // Record gaze data
-                        gazeData.push({
-                            type: 'gaze',
-                            x: Math.round(data.x),
-                            y: Math.round(data.y),
-                            timestamp: Date.now(),
-                            pageId: getCurrentPageId()
-                        });
-                    })
-                    .begin();
-
-                log('✅ WebGazer initialisé avec succès');
-                webgazerReady = true;
-
-                // Attendre un peu avant de montrer la webcam
-                setTimeout(() => {
-                    const videoElement = document.querySelector('video[autoplay]');
-                    if (videoElement) {
-                        log('✅ Élément vidéo détecté');
-                        webcamActive = true;
-                        document.getElementById('webcam-container').style.display = 'block';
-                        log('✅ Webcam container affiché');
-                    } else {
-                        log('⚠️ Élément vidéo NOT trouvé');
-                    }
-                }, 500);
-
-                return true;
-
-            } catch (error) {
-                log('❌ ERROR lors de l\'initialisation de WebGazer:', error.message);
-                alert('Erreur WebGazer: ' + error.message);
-                return false;
-            }
-        }
-
-        // ===== REQUEST WEBCAM PERMISSION =====
-        function requestWebcamPermission() {
-            log('📹 Demande d\'accès à la webcam...');
-            
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(stream => {
-                    log('✅ Permission webcam ACCORDÉE');
-                    // Arrêter le stream immédiatement
-                    stream.getTracks().forEach(track => track.stop());
-                    // Lancer le calibrage
-                    startCalibration();
-                })
-                .catch(error => {
-                    log('❌ ERROR: Permission webcam REFUSÉE ou webcam indisponible', error.message);
-                    alert('Erreur: Vous devez autoriser l\'accès à la webcam pour utiliser l\'eye-tracker.\n\nErreur: ' + error.message);
-                });
-        }
-
-        // ===== START CALIBRATION (after webcam permission) =====
-        function startCalibration() {
-            log('🎯 Démarrage du calibrage');
-            document.getElementById('calibration-overlay').style.display = 'flex';
             document.getElementById('webcam-container').style.display = 'block';
-            
-            // Attendre que WebGazer affiche la vidéo
-            setTimeout(() => {
-                log('✅ Webcam et calibrage affichés');
-            }, 300);
+            document.getElementById('survey-container').style.display = 'block';
+            isRecording = true;
+            startGazeTracking();
+            log('✅ Enregistrement des données démarré.');
+        }
+
+        // ===== INITIALIZE FACE LANDMARKS MODEL =====
+        async function initializeFaceModel() {
+            log('🔧 Initialisation du modèle face-landmarks...');
+
+            if (typeof faceLandmarksDetection === 'undefined') {
+                log('❌ ERROR: face-landmarks-detection non chargé');
+                return false;
+            }
+
+            // Essayer d'abord le runtime Mediapipe (plus léger et fiable)
+            try {
+                faceModel = await faceLandmarksDetection.load(
+                    faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
+                    {
+                        runtime: 'mediapipe',
+                        solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1646424915',
+                        maxFaces: 1,
+                        refineLandmarks: true,
+                        shouldLoadIrisModel: true,
+                        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1646424915/${file}`
+                    }
+                );
+                log('✅ Modèle face-landmarks chargé (runtime mediapipe)');
+                return true;
+            } catch (error) {
+                log('⚠️ Mediapipe runtime a échoué, tentative TFJS...', error.message);
+            }
+
+            // Fallback TFJS runtime
+            try {
+                if (typeof tf !== 'undefined') {
+                    await tf.setBackend('webgl');
+                    await tf.ready();
+                }
+                faceModel = await faceLandmarksDetection.load(
+                    faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
+                    {
+                        runtime: 'tfjs',
+                        maxFaces: 1,
+                        refineLandmarks: true,
+                        shouldLoadIrisModel: true
+                    }
+                );
+                log('✅ Modèle face-landmarks chargé (runtime tfjs)');
+                return true;
+            } catch (error) {
+                log('❌ ERROR lors du chargement du modèle face-landmarks (mediapipe & tfjs):', error.message);
+                alert('Erreur modèle face-landmarks: ' + error.message + '\nVérifiez l\'accès CDN, HTTPS/localhost, et désactivez les bloqueurs.');
+                return false;
+            }
+        }
+
+        // ===== START CAMERA =====
+        async function startCamera() {
+            log('📹 Demande d\'accès à la webcam...');
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+                videoElement = document.getElementById('gaze-video');
+                videoElement.srcObject = stream;
+                await videoElement.play();
+                webcamActive = true;
+                document.getElementById('webcam-container').style.display = 'block';
+                log('✅ Webcam démarrée');
+                return true;
+            } catch (error) {
+                log('❌ ERROR: Permission webcam REFUSÉE ou webcam indisponible', error.message);
+                alert('Erreur: Vous devez autoriser l\'accès à la webcam pour utiliser l\'eye-tracker.\n\nErreur: ' + error.message);
+                return false;
+            }
+        }
+
+        // ===== START CALIBRATION (noop now) =====
+        function startCalibration() {
+            log('🎯 Calibration sautée (face-landmarks ne requiert pas de calibration manuelle)');
+            document.getElementById('calibration-overlay').style.display = 'none';
+            document.getElementById('webcam-container').style.display = 'block';
         }
 
         // ===== START GAZE TRACKING =====
         function startGazeTracking() {
             const gazePoint = document.getElementById('gaze-point');
             gazePoint.style.display = 'block';
+            startDetectionLoop();
+            startGazeSampling();
+        }
+
+        function startGazeSampling() {
+            if (gazeSamplingInterval) return;
+            gazeSamplingInterval = setInterval(() => {
+                if (!isRecording) return;
+                
+                if (!lastGazePoint) {
+                    log('⚠️ lastGazePoint est NULL - aucune prédiction face-landmarks pour le moment');
+                    return;
+                }
+
+                gazeData.push({
+                    type: 'gaze',
+                    x: Math.round(lastGazePoint.x),
+                    y: Math.round(lastGazePoint.y),
+                    timestamp: Date.now(),
+                    pageId: getCurrentPageId()
+                });
+            }, GAZE_SAMPLE_RATE_MS);
+            log(`▶️ Échantillonnage regard toutes les ${GAZE_SAMPLE_RATE_MS} ms`);
+            
+            // Mise à jour de l'overlay debug
+            setInterval(() => {
+                const debugListener = document.getElementById('debug-listener');
+                const debugPosition = document.getElementById('debug-position');
+                const debugRecording = document.getElementById('debug-recording');
+                const debugEvents = document.getElementById('debug-events');
+                const debugWebgazer = document.getElementById('debug-webgazer');
+                
+                if (debugListener) {
+                    debugListener.textContent = `Polling: ${gazeListenerCallCount} prédictions, lastPoint: ${lastGazePoint ? 'OK' : 'NULL'}`;
+                    
+                    // Alerte si pas d'appels après 5 secondes
+                    if (isRecording && gazeListenerCallCount === 0) {
+                        debugListener.style.color = 'red';
+                        debugListener.style.fontWeight = 'bold';
+                    } else if (gazeListenerCallCount > 0) {
+                        debugListener.style.color = 'lime';
+                    }
+                }
+                if (debugPosition && lastGazePoint) {
+                    debugPosition.textContent = `Position: (${Math.round(lastGazePoint.x)}, ${Math.round(lastGazePoint.y)})`;
+                    debugPosition.style.color = 'lime';
+                } else if (debugPosition) {
+                    debugPosition.textContent = `Position: ⚠️ AUCUNE PRÉDICTION`;
+                    debugPosition.style.color = 'orange';
+                }
+                if (debugRecording) {
+                    debugRecording.textContent = `Enregistrement: ${isRecording ? 'OUI ✅' : 'Non ❌'}`;
+                }
+                if (debugEvents) {
+                    const gazeCount = gazeData.filter(e => e.type === 'gaze').length;
+                    const clickCount = gazeData.filter(e => e.type === 'click').length;
+                    debugEvents.textContent = `Événements: ${gazeCount} gaze / ${clickCount} clics`;
+                }
+                if (debugWebgazer) {
+                    if (faceModel && lastGazePoint) {
+                        debugWebgazer.textContent = 'FaceModel: ✅ prédiction OK';
+                        debugWebgazer.style.color = 'lime';
+                    } else if (faceModel) {
+                        debugWebgazer.textContent = 'FaceModel: chargé, en attente de prédiction';
+                        debugWebgazer.style.color = 'orange';
+                    } else {
+                        debugWebgazer.textContent = 'FaceModel: non chargé';
+                        debugWebgazer.style.color = 'red';
+                    }
+                }
+                
+                if (isRecording) {
+                    const gazeCount = gazeData.filter(e => e.type === 'gaze').length;
+                    if (gazeCount === 0 && gazeListenerCallCount === 0) {
+                        log(`🔴 DIAGNOSTIC: Aucune donnée gaze!`);
+                    }
+                }
+            }, 1000);
+        }
+
+        function stopGazeSampling() {
+            if (!gazeSamplingInterval) return;
+            clearInterval(gazeSamplingInterval);
+            gazeSamplingInterval = null;
+            log('⏹️ Échantillonnage regard arrêté');
+        }
+
+        // ===== ENGINE: MEDIAPIPE FACE MESH (AUTO-GENERATED) =====
+        function startDetectionLoop() { /* MediaPipe uses internal loop via Camera Utils */ }
+        
+        let faceMesh;
+        let camera;
+
+        async function loadMediaPipe() {
+            return new Promise((resolve, reject) => {
+                 log("⏳ Chargement de MediaPipe FaceMesh...");
+                 const script = document.createElement('script');
+                 script.src = "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js";
+                 script.crossOrigin = "anonymous";
+                 script.onload = () => {
+                     log("✅ Script FaceMesh chargé.");
+                     const script2 = document.createElement('script');
+                     script2.src = "https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js";
+                     script2.crossOrigin = "anonymous";
+                     script2.onload = () => {
+                         log("✅ Script Camera Utils chargé.");
+                         resolve(true); 
+                     };
+                     script2.onerror = reject;
+                     document.head.appendChild(script2);
+                 };
+                 script.onerror = (e) => reject(new Error("Impossible de charger FaceMesh.js"));
+                 document.head.appendChild(script);
+            });
+        }
+
+        async function initializeFaceModel() {
+            try {
+                await loadMediaPipe();
+                
+                // Initialize FaceMesh Global
+                faceMesh = new FaceMesh({locateFile: (file) => {
+                    return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+                }});
+                
+                faceMesh.setOptions({
+                    maxNumFaces: 1,
+                    refineLandmarks: true, // Needed for iris
+                    minDetectionConfidence: 0.5,
+                    minTrackingConfidence: 0.5
+                });
+                
+                faceMesh.onResults(onResults);
+                
+                // Initialize Camera
+                videoElement = document.getElementById('webgazerVideoFeed');
+                if (!videoElement) {
+                     videoElement = document.createElement('video');
+                     videoElement.id = 'webgazerVideoFeed';
+                     videoElement.style.visibility = 'hidden'; 
+                     videoElement.style.position = 'absolute';
+                     videoElement.style.top = '-9999px';
+                     document.body.appendChild(videoElement);
+                }
+
+                camera = new Camera(videoElement, {
+                    onFrame: async () => {
+                        await faceMesh.send({image: videoElement});
+                    },
+                    width: 640,
+                    height: 480
+                });
+                
+                await camera.start();
+                log("✅ Camera & MediaPipe démarrés.");
+                webcamActive = true;
+                return true;
+            } catch (e) {
+                log("❌ Erreur init MediaPipe: " + e.message);
+                alert("Erreur critique caméra/IA: " + e.message);
+                return false;
+            }
+        }
+
+        function onResults(results) {
+            if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+                 const landmarks = results.multiFaceLandmarks[0];
+                 const pupil = calculatePupil(landmarks);
+                 
+                 if (pupil) {
+                     gazeListenerCallCount++;
+                     
+                     // Coordinates are normalized 0-1
+                     // Mirror X axis because it's a webcam
+                     const x = (1 - pupil.x); 
+                     const y = pupil.y;
+                     
+                     // Calibration / Sensitivity Factor
+                     // These "magic numbers" adjust the "Gains"
+                     // Since user eyes move effectively only within a generic 20% of the screen center
+                     const sensitivityX = 2.5;
+                     const sensitivityY = 3.5;
+                     const offsetX = 0.5; // Center
+                     const offsetY = 0.45; // Slightly above center usually
+                     
+                     let sx = (x - offsetX) * sensitivityX + 0.5;
+                     let sy = (y - offsetY) * sensitivityY + 0.5;
+                     
+                     // Clamp to screen
+                     sx = Math.max(0, Math.min(1, sx)) * window.innerWidth;
+                     sy = Math.max(0, Math.min(1, sy)) * window.innerHeight;
+                     
+                     lastGazePoint = { x: sx, y: sy, timestamp: Date.now() };
+                     
+                     updateVisuals(sx, sy, true);
+                 }
+            } else {
+                updateVisuals(0,0, false);
+            }
+        }
+        
+        function updateVisuals(x, y, active) {
+             const dot = document.getElementById('gaze-point');
+             if (dot) {
+                 if (active) {
+                     dot.style.left = x + 'px';
+                     dot.style.top = y + 'px';
+                     dot.style.display = 'block';
+                 } else {
+                     dot.style.display = 'none';
+                 }
+             }
+             
+             // Update Debug Text
+             const dw = document.getElementById('debug-webgazer');
+             if(dw) { 
+                 if(active) {
+                     dw.textContent = "MediaPipe: Tracking Active"; 
+                     dw.style.color="lime"; 
+                 } else {
+                     dw.textContent = "MediaPipe: No Face"; 
+                     dw.style.color="red";
+                 }
+             }
+        }
+        
+        function calculatePupil(mesh) {
+            // Refined landmarks: 468 is left iris center, 473 is right iris center
+            const left = mesh[468];
+            const right = mesh[473];
+            if (left && right) {
+                return { 
+                    x: (left.x + right.x) / 2, 
+                    y: (left.y + right.y) / 2 
+                };
+            }
+            return null;
         }
 
         // ===== RECORD CLICK =====
@@ -938,6 +1192,7 @@
         // ===== FINISH SURVEY =====
         function finishSurvey() {
             isRecording = false;
+            stopGazeSampling();
             log('🛑 Enregistrement ARRÊTÉ');
             
             // Hide gaze point
@@ -947,14 +1202,6 @@
             // Hide survey
             document.getElementById('survey-container').style.display = 'none';
             log('➡️ Survey container caché');
-            
-            // Stop WebGazer
-            try {
-                webgazer.end();
-                log('✅ WebGazer arrêté');
-            } catch (e) {
-                log('⚠️ Erreur lors de l\'arrêt de WebGazer:', e.message);
-            }
             
             // Show completion screen
             const completionScreen = document.getElementById('completion-screen');
@@ -971,59 +1218,112 @@
             log(`📊 Données enregistrées: ${gazeData.length} événements (${gazeEvents} gaze + ${clickEvents} clics)`);
             
             // Afficher un aperçu des données
-            console.log('📋 Aperçu des données:', gazeData.slice(0, 5));
+            console.log('📋 Aperçu complet des données:', gazeData);
+            
+            // Sauvegarde automatique immédiate via téléchargement
+            autoSaveData();
         }
 
         // ===== DOWNLOAD DATA =====
-        function downloadData() {
-            log('📥 Téléchargement des données en JSON...');
-            const json = JSON.stringify(gazeData, null, 2);
+        function formatDateStamp() {
+            const d = new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`;
+        }
+
+        async function saveJsonToDirectory(filename, json) {
+            if (!window.showDirectoryPicker) {
+                log('ℹ️ File System Access API non supportée par ce navigateur, fallback sur téléchargement.');
+                return false;
+            }
+
+            try {
+                if (!directoryHandle) {
+                    directoryHandle = await window.showDirectoryPicker();
+                    log('✅ Dossier sélectionné pour la sauvegarde locale');
+                }
+
+                const fileHandle = await directoryHandle.getFileHandle(filename, { create: true });
+                const writable = await fileHandle.createWritable();
+                await writable.write(json);
+                await writable.close();
+                log(`✅ Fichier écrit dans le répertoire choisi: ${filename}`);
+                return true;
+            } catch (error) {
+                log('⚠️ Sauvegarde locale impossible, fallback sur téléchargement', error.message);
+                directoryHandle = null;
+                return false;
+            }
+        }
+
+        function triggerDownload(filename, json, silent = false) {
             const blob = new Blob([json], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `gaze-data-${Date.now()}.json`;
+            a.download = filename;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            log(`✅ Fichier téléchargé: gaze-data-${Date.now()}.json (${gazeData.length} événements)`);
+            log(`✅ Fichier téléchargé: ${filename} (${gazeData.length} événements)`);
+            if (!silent) {
+                alert('Fichier téléchargé dans votre dossier de téléchargements par défaut.');
+            }
+        }
+
+        function autoSaveData() {
+            log('💾 Sauvegarde automatique des données...');
+            const filename = `gaze-data-${formatDateStamp()}.json`;
+            const json = JSON.stringify(gazeData, null, 2);
+            triggerDownload(filename, json, true);
+            log(`✅ Fichier téléchargé automatiquement: ${filename}`);
+        }
+
+        async function downloadData() {
+            log('📥 Téléchargement manuel des données...');
+            const filename = `gaze-data-${formatDateStamp()}.json`;
+            const json = JSON.stringify(gazeData, null, 2);
+
+            // Essayer d'abord la sauvegarde dans un dossier choisi
+            const saved = await saveJsonToDirectory(filename, json);
+            if (saved) {
+                alert(`Données sauvegardées dans le dossier sélectionné (${filename}).`);
+                return;
+            }
+
+            // Fallback: téléchargement classique
+            triggerDownload(filename, json, false);
         }
 
         // ===== INITIALIZATION =====
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             log('🚀 ═══════════════════════════════════════════════════');
-            log('🚀 INITIALISATION DE L\'APPLICATION');
+            log('🚀 INITIALISATION DE L\'APPLICATION (MediaPipe)');
             log('🚀 ═══════════════════════════════════════════════════');
             
-            // Setup calibration grid
-            setupCalibrationGrid();
-            log('✅ Grille de calibration créée');
-            
-            // Add global click listener
+            document.getElementById('calibration-overlay').style.display = 'none';
+
             document.addEventListener('click', recordClick);
             log('✅ Event listener pour clics ajouté');
             
-            // Show first page
             showPage(0);
             log('✅ Première page affichée');
 
-            // Initialize WebGazer
-            const webgazerInit = initializeWebGazer();
-            
-            if (webgazerInit) {
-                log('⏳ Attente de 2 secondes avant demande de webcam...');
-                
-                // Attendre 2 secondes que WebGazer se charge
-                setTimeout(() => {
-                    log('✅ WebGazer devrait être prêt');
-                    log('🔐 DEMANDE DE PERMISSION WEBCAM');
-                    requestWebcamPermission();
-                }, 2000);
+            // Initialize Camera & AI
+            const ok = await initializeFaceModel();
+
+            if (ok) {
+                log('✅ Camera + modèle prêts');
+                // Auto-complete calibration for now since we use naive internal map
+                completeCalibration();
+            } else {
+                log('❌ Initialisation incomplète');
             }
             
             log('✅ Application prête! Consultez la console (F12) pour le debug.');
         });
     </script>
 </body>
+
 </html>
