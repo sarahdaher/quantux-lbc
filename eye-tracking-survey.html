@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enquête UX Eye-Tracking - Le Boncoin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            overflow: hidden;
+        }
+
+        #app {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* ===== CALIBRATION OVERLAY ===== */
+        #calibration-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .calibration-content {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .calibration-content h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .calibration-content p {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        #calibration-grid {
+            position: relative;
+            width: 90vw;
+            height: 80vh;
+            max-width: 1200px;
+            max-height: 700px;
+            border: 2px solid #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .calibration-point {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #ff6e14;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 12px;
+            user-select: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 110, 20, 0.5);
+        }
+
+        .calibration-point:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 110, 20, 0.8);
+        }
+
+        .calibration-point.completed {
+            background: #4caf50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+
+        .calibration-point.active {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .calibration-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 16px;
+        }
+
+        /* ===== VIDEO WEBCAM ===== */
+        #webcam-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 150px;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 999;
+            border: 2px solid #ff6e14;
+            display: none;
+        }
+
+        #webcam-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ===== SURVEY CONTAINER ===== */
+        #survey-container {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .survey-page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            background: white;
+            overflow-y: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .survey-page.active {
+            display: block;
+        }
+
+        /* ===== PAGE LISTE ===== */
+        .page-header {
+            background: #ff6e14;
+            color: white;
+            padding: 15px;
+            margin: -20px -20px 20px -20px;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .product-card {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .product-info {
+            padding: 12px;
+        }
+
+        .product-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+        .product-price {
+            font-size: 18px;
+            color: #ff6e14;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .product-seller {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* ===== PAGE PRODUIT ===== */
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .product-gallery {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .thumbnails {
+            display: flex;
+            gap: 8px;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: #ff6e14;
+        }
+
+        .product-details-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-details-info h1 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .price-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .price-section .price {
+            font-size: 32px;
+            color: #ff6e14;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .price-section .old-price {
+            font-size: 14px;
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .seller-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .seller-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            border-radius: 50%;
+        }
+
+        .seller-details h3 {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .seller-details p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .product-description {
+            margin-bottom: 20px;
+        }
+
+        .product-description h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .product-description p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .contact-btn {
+            background: #ff6e14;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .contact-btn:hover {
+            background: #e55a00;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 500;
+        }
+
+        .nav-btn {
+            background: #ff6e14;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .nav-btn:hover {
+            background: #e55a00;
+        }
+
+        .nav-btn:active {
+            transform: scale(0.98);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .page-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #333;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== GAZE POINT (RED DOT) ===== */
+        #gaze-point {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: red;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 0, 0, 0.5);
+            pointer-events: none;
+            z-index: 9998;
+            display: none;
+            box-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
+        }
+
+        /* ===== COMPLETION SCREEN ===== */
+        #completion-screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 2000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        #completion-screen.active {
+            display: flex;
+        }
+
+        #completion-screen h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        #completion-screen p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        #completion-screen .btn-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .completion-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .completion-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .completion-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* ===== HIDDEN VIDEO ===== */
+        #webgazer-video {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- CALIBRATION OVERLAY -->
+        <div id="calibration-overlay">
+            <div class="calibration-content">
+                <h1>🎯 Calibration du Eye-Tracker</h1>
+                <p>Cliquez 5 fois sur chaque point pour calibrer votre eye-tracker.</p>
+                <p>Les points changeront de couleur au fur et à mesure.</p>
+            </div>
+            <div id="calibration-grid">
+                <div id="webcam-container">
+                    <video id="webgazer-video" autoplay playsinline></video>
+                </div>
+                <div class="calibration-counter">
+                    <span id="calibration-progress">0/45 clics effectués</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAZE POINT (RED DOT) -->
+        <div id="gaze-point"></div>
+
+        <!-- SURVEY CONTAINER -->
+        <div id="survey-container">
+            <div class="page-counter">
+                <span id="page-counter-text">Page 1/3</span>
+            </div>
+
+            <!-- PAGE 1: LISTE DE PRODUITS -->
+            <div class="survey-page active" data-page-id="page-liste">
+                <div class="page-header">Liste de Produits - Le Boncoin</div>
+                <div class="product-list" id="products-list">
+                    <div class="product-card">
+                        <div class="product-image">iPhone 14 Pro</div>
+                        <div class="product-info">
+                            <div class="product-title">iPhone 14 Pro - État neuf</div>
+                            <div class="product-price">799€</div>
+                            <div class="product-seller">Vendeur: TechStore_Pro</div>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image">Samsung Galaxy S23</div>
+                        <div class="product-info">
+                            <div class="product-title">Samsung Galaxy S23 Ultra</div>
+                            <div class="product-price">699€</div>
+                            <div class="product-seller">Vendeur: MobileExperts</div>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image">Google Pixel 7</div>
+                        <div class="product-info">
+                            <div class="product-title">Google Pixel 7 Pro</div>
+                            <div class="product-price">599€</div>
+                            <div class="product-seller">Vendeur: GoogleFans</div>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image">OnePlus 11</div>
+                        <div class="product-info">
+                            <div class="product-title">OnePlus 11 Pro Max</div>
+                            <div class="product-price">549€</div>
+                            <div class="product-seller">Vendeur: FastPhone</div>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image">Xiaomi 13</div>
+                        <div class="product-info">
+                            <div class="product-title">Xiaomi 13 Ultra</div>
+                            <div class="product-price">499€</div>
+                            <div class="product-seller">Vendeur: ChinaTech</div>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image">AirPods Pro</div>
+                        <div class="product-info">
+                            <div class="product-title">Apple AirPods Pro Max</div>
+                            <div class="product-price">349€</div>
+                            <div class="product-seller">Vendeur: AudioHub</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 2: PRODUIT A (DÉTAIL) -->
+            <div class="survey-page" data-page-id="page-produit-a">
+                <div class="page-header">Détail Produit - iPhone 14 Pro</div>
+                <div class="product-detail">
+                    <div class="product-gallery">
+                        <div class="main-image">📱 iPhone 14 Pro Image</div>
+                        <div class="thumbnails">
+                            <div class="thumbnail active"></div>
+                            <div class="thumbnail"></div>
+                            <div class="thumbnail"></div>
+                            <div class="thumbnail"></div>
+                        </div>
+                    </div>
+                    <div class="product-details-info">
+                        <h1>iPhone 14 Pro 512GB Noir</h1>
+                        <div class="price-section">
+                            <div class="price">799€</div>
+                            <div class="old-price">Prix original: 1099€</div>
+                        </div>
+                        <div class="seller-info">
+                            <div class="seller-avatar"></div>
+                            <div class="seller-details">
+                                <h3>TechStore_Pro ⭐</h3>
+                                <p>4.8/5 (1247 avis) • 3200+ articles vendus</p>
+                            </div>
+                        </div>
+                        <div class="product-description">
+                            <h3>Description</h3>
+                            <p>iPhone 14 Pro en excellent état, très peu utilisé. Tous les accessoires d'origine inclus (boîte, câble, adaptateur). Pas de rayures ni de dommages. Batterie à 98%. Parfait pour un acheteur exigeant.</p>
+                        </div>
+                        <button class="contact-btn">Contacter le vendeur</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 3: PRODUIT B (DÉTAIL) -->
+            <div class="survey-page" data-page-id="page-produit-b">
+                <div class="page-header">Détail Produit - Samsung Galaxy S23 Ultra</div>
+                <div class="product-detail">
+                    <div class="product-gallery">
+                        <div class="main-image">📱 Samsung S23 Ultra Image</div>
+                        <div class="thumbnails">
+                            <div class="thumbnail active"></div>
+                            <div class="thumbnail"></div>
+                            <div class="thumbnail"></div>
+                            <div class="thumbnail"></div>
+                        </div>
+                    </div>
+                    <div class="product-details-info">
+                        <h1>Samsung Galaxy S23 Ultra 256GB Verde</h1>
+                        <div class="price-section">
+                            <div class="price">699€</div>
+                            <div class="old-price">Prix original: 1249€</div>
+                        </div>
+                        <div class="seller-info">
+                            <div class="seller-avatar"></div>
+                            <div class="seller-details">
+                                <h3>MobileExperts ⭐⭐</h3>
+                                <p>4.9/5 (2156 avis) • 5800+ articles vendus</p>
+                            </div>
+                        </div>
+                        <div class="product-description">
+                            <h3>Description</h3>
+                            <p>Samsung Galaxy S23 Ultra en parfait état de fonctionnement. Acheté il y a 3 mois, utilisé modérément. Écran AMOLED 6.8" 120Hz immaculé. Appareil photo 200MP + zoom optique 10x. Inclus: chargeur 45W, étui de protection premium, protecteur d'écran.</p>
+                        </div>
+                        <button class="contact-btn">Contacter le vendeur</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPLETION SCREEN -->
+        <div id="completion-screen">
+            <h1>✅ Enquête Terminée</h1>
+            <p>Merci d'avoir participé à notre étude UX sur la fiabilité des produits Le Boncoin!</p>
+            <p id="data-stats" style="font-size: 14px; margin-top: 20px;"></p>
+            <div class="btn-group">
+                <button class="completion-btn" onclick="downloadData()">📥 Télécharger les données</button>
+                <button class="completion-btn" onclick="location.reload()">↻ Recommencer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION BUTTONS -->
+    <div class="nav-buttons" id="nav-buttons">
+        <button class="nav-btn" id="prev-btn" onclick="showPrevPage()">← Précédent</button>
+        <button class="nav-btn" id="next-btn" onclick="showNextPage()">Suivant →</button>
+        <button class="nav-btn" id="finish-btn" onclick="finishSurvey()" style="display: none;">✓ Terminer</button>
+    </div>
+
+    <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
+
+    <script>
+        // ===== DEBUG MODE =====
+        const DEBUG = true;
+        function log(message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            console.log(`[${timestamp}] ${message}`, data || '');
+            // Aussi afficher en overlay pour debug
+            if (DEBUG && message.includes('ERROR') || message.includes('✅')) {
+                console.error(`[${timestamp}] ${message}`, data || '');
+            }
+        }
+
+        // ===== GLOBAL STATE =====
+        let gazeData = [];
+        let currentPageIndex = 0;
+        const totalPages = 3;
+        let calibrationComplete = false;
+        let calibrationClicks = {}; // { 'point-0': 0, 'point-1': 0, ... }
+        let isRecording = false;
+        let webgazerReady = false;
+        let webcamActive = false;
+
+        // Initialize calibration clicks counter
+        for (let i = 0; i < 9; i++) {
+            calibrationClicks[`point-${i}`] = 0;
+        }
+
+        const TOTAL_CALIBRATION_CLICKS = 45; // 9 points × 5 clicks
+
+        // ===== SETUP CALIBRATION GRID =====
+        function setupCalibrationGrid() {
+            const grid = document.getElementById('calibration-grid');
+            const gridRect = grid.getBoundingClientRect();
+            const width = gridRect.width;
+            const height = gridRect.height;
+
+            // 3x3 grid positions
+            const positions = [
+                { x: 0, y: 0 },     // top-left
+                { x: 0.5, y: 0 },   // top-center
+                { x: 1, y: 0 },     // top-right
+                { x: 0, y: 0.5 },   // middle-left
+                { x: 0.5, y: 0.5 }, // middle-center
+                { x: 1, y: 0.5 },   // middle-right
+                { x: 0, y: 1 },     // bottom-left
+                { x: 0.5, y: 1 },   // bottom-center
+                { x: 1, y: 1 }      // bottom-right
+            ];
+
+            positions.forEach((pos, index) => {
+                const point = document.createElement('div');
+                point.className = 'calibration-point';
+                point.id = `point-${index}`;
+                point.innerHTML = index + 1;
+
+                const x = pos.x * width;
+                const y = pos.y * height;
+
+                point.style.left = (x - 25) + 'px';
+                point.style.top = (y - 25) + 'px';
+
+                point.addEventListener('click', () => handleCalibrationClick(index, point));
+                grid.appendChild(point);
+            });
+        }
+
+        // ===== CALIBRATION CLICK HANDLER =====
+        function handleCalibrationClick(pointIndex, element) {
+            const pointId = `point-${pointIndex}`;
+            calibrationClicks[pointId]++;
+
+            log(`🖱️ Clic sur point ${pointIndex + 1} (${calibrationClicks[pointId]}/5)`);
+
+            element.classList.add('active');
+            setTimeout(() => element.classList.remove('active'), 300);
+
+            if (calibrationClicks[pointId] === 5) {
+                element.classList.add('completed');
+                log(`✅ Point ${pointIndex + 1} complété!`);
+            }
+
+            // Update progress
+            const totalClicks = Object.values(calibrationClicks).reduce((a, b) => a + b, 0);
+            document.getElementById('calibration-progress').textContent = 
+                `${totalClicks}/${TOTAL_CALIBRATION_CLICKS} clics effectués`;
+
+            log(`📊 Progrès: ${totalClicks}/${TOTAL_CALIBRATION_CLICKS}`);
+
+            if (totalClicks === TOTAL_CALIBRATION_CLICKS) {
+                completeCalibration();
+            }
+        }
+
+        // ===== COMPLETE CALIBRATION =====
+        function completeCalibration() {
+            log('🎉 ✅ CALIBRATION COMPLÈTE!');
+            
+            calibrationComplete = true;
+            
+            // Hide calibration overlay
+            document.getElementById('calibration-overlay').style.display = 'none';
+            log('➡️ Overlay de calibration caché');
+            
+            // Hide webcam video
+            document.getElementById('webcam-container').style.display = 'none';
+            log('➡️ Webcam container caché');
+            
+            // Show survey
+            document.getElementById('survey-container').style.display = 'block';
+            log('➡️ Survey container affiché');
+            
+            // Start recording
+            isRecording = true;
+            log('🔴 Enregistrement DÉMARRÉ');
+            
+            // Start gaze tracking
+            startGazeTracking();
+            
+            log('✅ Calibration complète! Enregistrement des données démarré.');
+        }
+
+        // ===== INITIALIZE WEBGAZER =====
+        function initializeWebGazer() {
+            log('🔧 Initialisation de WebGazer...');
+            
+            // Vérifier que WebGazer est chargé
+            if (typeof webgazer === 'undefined') {
+                log('❌ ERROR: WebGazer n\'est pas chargé!');
+                alert('Erreur: WebGazer n\'a pas pu se charger. Vérifiez votre connexion internet.');
+                return false;
+            }
+
+            log('✅ WebGazer détecté');
+
+            try {
+                webgazer
+                    .setRegression('ridge')
+                    .setTracker('clmtrackr')
+                    .setGazeListener((data, elapsedTime) => {
+                        if (data == null) {
+                            log('⚠️ Données de regard NULL');
+                            return;
+                        }
+                        
+                        if (!isRecording) return;
+
+                        const gazePoint = document.getElementById('gaze-point');
+                        gazePoint.style.left = (data.x - 6) + 'px';
+                        gazePoint.style.top = (data.y - 6) + 'px';
+                        gazePoint.style.display = 'block';
+
+                        // Record gaze data
+                        gazeData.push({
+                            type: 'gaze',
+                            x: Math.round(data.x),
+                            y: Math.round(data.y),
+                            timestamp: Date.now(),
+                            pageId: getCurrentPageId()
+                        });
+                    })
+                    .begin();
+
+                log('✅ WebGazer initialisé avec succès');
+                webgazerReady = true;
+
+                // Attendre un peu avant de montrer la webcam
+                setTimeout(() => {
+                    const videoElement = document.querySelector('video[autoplay]');
+                    if (videoElement) {
+                        log('✅ Élément vidéo détecté');
+                        webcamActive = true;
+                        document.getElementById('webcam-container').style.display = 'block';
+                        log('✅ Webcam container affiché');
+                    } else {
+                        log('⚠️ Élément vidéo NOT trouvé');
+                    }
+                }, 500);
+
+                return true;
+
+            } catch (error) {
+                log('❌ ERROR lors de l\'initialisation de WebGazer:', error.message);
+                alert('Erreur WebGazer: ' + error.message);
+                return false;
+            }
+        }
+
+        // ===== REQUEST WEBCAM PERMISSION =====
+        function requestWebcamPermission() {
+            log('📹 Demande d\'accès à la webcam...');
+            
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    log('✅ Permission webcam ACCORDÉE');
+                    // Arrêter le stream immédiatement
+                    stream.getTracks().forEach(track => track.stop());
+                    // Lancer le calibrage
+                    startCalibration();
+                })
+                .catch(error => {
+                    log('❌ ERROR: Permission webcam REFUSÉE ou webcam indisponible', error.message);
+                    alert('Erreur: Vous devez autoriser l\'accès à la webcam pour utiliser l\'eye-tracker.\n\nErreur: ' + error.message);
+                });
+        }
+
+        // ===== START CALIBRATION (after webcam permission) =====
+        function startCalibration() {
+            log('🎯 Démarrage du calibrage');
+            document.getElementById('calibration-overlay').style.display = 'flex';
+            document.getElementById('webcam-container').style.display = 'block';
+            
+            // Attendre que WebGazer affiche la vidéo
+            setTimeout(() => {
+                log('✅ Webcam et calibrage affichés');
+            }, 300);
+        }
+
+        // ===== START GAZE TRACKING =====
+        function startGazeTracking() {
+            const gazePoint = document.getElementById('gaze-point');
+            gazePoint.style.display = 'block';
+        }
+
+        // ===== RECORD CLICK =====
+        function recordClick(event) {
+            if (!isRecording) return;
+
+            gazeData.push({
+                type: 'click',
+                x: Math.round(event.clientX),
+                y: Math.round(event.clientY),
+                timestamp: Date.now(),
+                pageId: getCurrentPageId()
+            });
+        }
+
+        // ===== PAGE MANAGEMENT =====
+        function getCurrentPageId() {
+            const activePage = document.querySelector('.survey-page.active');
+            return activePage ? activePage.dataset.pageId : 'unknown';
+        }
+
+        function showPage(index) {
+            if (index < 0 || index >= totalPages) return;
+
+            const pages = document.querySelectorAll('.survey-page');
+            pages.forEach((page, i) => {
+                page.classList.toggle('active', i === index);
+            });
+
+            currentPageIndex = index;
+
+            // Update counter
+            document.getElementById('page-counter-text').textContent = `Page ${index + 1}/${totalPages}`;
+
+            // Update buttons
+            document.getElementById('prev-btn').disabled = index === 0;
+            document.getElementById('prev-btn').style.display = index === 0 ? 'none' : 'block';
+            document.getElementById('next-btn').style.display = index === totalPages - 1 ? 'none' : 'block';
+            document.getElementById('finish-btn').style.display = index === totalPages - 1 ? 'block' : 'none';
+
+            console.log(`📄 Affichage de la page ${index + 1}/${totalPages}`);
+        }
+
+        function showNextPage() {
+            if (currentPageIndex < totalPages - 1) {
+                showPage(currentPageIndex + 1);
+            }
+        }
+
+        function showPrevPage() {
+            if (currentPageIndex > 0) {
+                showPage(currentPageIndex - 1);
+            }
+        }
+
+        // ===== FINISH SURVEY =====
+        function finishSurvey() {
+            isRecording = false;
+            log('🛑 Enregistrement ARRÊTÉ');
+            
+            // Hide gaze point
+            document.getElementById('gaze-point').style.display = 'none';
+            log('➡️ Red dot caché');
+            
+            // Hide survey
+            document.getElementById('survey-container').style.display = 'none';
+            log('➡️ Survey container caché');
+            
+            // Stop WebGazer
+            try {
+                webgazer.end();
+                log('✅ WebGazer arrêté');
+            } catch (e) {
+                log('⚠️ Erreur lors de l\'arrêt de WebGazer:', e.message);
+            }
+            
+            // Show completion screen
+            const completionScreen = document.getElementById('completion-screen');
+            completionScreen.classList.add('active');
+            log('✅ Écran de complétion affiché');
+
+            // Display stats
+            const gazeEvents = gazeData.filter(e => e.type === 'gaze').length;
+            const clickEvents = gazeData.filter(e => e.type === 'click').length;
+            document.getElementById('data-stats').innerHTML = 
+                `📊 Données enregistrées: ${gazeEvents} événements gaze + ${clickEvents} clics = ${gazeData.length} événements total`;
+
+            log('✅ ENQUÊTE TERMINÉE!');
+            log(`📊 Données enregistrées: ${gazeData.length} événements (${gazeEvents} gaze + ${clickEvents} clics)`);
+            
+            // Afficher un aperçu des données
+            console.log('📋 Aperçu des données:', gazeData.slice(0, 5));
+        }
+
+        // ===== DOWNLOAD DATA =====
+        function downloadData() {
+            log('📥 Téléchargement des données en JSON...');
+            const json = JSON.stringify(gazeData, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `gaze-data-${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            log(`✅ Fichier téléchargé: gaze-data-${Date.now()}.json (${gazeData.length} événements)`);
+        }
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🚀 ═══════════════════════════════════════════════════');
+            log('🚀 INITIALISATION DE L\'APPLICATION');
+            log('🚀 ═══════════════════════════════════════════════════');
+            
+            // Setup calibration grid
+            setupCalibrationGrid();
+            log('✅ Grille de calibration créée');
+            
+            // Add global click listener
+            document.addEventListener('click', recordClick);
+            log('✅ Event listener pour clics ajouté');
+            
+            // Show first page
+            showPage(0);
+            log('✅ Première page affichée');
+
+            // Initialize WebGazer
+            const webgazerInit = initializeWebGazer();
+            
+            if (webgazerInit) {
+                log('⏳ Attente de 2 secondes avant demande de webcam...');
+                
+                // Attendre 2 secondes que WebGazer se charge
+                setTimeout(() => {
+                    log('✅ WebGazer devrait être prêt');
+                    log('🔐 DEMANDE DE PERMISSION WEBCAM');
+                    requestWebcamPermission();
+                }, 2000);
+            }
+            
+            log('✅ Application prête! Consultez la console (F12) pour le debug.');
+        });
+    </script>
+</body>
+</html>
