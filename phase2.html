@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>UX Study – Leboncoin</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f6f6f6}
+header{background:#ff6e14;color:#fff;padding:15px;font-size:22px;text-align:center}
+.page{max-width:1100px;margin:20px auto;padding:10px}
+.card{display:flex;gap:20px;background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.seller{width:220px;flex-shrink:0;text-align:center;border-right:1px solid #eee;padding-right:15px}
+.seller img{width:100px;height:100px;border-radius:50%;object-fit:cover;margin-bottom:8px}
+.seller .info{font-weight:bold;margin-bottom:5px}
+.seller .badge{display:inline-block;background:#ff6e14;color:#fff;padding:2px 6px;margin:2px 2px 4px 0;border-radius:4px;font-size:12px}
+.seller .rating{font-size:14px;color:#555;margin-top:5px}
+.seller .numListings{font-size:14px;color:#555;margin-top:5px}
+
+.product{flex:1;display:flex;flex-direction:column;gap:10px}
+.gallery-main{position:relative}
+.gallery-main img#mainImg{width:100%;height:300px;object-fit:cover;border-radius:6px}
+.thumbnails{display:flex;gap:6px;margin-top:6px;overflow-x:auto}
+.thumbnails img{width:60px;height:60px;object-fit:cover;border-radius:4px;cursor:pointer;opacity:0.7;border:2px solid transparent}
+.thumbnails img.active{opacity:1;border-color:#ff6e14}
+
+.details h1{margin:0;font-size:20px;display:flex;align-items:center;gap:8px}
+.details .badge{background:#ff6e14;color:white;padding:2px 6px;border-radius:4px;font-size:12px}
+.details .price{font-size:24px;font-weight:bold;color:#ff6e14;margin:6px 0}
+.details .old{font-size:14px;text-decoration:line-through;color:#888;margin-left:6px}
+.details .discount{font-size:14px;color:green;margin-left:6px}
+.details .transaction,.details .delivery{font-size:14px;color:#555;margin:2px 0}
+.details .stats{font-size:14px;color:#555;margin:6px 0;display:flex;gap:15px}
+.details .description{max-height:100px;overflow:auto;padding:6px;border:1px solid #eee;border-radius:4px;background:#fafafa}
+.contact-btn{width:180px;background:#ff6e14;color:white;border:none;padding:10px;font-weight:bold;border-radius:4px;cursor:pointer;margin-top:10px}
+
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);align-items:center;justify-content:center;z-index:100}
+.modal-content{background:#fff;padding:20px;width:450px;border-radius:6px}
+.modal-content h3{margin-top:0}
+.modal-content label{display:block;margin-top:10px;font-size:14px}
+textarea,select,input{width:100%;margin-top:5px;padding:5px;border-radius:4px;border:1px solid #ccc}
+.click-marker{position:fixed;transform:translate(-50%,-50%);pointer-events:none;z-index:9999;text-align:center}
+.click-dot{width:14px;height:14px;background:red;border-radius:50%;margin:auto}
+.click-coords{background:black;color:white;font-weight:bold;font-size:14px;padding:4px 8px;border-radius:4px;margin-top:6px}
+</style>
+</head>
+<body>
+<header>UX Study – Leboncoin</header>
+<div class="page" id="content"></div>
+
+<!-- Modals -->
+<div class="modal" id="modalConsent">
+  <div class="modal-content">
+    <h3>Consent</h3>
+    <p>We will record mouse movements and clicks. Your data is anonymous and you can withdraw anytime.</p>
+    <button onclick="startWarmUp()">Agree & Continue</button>
+  </div>
+</div>
+
+<div class="modal" id="modalWarmUp">
+  <div class="modal-content">
+    <h3>Warm-Up</h3>
+    <p>Click anywhere on the page to get familiar with clicking.</p>
+    <button onclick="endWarmUp()">Start Study</button>
+  </div>
+</div>
+
+<div class="modal" id="modalClick">
+  <div class="modal-content">
+    <h3>Click-to-Explain</h3>
+    <p>Click on the element that most influenced your trust.<br>(A marker shows where you clicked)</p>
+    <button onclick="finishClickExplain()">Done</button>
+  </div>
+</div>
+
+<div class="modal" id="modalSurvey">
+  <div class="modal-content">
+    <h3>Listing Survey</h3>
+    <label>I think this listing is trustworthy:
+      <select id="trust"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    </label>
+    <label>I think this seller is trustworthy:
+      <select id="sellerTrust"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    </label>
+    <label>If I were browsing for this product, I would have contacted this seller:
+      <select id="contactLikely"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    </label>
+    <label>Why? (optional)
+      <textarea id="reason"></textarea>
+    </label>
+    <button onclick="submitTrial()">Submit</button>
+  </div>
+</div>
+
+<div class="modal" id="modalPhaseC">
+  <div class="modal-content">
+    <h3>Phase C: Overall Desirability Survey</h3>
+    <label>Which listing do you trust most?
+      <select id="mostTrusted"></select>
+    </label>
+    <label>Overall, how trustworthy did you find the listings?
+      <select id="overallTrust"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    </label>
+    <label>Which UX element most influenced your trust judgment?
+      <select id="mostInfluential"><option></option>
+        <option>Photos</option>
+        <option>Description</option>
+        <option>Price</option>
+        <option>Seller</option>
+        <option>Badges</option>
+        <option>Rating</option>
+      </select>
+    </label>
+    <label>Likelihood to contact sellers (1–7):
+      <select id="contactLikelyPhaseC"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select>
+    </label>
+    <label>Which elements most influence your decision to contact a seller? (up to 3)
+      <input type="text" id="contactElements">
+    </label>
+    <label>Prefer more photos or detailed description?
+      <select id="photosVsDesc"><option></option><option>More Photos</option><option>More Description</option></select>
+    </label>
+    <label>Rate overall visual appeal (1–7):
+      <select id="visualAppeal"><option></option><option>1</option><option>2</option><option>3</option><option>4</option>
+      <option>5</option><option>6</option><option>7</option></select>
+    </label>
+    <label>Any feedback:
+      <textarea id="openFeedback"></textarea>
+    </label>
+    <button onclick="submitPhaseC()">Submit & Export CSV</button>
+  </div>
+</div>
+
+<script>
+// CONFIG
+let clickMode="off",currentTrial=0,responses=[],activeThumbIndex=0,teamListings=[];
+const allTeams={
+  A:[
+    {title:"Produit A1",price:"€50",oldPrice:"€60",discount:"-17%",badge:"Top",secure:true,delivery:"Livraison dès 2,99€",likes:12,desc:"Produit A1 description",images:["https://via.placeholder.com/600x400?text=A1-1","https://via.placeholder.com/600x400?text=A1-2"],seller:{name:"Alice",photo:"https://via.placeholder.com/100",badges:["Pro"],rating:4,numListings:5}},
+    {title:"Produit A2",price:"€55",oldPrice:"€65",discount:"-15%",badge:"Pro",secure:true,delivery:"Livraison dès 3,99€",likes:20,desc:"Produit A2 description",images:["https://via.placeholder.com/600x400?text=A2-1"],seller:{name:"Alice",photo:"https://via.placeholder.com/100",badges:["Pro"],rating:4,numListings:5}},
+    {title:"Produit A3",price:"€53",oldPrice:"€63",discount:"-16%",badge:"Top",secure:true,delivery:"Livraison dès 4,99€",likes:18,desc:"Produit A3 description",images:["https://via.placeholder.com/600x400?text=A3-1"],seller:{name:"Alice",photo:"https://via.placeholder.com/100",badges:["Pro"],rating:4,numListings:5}}
+  ],
+  B:[
+    {title:"Produit B1",price:"€70",oldPrice:"€80",discount:"-12%",badge:"Top",secure:true,delivery:"Livraison dès 2,99€",likes:30,desc:"Produit B1 description",images:["https://via.placeholder.com/600x400?text=B1-1"],seller:{name:"Bob",photo:"https://via.placeholder.com/100",badges:["Pro"],rating:5,numListings:4}},
+    {title:"Produit B2",price:"€72",oldPrice:"€82",discount:"-12%",badge:"Pro",secure:true,delivery:"Livraison dès 3,99€",likes:28,desc:"Produit B2 description",images:["https://via.placeholder.com/600x400?text=B2-1"],seller:{name:"Bob",photo:"https://via.placeholder.com/100",badges:["Pro"],rating:5,numListings:4}},
+    {title:"Produit B3",price:"€75",oldPrice:"€85",discount:"-12%",badge:"Top",secure:true,delivery:"Livraison dès 4,99€",likes:32,desc:"Produit B3 description",images:["https://via.placeholder.com/600x400?text=B3-1"],seller:{name:"Bob",photo:"https://via.placeholder.com/100",badges:["Pro"],rating:5,numListings:4}}
+  ],
+  C:[
+    {title:"Produit C1",price:"€90",oldPrice:"€100",discount:"-10%",badge:"Top",secure:true,delivery:"Livraison dès 2,99€",likes:15,desc:"Produit C1 description",images:["https://via.placeholder.com/600x400?text=C1-1"],seller:{name:"Charlie",photo:"https://via.placeholder.com/100",badges:["Top"],rating:3.5,numListings:6}},
+    {title:"Produit C2",price:"€92",oldPrice:"€102",discount:"-10%",badge:"Pro",secure:true,delivery:"Livraison dès 3,99€",likes:18,desc:"Produit C2 description",images:["https://via.placeholder.com/600x400?text=C2-1"],seller:{name:"Charlie",photo:"https://via.placeholder.com/100",badges:["Top"],rating:3.5,numListings:6}},
+    {title:"Produit C3",price:"€95",oldPrice:"€105",discount:"-10%",badge:"Top",secure:true,delivery:"Livraison dès 4,99€",likes:20,desc:"Produit C3 description",images:["https://via.placeholder.com/600x400?text=C3-1"],seller:{name:"Charlie",photo:"https://via.placeholder.com/100",badges:["Top"],rating:3.5,numListings:6}}
+  ]
+};
+
+// Choix aléatoire de l'équipe
+const teams=["A","B","C"];
+teamListings=allTeams[teams[Math.floor(Math.random()*teams.length)]];
+
+// FUNCTIONS
+function renderTrial(){
+  const l=teamListings[currentTrial]; activeThumbIndex=0;
+  content.innerHTML=`
+  <div class="card">
+    <div class="seller">
+      <img src="${l.seller.photo}" alt="${l.seller.name}">
+      <div class="info">${l.seller.name}</div>
+      ${l.seller.badges.map(b=>`<div class="badge">${b}</div>`).join('')}
+      <div class="rating">${"★".repeat(Math.floor(l.seller.rating))+"☆".repeat(5-Math.floor(l.seller.rating))} (${l.seller.rating})</div>
+      <div class="numListings">${l.seller.numListings} annonces</div>
+    </div>
+    <div class="product">
+      <div class="gallery-main">
+        <img id="mainImg" src="${l.images[0]}" alt="${l.title}">
+        <div class="thumbnails">${l.images.map((img,i)=>`<img src="${img}" class="${i===0?'active':''}" onclick="changeMain(${i})">`).join('')}</div>
+      </div>
+      <div class="details">
+        <h1>${l.title} <span class="badge">${l.badge}</span></h1>
+        <div class="price">${l.price}<span class="old">${l.oldPrice}</span> <span class="discount">${l.discount}</span></div>
+        <div class="transaction">${l.secure?"Transaction sécurisée":""}</div>
+        <div class="delivery">${l.delivery}</div>
+        <div class="stats"><span>${l.likes} likes</span></div>
+        <div class="description">${l.desc}</div>
+        <button class="contact-btn" onclick="startClickExplain()">Inspect & Explain</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function changeMain(i){
+  const l=teamListings[currentTrial]; activeThumbIndex=i;
+  document.getElementById("mainImg").src=l.images[i];
+  document.querySelectorAll(".thumbnails img").forEach((img,idx)=>img.classList.toggle("active",idx===i));
+}
+
+// CLICK HANDLER
+document.addEventListener("click",e=>{
+  if(clickMode==="off") return;
+  if(e.target.closest(".modal-content")) return;
+  if(e.target.classList.contains("contact-btn")) return;
+
+  const marker=document.createElement("div");
+  marker.className="click-marker";
+  marker.style.left=e.clientX+"px";
+  marker.style.top=e.clientY+"px";
+  marker.innerHTML=`<div class="click-dot"></div><div class="click-coords">(${e.clientX},${e.clientY})</div>`;
+  document.body.appendChild(marker);
+  setTimeout(()=>marker.remove(),1200);
+
+  if(clickMode==="explain") clickExplain={x:e.clientX,y:e.clientY,element:e.target.tagName};
+});
+
+// Modal workflow
+function startWarmUp(){modalConsent.style.display="none"; modalWarmUp.style.display="flex"; clickMode="warmup";}
+function endWarmUp(){modalWarmUp.style.display="none"; clickMode="off"; renderTrial();}
+function startClickExplain(){clickExplain=null; clickMode="explain"; modalClick.style.display="flex";}
+function finishClickExplain(){clickMode="off"; modalClick.style.display="none"; modalSurvey.style.display="flex";}
+function submitTrial(){
+  const l=teamListings[currentTrial];
+  responses.push({
+    trial:currentTrial,
+    click:clickExplain,
+    trust:trust.value,
+    sellerTrust:sellerTrust.value,
+    contactLikely:contactLikely.value,
+    reason:reason.value,
+    listingLabel:l.title
+  });
+  modalSurvey.style.display="none";
+  currentTrial++;
+  if(currentTrial<teamListings.length) renderTrial(); else startPhaseC();
+}
+
+function startPhaseC(){
+  content.innerHTML="";
+  teamListings.forEach((l,i)=>{
+    const o=document.createElement("option"); o.value=i; o.textContent=l.title; mostTrusted.appendChild(o);
+  });
+  modalPhaseC.style.display="flex";
+}
+
+function submitPhaseC(){
+  responses.push({
+    final:{
+      mostTrusted:mostTrusted.value,
+      overallTrust:overallTrust.value,
+      mostInfluential:mostInfluential.value,
+      contactLikelyPhaseC:contactLikelyPhaseC.value,
+      contactElements:contactElements.value,
+      photosVsDesc:photosVsDesc.value,
+      visualAppeal:visualAppeal.value,
+      openFeedback:openFeedback.value
+    }
+  });
+  modalPhaseC.style.display="none";
+  content.innerHTML="<h2>Thank you 🙏</h2>";
+  console.log(responses);
+  exportCSV(responses);
+}
+
+function exportCSV(data){
+  let csv="trial,listingLabel,x_click,y_click,element,trust,sellerTrust,contactLikely,reason\n";
+  data.forEach(r=>{
+    if(r.trial!==undefined){
+      csv+=[r.trial,`"${r.listingLabel}"`,r.click?.x||"",r.click?.y||"",r.click?.element||"",r.trust,r.sellerTrust,r.contactLikely,`"${r.reason||""}"`].join(",")+"\n";
+    } else if(r.final){
+      const f=r.final;
+      csv+=["Final","","","","",f.mostTrusted,f.overallTrust,f.mostInfluential,`"${f.openFeedback||""}"`].join(",")+"\n";
+    }
+  });
+  const blob=new Blob([csv],{type:"text/csv"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download="UX_study_responses.csv"; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+// START
+modalConsent.style.display="flex";
+</script>
+</body>
+</html>
