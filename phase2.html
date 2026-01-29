@@ -1,72 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>UX Study – Leboncoin</title>
+<title>Étude UX – Confiance Leboncoin</title>
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#f6f6f6}
-header{background:#ff6e14;color:#fff;padding:15px;font-size:22px;text-align:center}
-.page{max-width:1100px;margin:20px auto;padding:10px}
-.card{display:flex;gap:20px;background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
-.seller{width:220px;flex-shrink:0;text-align:center;border-right:1px solid #eee;padding-right:15px}
-.seller img{width:100px;height:100px;border-radius:50%;object-fit:cover;margin-bottom:8px}
-.seller .info{font-weight:bold;margin-bottom:5px}
-.seller .badge{display:inline-block;background:#ff6e14;color:#fff;padding:2px 6px;margin:2px 2px 4px 0;border-radius:4px;font-size:12px}
-.seller .rating{font-size:14px;color:#555;margin-top:5px}
-.seller .numListings{font-size:14px;color:#555;margin-top:5px}
+body{margin:0;font-family:Arial,sans-serif;background:#f6f6f6;color:#333}
+header{background:#ff6e14;color:#fff;padding:15px;font-size:22px;text-align:center;font-weight:bold}
+.page{max-width:900px;margin:20px auto;padding:10px}
+.card{display:flex;gap:20px;background:#fff;padding:25px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+.seller{width:220px;flex-shrink:0;text-align:center;border-right:1px solid #eee;padding-right:20px}
+.seller img{width:110px;height:110px;border-radius:50%;object-fit:cover;margin-bottom:12px;background:#eee}
+.seller .info{font-weight:bold;font-size:16px;margin-bottom:8px;color:#000}
+.seller .badge{display:inline-block;background:#eef7ff;color:#0078d4;padding:4px 8px;margin:3px;border-radius:4px;font-size:11px;font-weight:bold;border:1px solid #0078d4}
+.seller .badge.pro{background:#fff0e5;color:#ff6e14;border-color:#ff6e14}
+.seller .rating{font-size:15px;color:#ffb400;margin-top:8px;font-weight:bold}
+.seller .numListings{font-size:13px;color:#666;margin-top:5px}
 
-.product{flex:1;display:flex;flex-direction:column;gap:10px}
-.gallery-main{position:relative}
-.gallery-main img#mainImg{width:100%;height:300px;object-fit:cover;border-radius:6px}
-.thumbnails{display:flex;gap:6px;margin-top:6px;overflow-x:auto}
-.thumbnails img{width:60px;height:60px;object-fit:cover;border-radius:4px;cursor:pointer;opacity:0.7;border:2px solid transparent}
-.thumbnails img.active{opacity:1;border-color:#ff6e14}
+.product{flex:1;display:flex;flex-direction:column;gap:12px}
+.gallery-main img#mainImg{width:100%;height:350px;object-fit:contain;border-radius:8px;background:#f9f9f9}
 
-.details h1{margin:0;font-size:20px;display:flex;align-items:center;gap:8px}
-.details .badge{background:#ff6e14;color:white;padding:2px 6px;border-radius:4px;font-size:12px}
-.details .price{font-size:24px;font-weight:bold;color:#ff6e14;margin:6px 0}
-.details .old{font-size:14px;text-decoration:line-through;color:#888;margin-left:6px}
-.details .discount{font-size:14px;color:green;margin-left:6px}
-.details .transaction,.details .delivery{font-size:14px;color:#555;margin:2px 0}
-.details .stats{font-size:14px;color:#555;margin:6px 0;display:flex;gap:15px}
-.details .description{max-height:100px;overflow:auto;padding:6px;border:1px solid #eee;border-radius:4px;background:#fafafa}
-.contact-btn{width:180px;background:#ff6e14;color:white;border:none;padding:10px;font-weight:bold;border-radius:4px;cursor:pointer;margin-top:10px}
+.details h1{margin:0;font-size:24px;display:flex;align-items:center;gap:10px;color:#000}
+.details .price{font-size:28px;font-weight:bold;color:#000;margin:10px 0}
+.details .old{font-size:16px;text-decoration:line-through;color:#888;margin-left:8px;font-weight:normal}
+.details .discount{font-size:16px;color:#ed0000;margin-left:8px}
+.details .tag{display:inline-block;font-size:14px;padding:4px 0;color:#333}
+.details .tag.secure{color:#2ecc71;font-weight:bold}
+.details .tag.warning{color:#e67e22;font-weight:bold}
+.details .description{margin-top:15px;padding:12px;border:1px solid #eee;border-radius:6px;background:#fcfcfc;line-height:1.5;font-size:14px;color:#444}
+.contact-btn{width:100%;background:#ff6e14;color:white;border:none;padding:15px;font-size:16px;font-weight:bold;border-radius:8px;cursor:pointer;margin-top:15px;transition:0.2s}
+.contact-btn:hover{background:#e65c00}
 
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);align-items:center;justify-content:center;z-index:100}
-.modal-content{background:#fff;padding:20px;width:450px;border-radius:6px}
-.modal-content h3{margin-top:0}
-.modal-content label{display:block;margin-top:10px;font-size:14px}
-textarea,select,input{width:100%;margin-top:5px;padding:5px;border-radius:4px;border:1px solid #ccc}
-.click-marker{position:fixed;transform:translate(-50%,-50%);pointer-events:none;z-index:9999;text-align:center}
-.click-dot{width:14px;height:14px;background:red;border-radius:50%;margin:auto}
-.click-coords{background:black;color:white;font-weight:bold;font-size:14px;padding:4px 8px;border-radius:4px;margin-top:6px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);align-items:center;justify-content:center;z-index:100}
+.modal-content{background:#fff;padding:30px;width:480px;border-radius:12px;text-align:left}
+.modal-content h3{margin-top:0;color:#ff6e14}
+.modal-content label{display:block;margin-top:15px;font-size:14px;font-weight:bold}
+textarea,select{width:100%;margin-top:8px;padding:10px;border-radius:6px;border:1px solid #ccc;font-size:14px}
+textarea{height:80px;resize:none}
+.modal-content button{width:100%;background:#333;color:white;border:none;padding:12px;margin-top:20px;border-radius:6px;cursor:pointer;font-weight:bold}
+
+.click-marker{position:fixed;transform:translate(-50%,-50%);pointer-events:none;z-index:9999}
+.click-dot{width:20px;height:20px;background:rgba(255,0,0,0.6);border:2px solid red;border-radius:50%}
 </style>
 </head>
 <body>
-<header>UX Study – Leboncoin</header>
+
+<header>Leboncoin UX Study - 2026</header>
 <div class="page" id="content"></div>
 
-<div class="modal" id="modalConsent">
+<div class="modal" id="modalConsent" style="display:flex">
   <div class="modal-content">
-    <h3>Consent</h3>
-    <p>We will record mouse movements and clicks. Your data is anonymous and you can withdraw anytime.</p>
-    <button onclick="startWarmUp()">Agree & Continue</button>
+    <h3>Consent </h3>
+    <p>Nous allons analyser vos interactions avec 9 annonces. Vos clics seront enregistrés de manière anonyme.</p>
+    <button onclick="closeModal('modalConsent');startStudy();">Agree & Continue</button>
   </div>
 </div>
 
-<div class="modal" id="modalWarmUp">
-  <div class="modal-content">
-    <h3>Warm-Up</h3>
-    <p>Click anywhere on the page to get familiar with clicking.</p>
-    <button onclick="endWarmUp()">Start Study</button>
-  </div>
-</div>
 
 <div class="modal" id="modalClick">
   <div class="modal-content">
     <h3>Trust Influence</h3>
     <p>After clicking the button below, <strong>click on the element on the page</strong> that most influenced your trust level.</p>
-    <button onclick="enableClickCapture()">I understand, let me click</button>
+    <button onclick="enableClickCapture()">I understand</button>
   </div>
 </div>
 
@@ -74,16 +68,16 @@ textarea,select,input{width:100%;margin-top:5px;padding:5px;border-radius:4px;bo
   <div class="modal-content">
     <h3>Listing Survey</h3>
     <label>I think this listing is trustworthy (1-5):
-      <select id="trust"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      <select id="trust"><option value=""></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
     </label>
-    <label>I think this seller is trustworthy (1-5):
-      <select id="sellerTrust"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    <label>I think this seller is trustworthy (1-5): :
+      <select id="sellerTrust"><option value=""></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
     </label>
     <label>Likelihood to contact this seller (1-5):
-      <select id="contactLikely"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      <select id="contactLikely"><option value=""></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
     </label>
     <label>Why? (optional)
-      <textarea id="reason"></textarea>
+      <textarea id="reason" placeholder="Ex: Pas de paiement sécurisé, vendeur pro, prix trop bas..."></textarea>
     </label>
     <button onclick="submitTrial()">Submit</button>
   </div>
@@ -91,7 +85,7 @@ textarea,select,input{width:100%;margin-top:5px;padding:5px;border-radius:4px;bo
 
 <div class="modal" id="modalPhaseC">
   <div class="modal-content">
-    <h3>Phase C: Overall Desirability Survey</h3>
+    <h3>Overall Desirability Survey</h3>
     <label>Which listing do you trust most?
       <select id="mostTrusted"></select>
     </label>
@@ -103,159 +97,237 @@ textarea,select,input{width:100%;margin-top:5px;padding:5px;border-radius:4px;bo
         <option>Seller</option>
         <option>Badges</option>
         <option>Rating</option>
+        <option>Other</option>
       </select>
     </label>
+    <input type="text" id="otherValue" placeholder="Precise here" style="display:none; margin-top:10px;">
     <button onclick="submitPhaseC()">Submit & Export CSV</button>
   </div>
 </div>
 
 <script>
-// CONFIG
-let clickMode="off", currentTrial=0, responses=[], clickExplain=null, teamListings=[];
-const allTeams={
-  A:[
-    {title:"Product A1",price:"€50",oldPrice:"€60",discount:"-17%",badge:"Top",secure:true,delivery:"Delivery from €2.99",likes:12,desc:"Product A1 description",images:["https://via.placeholder.com/600x400?text=A1-1","https://via.placeholder.com/600x400?text=A1-2"],seller:{name:"Alice",photo:"https://via.placeholder.com/100",badges:["Pro"],rating:4,numListings:5}},
-    {title:"Product A2",price:"€55",oldPrice:"€65",discount:"-15%",badge:"Pro",secure:true,delivery:"Delivery from €3.99",likes:20,desc:"Product A2 description",images:["https://via.placeholder.com/600x400?text=A2-1"],seller:{name:"Alice",photo:"https://via.placeholder.com/100",badges:["Pro"],rating:4,numListings:5}},
-    {title:"Product A3",price:"€53",oldPrice:"€63",discount:"-16%",badge:"Top",secure:true,delivery:"Delivery from €4.99",likes:18,desc:"Product A3 description",images:["https://via.placeholder.com/600x400?text=A3-1"],seller:{name:"Alice",photo:"https://via.placeholder.com/100",badges:["Pro"],rating:4,numListings:5}}
-  ],
-  B:[
-    {title:"Product B1",price:"€70",oldPrice:"€80",discount:"-12%",badge:"Top",secure:true,delivery:"Delivery from €2.99",likes:30,desc:"Product B1 description",images:["https://via.placeholder.com/600x400?text=B1-1"],seller:{name:"Bob",photo:"https://via.placeholder.com/100",badges:["Pro"],rating:5,numListings:4}},
-    {title:"Product B2",price:"€72",oldPrice:"€82",discount:"-12%",badge:"Pro",secure:true,delivery:"Delivery from €3.99",likes:28,desc:"Product B2 description",images:["https://via.placeholder.com/600x400?text=B2-1"],seller:{name:"Bob",photo:"https://via.placeholder.com/100",badges:["Pro"],rating:5,numListings:4}},
-    {title:"Product B3",price:"€75",oldPrice:"€85",discount:"-12%",badge:"Top",secure:true,delivery:"Delivery from €4.99",likes:32,desc:"Product B3 description",images:["https://via.placeholder.com/600x400?text=B3-1"],seller:{name:"Bob",photo:"https://via.placeholder.com/100",badges:["Pro"],rating:5,numListings:4}}
-  ],
-  C:[
-    {title:"Product C1",price:"€90",oldPrice:"€100",discount:"-10%",badge:"Top",secure:true,delivery:"Delivery from €2.99",likes:15,desc:"Product C1 description",images:["https://via.placeholder.com/600x400?text=C1-1"],seller:{name:"Charlie",photo:"https://via.placeholder.com/100",badges:["Top"],rating:3.5,numListings:6}},
-    {title:"Product C2",price:"€92",oldPrice:"€102",discount:"-10%",badge:"Pro",secure:true,delivery:"Delivery from €3.99",likes:18,desc:"Product C2 description",images:["https://via.placeholder.com/600x400?text=C2-1"],seller:{name:"Charlie",photo:"https://via.placeholder.com/100",badges:["Top"],rating:3.5,numListings:6}},
-    {title:"Product C3",price:"€95",oldPrice:"€105",discount:"-10%",badge:"Top",secure:true,delivery:"Delivery from €4.99",likes:20,desc:"Product C3 description",images:["https://via.placeholder.com/600x400?text=C3-1"],seller:{name:"Charlie",photo:"https://via.placeholder.com/100",badges:["Top"],rating:3.5,numListings:6}}
-  ]
-};
+let clickMode = "off", currentTrial = 0, responses = [], clickData = null;
 
-const teams=["A","B","C"];
-teamListings=allTeams[teams[Math.floor(Math.random()*teams.length)]];
-
-function renderTrial(){
-  const l=teamListings[currentTrial];
-  content.innerHTML=`
-  <div class="card">
-    <div class="seller">
-      <img src="${l.seller.photo}" alt="${l.seller.name}">
-      <div class="info">${l.seller.name}</div>
-      ${l.seller.badges.map(b=>`<div class="badge">${b}</div>`).join('')}
-      <div class="rating">${"★".repeat(Math.floor(l.seller.rating))+"☆".repeat(5-Math.floor(l.seller.rating))} (${l.seller.rating})</div>
-      <div class="numListings">${l.seller.numListings} listings</div>
-    </div>
-    <div class="product">
-      <div class="gallery-main">
-        <img id="mainImg" src="${l.images[0]}" alt="${l.title}">
-        <div class="thumbnails">${l.images.map((img,i)=>`<img src="${img}" class="${i===0?'active':''}" onclick="changeMain(${i})">`).join('')}</div>
-      </div>
-      <div class="details">
-        <h1>${l.title} <span class="badge">${l.badge}</span></h1>
-        <div class="price">${l.price}<span class="old">${l.oldPrice}</span> <span class="discount">${l.discount}</span></div>
-        <div class="transaction">${l.secure?"Secure Transaction":""}</div>
-        <div class="delivery">${l.delivery}</div>
-        <div class="stats"><span>${l.likes} likes</span></div>
-        <div class="description">${l.desc}</div>
-        <button class="contact-btn" onclick="startClickExplain()">Inspect & Explain</button>
-      </div>
-    </div>
-  </div>`;
-}
-
-function changeMain(i){
-  const l=teamListings[currentTrial];
-  document.getElementById("mainImg").src=l.images[i];
-  document.querySelectorAll(".thumbnails img").forEach((img,idx)=>img.classList.toggle("active",idx===i));
-}
-
-// MODAL & CLICK LOGIC
-function startWarmUp(){ modalConsent.style.display="none"; modalWarmUp.style.display="flex"; clickMode="warmup"; }
-function endWarmUp(){ modalWarmUp.style.display="none"; clickMode="off"; renderTrial(); }
-
-function startClickExplain(){
-  clickExplain = null;
-  modalClick.style.display="flex";
-}
-
-function enableClickCapture(){
-  modalClick.style.display="none";
-  clickMode="explain";
-}
-
-document.addEventListener("click", e=>{
-  if(clickMode==="off") return;
-  if(e.target.closest(".modal-content")) return;
-  if(e.target.classList.contains("contact-btn")) return;
-
-  const marker=document.createElement("div");
-  marker.className="click-marker";
-  marker.style.left=e.clientX+"px";
-  marker.style.top=e.clientY+"px";
-  marker.innerHTML=`<div class="click-dot"></div><div class="click-coords">(${e.clientX},${e.clientY})</div>`;
-  document.body.appendChild(marker);
-  setTimeout(()=>marker.remove(),1200);
-
-  if(clickMode==="explain"){
-    clickExplain = { x:e.clientX, y:e.clientY, element:e.target.tagName };
-    clickMode = "off";
-    setTimeout(() => {
-        modalSurvey.style.display="flex";
-    }, 400);
+const annonces = [
+  {
+    id: "A1",
+    title: "iPhone 12",
+    price: "380,00 €",
+    oldPrice: "520,55 €",
+    disc: "-27%",
+    secure: true,
+    likes: 15,
+    desc: "iPhone 12 en bon état de fonctionnement, réinitialisé.",
+    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/fa/67/af/fa67af61390a2820d2fc2ba7a60055b5c31721e9.jpg?rule=ad-large",
+    seller: { name: "E.Leclerc", badges: ["Pro", "Top Vendeur"], rate: 4.0, ads: 13, photo: "" }
+  },
+  {
+    id: "A2",
+    title: "Google Pixel 7",
+    price: "189,00 €",
+    oldPrice: "",
+    disc: "",
+    secure: false,
+    likes: 23,
+    desc: "Très bon état, fonctionnement impeccable.",
+    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/9d/35/ac/9d35ac3233341deb38c9710ea79de6818d5cfc80.jpg?rule=ad-large",
+    seller: { name: "MARKET PHONE", badges: ["Pro", "Réactif"], rate: 5.0, ads: 6234, photo: "" }
+  },
+  {
+    id: "A3",
+    title: "iPhone 15 PLUS",
+    price: "550,00 €",
+    oldPrice: "",
+    disc: "",
+    secure: true,
+    likes: 9,
+    desc: "iPhone 15 PLUS très bon état général.",
+    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/e5/34/93/e5349380cb51f69a05a9a9f9ca0af9cc0de34f8d.jpg?rule=ad-large",
+    seller: { name: "PHONESTART", badges: ["Pro"], rate: 5.0, ads: 22, photo: "" }
+  },
+  {
+    id: "A4",
+    title: "IPhone 15 Pro Max",
+    price: "690,00 €",
+    oldPrice: "",
+    disc: "",
+    secure: true,
+    likes: 18,
+    desc: "Apple en très bon état de fonctionnement. Réinitialisé.",
+    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/01/1f/00/011f00ac2eaf872bb6cdf7f2cdbfd8bf8926ff99.jpg?rule=ad-large",
+    seller: { name: "UNIVACK", badges: ["Particulier", "Top Vendeur"], rate: 5.0, ads: 39750, photo: "" }
+  },
+  {
+    id: "A5",
+    title: "IPhone 15 Plus",
+    price: "550,00 €",
+    oldPrice: "",
+    disc: "",
+    secure: false,
+    likes: 16,
+    desc: "Accessoires d'origine inclus.",
+    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/a0/04/34/a004347f09407463ca104bd73f510935e8c3671f.jpg?rule=ad-large",
+    seller: { name: "cireluz", badges: ["Pro"], rate: 4.6, ads: 13, photo: "" }
+  },
+  {
+    id: "A6",
+    title: "IPhone 11",
+    price: "165,00 €",
+    oldPrice: "",
+    disc: "",
+    secure: true,
+    likes: 3,
+    desc: "État de fonctionnement acceptable. Petite rayure.",
+    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/22/a7/ff/22a7ff5eedbab467c7d90ce452829aa469324d74.jpg?rule=ad-large",
+    seller: { name: "FUTURX", badges: ["Pro"], rate: 3.1, ads: 1611, photo: "" }
+  },
+  {
+    id: "A7",
+    title: "IPhone 14 Pro",
+    price: "150,00 €",
+    oldPrice: "",
+    disc: "",
+    secure: true,
+    likes: 13,
+    desc: "Téléphone neuf, la boîte n'a jamais été ouverte.",
+    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/b7/90/4d/b7904d08e1d38e287ee96a3eef41f3dfb55bbabb.jpg?rule=ad-large",
+    seller: { name: "Dude30", badges: ["Pro"], rate: 0, ads: 0, photo: "" }
+  },
+  {
+    id: "A8",
+    title: "Huawei P30 Pro",
+    price: "209,00 €",
+    oldPrice: "",
+    disc: "",
+    secure: false,
+    likes: 17,
+    desc: "Huawei neuf. Parfait état, jamais utilisé.",
+    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/7f/bf/3b/7fbf3be309d7efc2dde6d32b06b6a90a1b330f71.jpg?rule=ad-large",
+    seller: { name: "Julien R", badges: ["Identité vérifiée"], rate: 5.0, ads: 4, photo: "" }
+  },
+  {
+    id: "A9",
+    title: "IPhone 15 Pro",
+    price: "929,00 €",
+    oldPrice: "1327,14 €",
+    disc: "-30%",
+    secure: true,
+    likes: 14,
+    desc: "",
+    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/0a/d8/a7/0ad8a7529da8ccacbe77ac5aeab7612fc48bdaae.jpg?rule=ad-large",
+    seller: { name: "Maxime", badges: ["Réactif", "Identité vérifiée", "Top Vendeur"], rate: 3.1, ads: 100, photo: "" }
   }
+];
+function renderTrial() {
+  const data = annonces[currentTrial];
+  const container = document.getElementById("content");
+  container.innerHTML = `
+    <div class="card">
+      <div class="seller">
+        <img src="${data.seller.photo || 'https://via.placeholder.com/100?text=?'}" alt="Seller">
+        <div class="info">${data.seller.name}</div>
+        ${data.seller.badges.map(b => `<span class="badge ${b === 'Pro' ? 'pro' : ''}">${b}</span>`).join('')}
+        <div class="rating">★ ${data.seller.rate || 'N/A'}</div>
+        <div class="numListings">${data.seller.ads} annonces</div>
+      </div>
+      <div class="product">
+        <div class="gallery-main"><img id="mainImg" src="${data.img}"></div>
+        <div class="details">
+          <h1>${data.title}</h1>
+          <div class="price">${data.price} ${data.oldPrice ? `<span class="old">${data.oldPrice}</span><span class="discount">${data.disc}</span>` : ''}</div>
+          
+          ${data.secure ? '<div class="tag secure">🛡️ Transaction sécurisée</div>' : ''}
+          
+          <div class="tag">📦 Livraison ou main propre</div>
+          <div class="description">${data.desc}</div>
+          <button class="contact-btn" onclick="openClickModal()">Évaluer cette annonce</button>
+        </div>
+      </div>
+    </div>`;
+}
+function openClickModal() { modalClick.style.display = "flex"; }
+function closeModal(id) { document.getElementById(id).style.display = "none"; }
+function enableClickCapture() { closeModal('modalClick'); clickMode = "capture"; }
+
+document.addEventListener("click", e => {
+  if (clickMode !== "capture") return;
+  if (e.target.closest('.modal-content') || e.target.classList.contains('contact-btn')) return;
+
+  const dot = document.createElement("div");
+  dot.className = "click-marker";
+  dot.style.left = e.clientX + "px"; dot.style.top = e.clientY + "px";
+  dot.innerHTML = `<div class="click-dot"></div>`;
+  document.body.appendChild(dot);
+  setTimeout(() => dot.remove(), 1000);
+
+  clickData = { x: e.clientX, y: e.clientY, target: e.target.innerText || e.target.tagName };
+  clickMode = "off";
+  modalSurvey.style.display = "flex";
 });
 
-function submitTrial(){
-  const l=teamListings[currentTrial];
+function startWarmUp() { modalWarmUp.style.display = "flex"; clickMode = "warmup"; }
+function startStudy() { clickMode = "off"; renderTrial(); }
+
+function submitTrial() {
   responses.push({
-    trial:currentTrial,
-    click:clickExplain,
-    trust:trust.value,
-    sellerTrust:sellerTrust.value,
-    contactLikely:contactLikely.value,
-    reason:reason.value,
-    listingLabel:l.title
+    id: currentTrial + 1,
+    produit: annonces[currentTrial].title,
+    clickX: clickData.x,
+    clickY: clickData.y,
+    clickTarget: clickData.target.substring(0, 20),
+    trust: document.getElementById("trust").value,
+    sellerTrust: document.getElementById("sellerTrust").value,
+    contact: document.getElementById("contactLikely").value,
+    reason: document.getElementById("reason").value.replace(/,/g, " ")
   });
-  modalSurvey.style.display="none";
+
+  closeModal('modalSurvey');
   // Reset fields
-  trust.value=""; sellerTrust.value=""; contactLikely.value=""; reason.value="";
-  
+  document.getElementById("trust").value = ""; document.getElementById("sellerTrust").value = "";
+  document.getElementById("contactLikely").value = ""; document.getElementById("reason").value = "";
+
   currentTrial++;
-  if(currentTrial < teamListings.length) renderTrial(); else startPhaseC();
+  if (currentTrial < annonces.length) renderTrial(); else showFinalSurvey();
 }
 
-function startPhaseC(){
-  content.innerHTML="";
-  teamListings.forEach((l,i)=>{
-    const o=document.createElement("option"); o.value=i; o.textContent=l.title; mostTrusted.appendChild(o);
+function showFinalSurvey() {
+  document.getElementById("content").innerHTML = "";
+  const select = document.getElementById("mostTrusted");
+  annonces.forEach((a, i) => {
+    let opt = document.createElement("option"); opt.value = a.title; opt.text = a.title; select.add(opt);
   });
-  modalPhaseC.style.display="flex";
+  modalPhaseC.style.display = "flex";
 }
 
-function submitPhaseC(){
-  responses.push({
-    final:{
-      mostTrusted:mostTrusted.options[mostTrusted.selectedIndex].text,
-      mostInfluential:mostInfluential.value
-    }
+function submitPhaseC() {
+  const final = {
+    best: document.getElementById("mostTrusted").value,
+    factor: document.getElementById("mostInfluential").value
+  };
+  closeModal('modalPhaseC');
+  
+  // Message de transition
+  document.getElementById("content").innerHTML = "<h2>Merci ! Vos résultats ont été générés. Redirection en cours...</h2>";
+  
+  // 1. GÉNÉRATION ET EXPORT DU CSV
+  let csv = "ID,Produit,Clic_X,Clic_Y,Element_Clique,Trust_Annonce,Trust_Vendeur,Contact,Commentaire\n";
+  responses.forEach(r => {
+    csv += `${r.id},${r.produit},${r.clickX},${r.clickY},${r.clickTarget},${r.trust},${r.sellerTrust},${r.contact},${r.reason}\n`;
   });
-  modalPhaseC.style.display="none";
-  content.innerHTML="<h2>Thank you for your participation! 🙏</h2>";
-  exportCSV(responses);
-}
+  csv += `\nBILAN FINAL\nMeilleure Annonce,${final.best}\nFacteur Principal,${final.factor}`;
 
-function exportCSV(data){
-  let csv="trial,listingLabel,x_click,y_click,element,trust,sellerTrust,contactLikely,reason\n";
-  data.forEach(r=>{
-    if(r.trial!==undefined){
-      csv+=[r.trial,`"${r.listingLabel}"`,r.click?.x||"",r.click?.y||"",r.click?.element||"",r.trust,r.sellerTrust,r.contactLikely,`"${r.reason||""}"`].join(",")+"\n";
-    }
-  });
-  const blob=new Blob([csv],{type:"text/csv"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a"); a.href=url; a.download="UX_Study_Results.csv"; a.click();
-}
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'phase2.csv';
+  document.body.appendChild(a); 
+  a.click();
+  document.body.removeChild(a);
 
-modalConsent.style.display="flex";
+  setTimeout(function() {
+    window.location.href = "phase3.html";
+  }, 2000);
+}
 </script>
 </body>
 </html>
