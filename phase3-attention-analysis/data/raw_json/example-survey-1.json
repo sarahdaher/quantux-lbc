@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-01-29T14:30:00.000Z",
+  "tests": [
+    {
+      "phase": 1,
+      "duration": 6,
+      "selectedProduct": {
+        "title": "Samsung Galaxy A55",
+        "price": 299,
+        "seller": "MobileWorld",
+        "location": "Montpellier (34)",
+        "daysAgo": 5,
+        "condition": "Bon état"
+      },
+      "motivations": [
+        "prix-bas",
+        "localisation"
+      ]
+    },
+    {
+      "phase": 2,
+      "duration": 15,
+      "selectedProduct": {
+        "title": "iPhone 15 Pro",
+        "price": 799,
+        "seller": "ProTrade",
+        "location": "Strasbourg (67)",
+        "daysAgo": 1,
+        "condition": "Bon état"
+      },
+      "motivations": [
+        "marque",
+        "condition",
+        "recente"
+      ]
+    },
+    {
+      "phase": 3,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "Google Pixel 9 Pro",
+        "price": 649,
+        "seller": "TechHub",
+        "location": "Toulouse (31)",
+        "daysAgo": 3,
+        "condition": "Bon état"
+      },
+      "motivations": [
+        "marque",
+        "prix-bas"
+      ]
+    }
+  ]
+}

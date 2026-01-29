@@ -1,0 +1,34 @@
+# Base de données (sera reconstruite à partir des JSON)
+data/attention_results.db
+
+# Fichiers JSON bruts - ON GARDE DANS GIT pour la collaboration !
+# Les JSON sont la source de vérité, pas la DB
+
+# Graphiques générés
+outputs/*.png
+outputs/*.jpg
+outputs/*.pdf
+outputs/*.txt
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

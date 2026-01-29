@@ -1,0 +1,151 @@
+╔═══════════════════════════════════════════════════════════════════════╗
+║                                                                       ║
+║        📊 PHASE 3 - ATTENTION TEST - DÉMARRAGE RAPIDE               ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+
+🚀 PREMIÈRE UTILISATION
+═══════════════════════════════════════════════════════════════════════
+
+1. Installation
+   ─────────────
+   ./setup.sh
+   
+   Ou manuellement :
+   pip install -r requirements.txt
+   python3 scripts/sync_database.py
+
+
+2. Faire un test
+   ─────────────
+   a) Ouvrir : phase3-attention-test-v2.html
+   b) Compléter le test (6s, 15s, 30s)
+   c) Télécharger le JSON
+   d) Déplacer le JSON dans : data/raw_json/
+
+
+3. Analyser
+   ─────────
+   python3 scripts/sync_database.py
+   python3 scripts/generate_graphs.py
+   
+   Résultats dans : outputs/
+
+
+═══════════════════════════════════════════════════════════════════════
+🔄 WORKFLOW COLLABORATIF
+═══════════════════════════════════════════════════════════════════════
+
+Contributeur A                      Contributeur B
+─────────────                       ─────────────
+1. git clone                        1. git clone
+2. Faire tester 10 personnes        2. git pull (récupère les 10 de A)
+3. 10 JSON → data/raw_json/         3. Faire tester 5 personnes
+4. sync_database.py                 4. 5 JSON → data/raw_json/
+5. git add + commit + push          5. sync_database.py (10+5=15 tests)
+                                    6. git add + commit + push
+
+                    Résultat : 15 tests accumulés !
+
+
+═══════════════════════════════════════════════════════════════════════
+🛠️  SCRIPTS UTILES
+═══════════════════════════════════════════════════════════════════════
+
+./setup.sh              → Installation complète
+./reset.sh              → Nettoyer DB + graphiques (garde JSON)
+./clean_all.sh          → TOUT supprimer (⚠️  irréversible)
+
+python3 scripts/sync_database.py      → Reconstruire la DB
+python3 scripts/generate_graphs.py    → Générer les graphiques
+
+
+═══════════════════════════════════════════════════════════════════════
+🧪 MODE TEST vs 🚀 MODE PRODUCTION
+═══════════════════════════════════════════════════════════════════════
+
+MODE TEST (Actuellement)
+────────────────────────
+- Utiliser reset.sh entre les tests
+- Tester différents scénarios
+- Valider le bon fonctionnement
+
+Cycle de test :
+  ./reset.sh
+  # Faire des tests manuels
+  python3 scripts/sync_database.py
+  python3 scripts/generate_graphs.py
+
+
+MODE PRODUCTION (Déploiement)
+──────────────────────────────
+- NE PLUS utiliser reset.sh ni clean_all.sh
+- Workflow Git strict
+- Tous les JSON sont précieux
+
+Cycle de production :
+  git pull
+  python3 scripts/sync_database.py
+  # Faire tester de nouveaux participants
+  git add data/raw_json/*.json
+  git commit -m "Ajout de X tests"
+  git push
+
+
+═══════════════════════════════════════════════════════════════════════
+📊 GRAPHIQUES GÉNÉRÉS
+═══════════════════════════════════════════════════════════════════════
+
+outputs/duration_vs_motivation.png    → Motivations par durée
+outputs/price_distribution.png        → Distribution des prix
+outputs/condition_distribution.png    → États préférés
+outputs/top_motivations.png           → Top motivations
+outputs/time_vs_price.png             → Corrélation temps/prix
+outputs/summary_stats.txt             → Statistiques textuelles
+
+
+═══════════════════════════════════════════════════════════════════════
+🆘 DÉPANNAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════
+
+Problème : ModuleNotFoundError
+Solution : pip install -r requirements.txt
+
+Problème : DB corrompue
+Solution : rm data/attention_results.db && python3 scripts/sync_database.py
+
+Problème : Pas de JSON
+Solution : Faire des tests et déplacer les JSON dans data/raw_json/
+
+Problème : Graphiques vides
+Solution : Minimum 3-5 sessions nécessaires
+
+
+═══════════════════════════════════════════════════════════════════════
+📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════
+
+README.md             → Documentation exhaustive (LIRE EN PREMIER)
+CONTRIBUTING.md       → Guide de contribution collaborative
+ARCHITECTURE.txt      → Schéma visuel du système
+
+
+═══════════════════════════════════════════════════════════════════════
+🎯 OBJECTIF
+═══════════════════════════════════════════════════════════════════════
+
+Minimum : 30 tests (10 participants)
+Optimal : 100+ tests (33+ participants)
+Idéal : 300+ tests (100+ participants)
+
+Progression actuelle :
+  python3 scripts/sync_database.py
+  → Affiche le nombre de sessions/tests collectés
+
+
+═══════════════════════════════════════════════════════════════════════
+
+Pour toute question, consulter README.md ou CONTRIBUTING.md
+
+═══════════════════════════════════════════════════════════════════════

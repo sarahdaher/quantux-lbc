@@ -1,0 +1,87 @@
+📊 PHASE 3 - ATTENTION TEST ANALYSIS
+═══════════════════════════════════════════════════════════════
+
+🎯 ARCHITECTURE COLLABORATIVE
+═══════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│                    CONTRIBUTEURS                            │
+│  (Clonent le dépôt, font tester, poussent les JSON)        │
+└──────────────────┬──────────────────────────────────────────┘
+                   │
+                   ▼
+         ┌─────────────────────┐
+         │   Git Repository    │
+         │  data/raw_json/     │ ◄── SOURCE DE VÉRITÉ
+         │  ├── survey_1.json  │
+         │  ├── survey_2.json  │
+         │  └── survey_N.json  │
+         └──────────┬──────────┘
+                    │
+                    │ git pull
+                    ▼
+         ┌──────────────────────┐
+         │  sync_database.py    │ ◄── Reconstruit la DB
+         └──────────┬───────────┘
+                    │
+                    ▼
+         ┌──────────────────────┐
+         │  attention_results.db│ ◄── Base de données SQLite
+         │  (NON versionnée)    │
+         └──────────┬───────────┘
+                    │
+                    ▼
+         ┌──────────────────────┐
+         │  generate_graphs.py  │ ◄── Génère les analyses
+         └──────────┬───────────┘
+                    │
+                    ▼
+         ┌──────────────────────┐
+         │  outputs/            │
+         │  ├── graphiques.png  │
+         │  └── stats.txt       │
+         └──────────────────────┘
+
+🔄 WORKFLOW CONTRIBUTEUR
+════════════════════════
+
+1. git clone + setup.sh
+2. Faire tester 5-10 personnes → JSON téléchargés
+3. Déplacer JSON dans data/raw_json/
+4. python3 scripts/sync_database.py
+5. git add data/raw_json/*.json
+6. git commit -m "Ajout de X tests"
+7. git push origin main
+
+✅ GARANTIES
+════════════
+
+✓ Pas de conflit Git (JSON avec timestamp unique)
+✓ Accumulation automatique des données
+✓ Source de vérité = JSON (pas la DB)
+✓ DB reconstruite à la demande
+✓ Chaque contributeur peut analyser localement
+
+📈 OBJECTIF
+═══════════
+
+100+ tests pour analyse statistique robuste
+
+🛠️  COMMANDES RAPIDES
+═════════════════════
+
+Nouveau contributeur :
+  ./setup.sh
+
+Après un git pull :
+  python3 scripts/sync_database.py
+
+Générer les analyses :
+  python3 scripts/generate_graphs.py
+
+📚 DOCUMENTATION
+════════════════
+
+README.md         → Vue d'ensemble
+CONTRIBUTING.md   → Guide détaillé
+setup.sh          → Installation automatique

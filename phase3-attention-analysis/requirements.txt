@@ -1,0 +1,15 @@
+# Dépendances Python pour Phase 3 - Attention Test Analysis
+
+# Manipulation de données
+pandas>=2.0.0
+
+# Visualisation
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Inclus automatiquement avec les packages ci-dessus :
+# - numpy (via pandas)
+# - pillow (via matplotlib)
+
+# Installation :
+# pip install -r requirements.txt

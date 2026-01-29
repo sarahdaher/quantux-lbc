@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-01-29T15:45:00.000Z",
+  "tests": [
+    {
+      "phase": 1,
+      "duration": 6,
+      "selectedProduct": {
+        "title": "Nothing Phone 2",
+        "price": 359,
+        "seller": "InnovateTech",
+        "location": "Lille (59)",
+        "daysAgo": 3,
+        "condition": "Excellent état"
+      },
+      "motivations": [
+        "prix-bas",
+        "condition"
+      ]
+    },
+    {
+      "phase": 2,
+      "duration": 15,
+      "selectedProduct": {
+        "title": "IPhone 16 Pro Max 256GB GARANTIE 2 ANS",
+        "price": 1099,
+        "seller": "TechPro Store",
+        "location": "Paris (75)",
+        "daysAgo": 1,
+        "condition": "Bon état"
+      },
+      "motivations": [
+        "marque",
+        "recente"
+      ]
+    },
+    {
+      "phase": 3,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "Samsung Galaxy S24 Ultra",
+        "price": 899,
+        "seller": "ElectroMax",
+        "location": "Marseille (13)",
+        "daysAgo": 1,
+        "condition": "Très bon état"
+      },
+      "motivations": [
+        "marque",
+        "condition",
+        "vendeur"
+      ]
+    }
+  ]
+}

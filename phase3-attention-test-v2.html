@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 3 - Test d'Attention - Le Boncoin UX Research</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f6f6;
+        }
+
+        header {
+            background: #ff6e14;
+            color: white;
+            padding: 15px;
+            font-size: 22px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #app {
+            width: 100%;
+            height: calc(100vh - 60px);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background: #f0f0f0;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ===== INTRO SCREEN ===== */
+        #intro-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 40px;
+            width: 100%;
+        }
+
+        #intro-screen h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        #intro-screen p {
+            font-size: 18px;
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        #intro-screen button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        #intro-screen button:hover {
+            transform: scale(1.05);
+        }
+
+        /* ===== MAIN CONTENT AREA ===== */
+        #main-content {
+            display: none;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            height: 80vh;
+            max-height: 800px;
+        }
+
+        #main-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== INSTRUCTIONS ===== */
+        #instructions {
+            background: white;
+            border-bottom: 2px solid #ff6e14;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #instructions h3 {
+            color: #ff6e14;
+            font-size: 16px;
+            margin-right: 20px;
+        }
+
+        #instructions p {
+            font-size: 14px;
+            color: #333;
+            margin: 0;
+        }
+
+        .timer {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6e14;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .timer.warning {
+            color: #e55a00;
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* ===== PRODUCT LIST VIEW ===== */
+        #product-list-wrapper {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        #product-list-wrapper.modal-open {
+            filter: blur(2px);
+        }
+
+        .product-list {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px;
+            background: white;
+        }
+
+        .product-list.scrollable {
+            overflow-y: scroll;
+        }
+
+        .product-list.non-scrollable {
+            overflow: hidden;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            user-select: none;
+        }
+
+        .product-card:hover {
+            background: #f9f9f9;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border-color: #ff6e14;
+            transform: translateY(-2px);
+        }
+
+        .product-card.clickable {
+            cursor: crosshair;
+        }
+
+        .product-card.clickable:hover {
+            border: 3px solid #ff6e14;
+            background: #fff9f0;
+            box-shadow: 0 4px 20px rgba(255, 110, 20, 0.3);
+        }
+
+        .product-card.clickable.selected {
+            border: 3px solid #4caf50;
+            background: #f0fff4;
+        }
+
+        .product-card.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .product-card.disabled:hover {
+            border-color: #ddd;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transform: none;
+        }
+
+        .product-image {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 6px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+        }
+
+        .product-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .product-title {
+            font-weight: bold;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .product-price {
+            font-size: 20px;
+            color: #ff6e14;
+            font-weight: bold;
+        }
+
+        .product-seller {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .product-location {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .product-date {
+            font-size: 12px;
+            color: #bbb;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 400px;
+            max-height: 70vh;
+            background: white;
+            z-index: 600;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            overflow-y: auto;
+            flex-direction: column;
+            border-radius: 12px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 0;
+            padding: 0;
+            width: 100%;
+            text-align: center;
+            box-shadow: none;
+        }
+
+        .modal-content h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .modal-content p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal-btn {
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn.primary {
+            background: #ff6e14;
+            color: white;
+        }
+
+        .modal-btn.primary:hover {
+            background: #e55a00;
+        }
+
+        .modal-btn.secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .modal-btn.secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .modal-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .selected-info {
+            background: #fff9f0;
+            border: 2px solid #ff6e14;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .selected-info.empty {
+            display: none;
+        }
+
+        .selected-info h4 {
+            color: #ff6e14;
+            margin: 0 0 5px 0;
+            font-size: 13px;
+        }
+
+        .selected-info p {
+            margin: 0;
+            font-size: 13px;
+            color: #333;
+        }
+
+        /* ===== RESULTS SCREEN ===== */
+        #results-screen {
+            display: none;
+            flex: 1;
+            width: 100%;
+            padding: 40px 20px;
+            overflow-y: auto;
+            background: white;
+        }
+
+        #results-screen.active {
+            display: block;
+        }
+
+        .results-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .results-container h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .test-result {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .test-result h3 {
+            color: #ff6e14;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .result-item {
+            background: white;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border-left: 4px solid #ff6e14;
+        }
+
+        .final-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .final-btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .final-btn.primary {
+            background: #ff6e14;
+            color: white;
+        }
+
+        .final-btn.primary:hover {
+            background: #e55a00;
+        }
+
+        .final-btn.secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .final-btn.secondary:hover {
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <header>Phase 3 - Test d'Attention & Fiabilité - Le Boncoin 🎯</header>
+
+    <div id="app">
+        <!-- INTRO SCREEN -->
+        <div id="intro-screen">
+            <h1>🎯 Phase 3 : Test d'Attention</h1>
+            <p>
+                Vous verrez des listes de produits pendant <strong>6, 15 et 30 secondes</strong>.<br>
+                <strong>Vous pouvez scroller</strong> et observer les annonces.<br>
+                <br>
+                À la fin de chaque durée, <strong>on vous demandera de cliquer sur l'annonce</strong> qui vous a le plus intéressé.
+            </p>
+            <button onclick="startTest()">Commencer le test</button>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <div id="main-content">
+            <!-- INSTRUCTIONS BAR -->
+            <div id="instructions">
+                <div>
+                    <h3 id="phase-title">Phase 1/3</h3>
+                    <p id="phase-text">En attente...</p>
+                </div>
+                <div class="timer" id="timer">-</div>
+            </div>
+
+            <!-- PRODUCT LIST -->
+            <div id="product-list-wrapper">
+                <div class="product-list" id="product-list">
+                    <!-- Produits générés dynamiquement -->
+                </div>
+            </div>
+        </div>
+
+        <!-- CLICK QUESTION MODAL -->
+        <div class="modal-overlay" id="click-modal">
+            <div class="modal-content">
+                <h2 id="modal-title">Quelle annonce ?</h2>
+                <p id="modal-text">Scrollez et cliquez.</p>
+                <div class="selected-info empty" id="selected-info">
+                    <h4>✅ Sélection :</h4>
+                    <p id="selected-product"></p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn secondary" onclick="skipQuestion()">Passer</button>
+                    <button class="modal-btn primary" id="confirm-btn" style="display:none;" onclick="confirmSelection()">Confirmer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOTIVATION MODAL -->
+        <div class="modal-overlay" id="motivation-modal">
+            <div class="modal-content">
+                <h2 id="motivation-title">Pourquoi ce choix ?</h2>
+                <p id="motivation-text">Qu'est-ce qui vous a motivé à choisir cette annonce ? (plusieurs choix possibles)</p>
+                <div id="motivation-checkboxes" style="text-align: left; margin-bottom: 20px;">
+                    <label style="display: block; margin: 10px 0; cursor: pointer;">
+                        <input type="checkbox" name="motivation" value="prix-bas"> 💰 Prix bas
+                    </label>
+                    <label style="display: block; margin: 10px 0; cursor: pointer;">
+                        <input type="checkbox" name="motivation" value="prix-eleve"> 📈 Prix élevé
+                    </label>
+                    <label style="display: block; margin: 10px 0; cursor: pointer;">
+                        <input type="checkbox" name="motivation" value="condition"> ✨ Bon état/Condition
+                    </label>
+                    <label style="display: block; margin: 10px 0; cursor: pointer;">
+                        <input type="checkbox" name="motivation" value="vendeur"> 👤 Vendeur fiable
+                    </label>
+                    <label style="display: block; margin: 10px 0; cursor: pointer;">
+                        <input type="checkbox" name="motivation" value="localisation"> 📍 Localisation
+                    </label>
+                    <label style="display: block; margin: 10px 0; cursor: pointer;">
+                        <input type="checkbox" name="motivation" value="marque"> 🏷️ Marque/Modèle
+                    </label>
+                    <label style="display: block; margin: 10px 0; cursor: pointer;">
+                        <input type="checkbox" name="motivation" value="recente"> ⏰ Annonce récente
+                    </label>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn secondary" onclick="skipMotivation()">Passer</button>
+                    <button class="modal-btn primary" onclick="confirmMotivation()">Continuer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS SCREEN -->
+        <div id="results-screen">
+            <div class="results-container">
+                <h2>📊 Résultats de vos tests d'attention</h2>
+                <div id="results-content">
+                    <!-- Résultats générés dynamiquement -->
+                </div>
+                <div class="final-buttons">
+                    <button class="final-btn secondary" onclick="downloadResults()">📥 Télécharger résultats</button>
+                    <button class="final-btn primary" onclick="location.reload()">↻ Recommencer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== GLOBAL STATE =====
+        const DURATIONS = [6, 15, 30]; // en secondes
+        let testResults = [];
+        let currentPhaseIndex = 0;
+        let currentDuration = 0;
+        let timeRemaining = 0;
+        let isViewingPhase = false;
+        let isSelectionPhase = false;
+        let selectedProductId = null;
+        let timerInterval = null;
+        let products = [];
+
+        // ===== PRODUCT DATA =====
+        const REAL_PRODUCTS = [
+            { title: 'IPhone 16 Pro Max 256GB GARANTIE 2 ANS', price: 1099, seller: 'TechPro Store', location: 'Paris (75)', daysAgo: 1, condition: 'Bon état', image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=300&h=300&fit=crop' },
+            { title: 'Apple IPhone 16 128GB GARANTIE 2 Ans', price: 849, seller: 'MobileExperts', location: 'Lyon (69)', daysAgo: 2, condition: 'Excellent état', image: 'https://images.unsplash.com/photo-1592286927505-ed0bd6a0d4a0?w=300&h=300&fit=crop' },
+            { title: 'Samsung Galaxy S24 Ultra', price: 899, seller: 'ElectroMax', location: 'Marseille (13)', daysAgo: 1, condition: 'Très bon état', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=300&h=300&fit=crop' },
+            { title: 'Google Pixel 9 Pro', price: 649, seller: 'TechHub', location: 'Toulouse (31)', daysAgo: 3, condition: 'Bon état', image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=300&h=300&fit=crop' },
+            { title: 'OnePlus 12 Pro', price: 549, seller: 'FastPhone', location: 'Nice (06)', daysAgo: 2, condition: 'Excellent état', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&h=300&fit=crop' },
+            { title: 'Xiaomi 14 Ultra', price: 479, seller: 'ChinaTech', location: 'Nantes (44)', daysAgo: 4, condition: 'Très bon état', image: 'https://images.unsplash.com/photo-1567581935884-3349723552ca?w=300&h=300&fit=crop' },
+            { title: 'iPhone 15 Pro', price: 799, seller: 'ProTrade', location: 'Strasbourg (67)', daysAgo: 1, condition: 'Bon état', image: 'https://images.unsplash.com/photo-1697026037043-6c0dfbbdaf72?w=300&h=300&fit=crop' },
+            { title: 'Samsung Galaxy A55', price: 299, seller: 'MobileWorld', location: 'Montpellier (34)', daysAgo: 5, condition: 'Bon état', image: 'https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=300&h=300&fit=crop' },
+            { title: 'Apple iPhone 14', price: 599, seller: 'TechStore_Pro', location: 'Bordeaux (33)', daysAgo: 2, condition: 'Très bon état', image: 'https://images.unsplash.com/photo-1663499482523-1c0d8c17d41f?w=300&h=300&fit=crop' },
+            { title: 'Nothing Phone 2', price: 359, seller: 'InnovateTech', location: 'Lille (59)', daysAgo: 3, condition: 'Excellent état', image: 'https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=300&h=300&fit=crop' }
+        ];
+
+        // ===== LOG FUNCTION =====
+        function log(msg) {
+            const timestamp = new Date().toLocaleTimeString();
+            console.log(`[${timestamp}] ${msg}`);
+        }
+
+        // ===== RENDER PRODUCTS =====
+        function renderProducts(clickable = false) {
+            const container = document.getElementById('product-list');
+            products = [...REAL_PRODUCTS].sort(() => Math.random() - 0.5); // Shuffle
+
+            container.innerHTML = products.map((p, idx) => `
+                <div class="product-card ${clickable ? 'clickable' : 'disabled'}" 
+                     data-product-id="${idx}"
+                     onclick="handleProductClick(event, ${idx})">
+                    <div class="product-image" style="background-image: url('${p.image}'); background-size: cover; background-position: center;"></div>
+                    <div class="product-info">
+                        <div class="product-title">${p.title}</div>
+                        <div class="product-price">${p.price}€</div>
+                        <div class="product-seller">📦 ${p.seller}</div>
+                        <div class="product-location">📍 ${p.location} • ${p.condition}</div>
+                        <div class="product-date">Il y a ${p.daysAgo}j</div>
+                    </div>
+                </div>
+            `).join('');
+
+            log(`✅ ${products.length} produits rendus (clickable: ${clickable})`);
+        }
+
+        // ===== START TEST =====
+        function startTest() {
+            log('🚀 Démarrage du test');
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('main-content').classList.add('active');
+            renderProducts(false);
+            startNextPhase();
+        }
+
+        // ===== START NEXT PHASE =====
+        function startNextPhase() {
+            if (currentPhaseIndex >= DURATIONS.length) {
+                showResults();
+                return;
+            }
+
+            currentDuration = DURATIONS[currentPhaseIndex];
+            isViewingPhase = true;
+            isSelectionPhase = false;
+            selectedProductId = null;
+            timeRemaining = currentDuration;
+
+            log(`📋 Phase ${currentPhaseIndex + 1}/${DURATIONS.length}: ${currentDuration}s`);
+
+            document.getElementById('phase-title').textContent = `Phase ${currentPhaseIndex + 1}/3`;
+            document.getElementById('phase-text').textContent = `Observez les annonces pendant ${currentDuration}s. Vous pouvez scroller.`;
+            document.getElementById('click-modal').classList.remove('active');
+
+            // Permettre le scroll mais pas les clics
+            const productList = document.getElementById('product-list');
+            productList.classList.add('scrollable');
+            productList.classList.remove('non-scrollable');
+
+            renderProducts(false); // Non clickable pendant la visualisation
+
+            startTimer();
+        }
+
+        // ===== START TIMER =====
+        function startTimer() {
+            const timerElement = document.getElementById('timer');
+
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerElement.textContent = `${timeRemaining}s`;
+            timerElement.classList.remove('warning');
+
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                timerElement.textContent = `${timeRemaining}s`;
+
+                if (timeRemaining <= 3) {
+                    timerElement.classList.add('warning');
+                }
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    completePhase();
+                }
+            }, 1000);
+        }
+
+        // ===== COMPLETE PHASE =====
+        function completePhase() {
+            log(`⏱️ Phase ${currentPhaseIndex + 1} terminée`);
+            isViewingPhase = false;
+            isSelectionPhase = true;
+
+            // Garder le scroll actif pour la sélection
+            const productList = document.getElementById('product-list');
+            // On garde le scroll actif : productList reste scrollable
+
+            // Rendre les produits cliquables
+            renderProducts(true);
+
+            // Afficher le modal sur le côté
+            const modal = document.getElementById('click-modal');
+            modal.classList.add('active');
+            document.getElementById('product-list-wrapper').classList.add('modal-open');
+            
+            document.getElementById('modal-title').textContent = `Quelle annonce vous a intéressé ?`;
+            document.getElementById('modal-text').textContent = `Scrollez la liste et cliquez sur celle que vous préférez.`;
+            document.getElementById('confirm-btn').style.display = 'none';
+
+            log('✅ Mode sélection activé - Les clics sont maintenant possibles');
+        }
+
+        // ===== HANDLE PRODUCT CLICK =====
+        function handleProductClick(event, productId) {
+            if (!isSelectionPhase) {
+                log('⚠️ Clic ignoré - Mode sélection inactif');
+                return;
+            }
+
+            log(`🖱️ Clic sur produit ${productId}: ${products[productId].title}`);
+
+            selectedProductId = productId;
+            const product = products[productId];
+
+            // Réinitialiser les sélections précédentes
+            document.querySelectorAll('.product-card.selected').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            // Sélectionner la carte cliquée
+            event.currentTarget.classList.add('selected');
+
+            // Afficher la sélection dans le modal
+            const selectedInfo = document.getElementById('selected-info');
+            document.getElementById('selected-product').textContent = `${product.title} - ${product.price}€`;
+            selectedInfo.classList.remove('empty');
+
+            // Afficher le bouton de confirmation
+            document.getElementById('confirm-btn').style.display = 'block';
+        }
+
+        // ===== CONFIRM SELECTION =====
+        function confirmSelection() {
+            if (selectedProductId === null) {
+                log('⚠️ Aucune sélection');
+                return;
+            }
+
+            const product = products[selectedProductId];
+            
+            log(`✅ Sélection confirmée: ${product.title}`);
+
+            // Masquer le click-modal et afficher le motivation-modal
+            document.getElementById('click-modal').classList.remove('active');
+            document.getElementById('motivation-modal').classList.add('active');
+            
+            // Réinitialiser les checkboxes
+            document.querySelectorAll('input[name="motivation"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            log('📋 Formulaire de motivation affiché');
+        }
+
+        // ===== CONFIRM MOTIVATION =====
+        function confirmMotivation() {
+            if (selectedProductId === null) {
+                log('⚠️ Pas de produit sélectionné');
+                return;
+            }
+
+            const product = products[selectedProductId];
+            
+            // Collecter les motivations sélectionnées
+            const motivations = Array.from(
+                document.querySelectorAll('input[name="motivation"]:checked')
+            ).map(checkbox => checkbox.value);
+
+            log(`📋 Motivations collectées: ${motivations.join(', ') || 'aucune'}`);
+
+            testResults.push({
+                phase: currentPhaseIndex + 1,
+                duration: currentDuration,
+                selectedProduct: product,
+                motivations: motivations
+            });
+
+            // Masquer le motivation-modal et passer à la phase suivante
+            document.getElementById('motivation-modal').classList.remove('active');
+            document.getElementById('product-list-wrapper').classList.remove('modal-open');
+            
+            currentPhaseIndex++;
+            setTimeout(() => startNextPhase(), 500);
+        }
+
+        // ===== SKIP MOTIVATION =====
+        function skipMotivation() {
+            if (selectedProductId === null) {
+                log('⚠️ Pas de produit sélectionné');
+                return;
+            }
+
+            const product = products[selectedProductId];
+
+            log(`⏭️ Motivation skippée pour: ${product.title}`);
+
+            testResults.push({
+                phase: currentPhaseIndex + 1,
+                duration: currentDuration,
+                selectedProduct: product,
+                motivations: []
+            });
+
+            // Masquer le motivation-modal et passer à la phase suivante
+            document.getElementById('motivation-modal').classList.remove('active');
+            document.getElementById('product-list-wrapper').classList.remove('modal-open');
+            
+            currentPhaseIndex++;
+            setTimeout(() => startNextPhase(), 500);
+        }
+
+        // ===== SKIP QUESTION =====
+        function skipQuestion() {
+            log(`⏭️ Phase ${currentPhaseIndex + 1} skippée`);
+            testResults.push({
+                phase: currentPhaseIndex + 1,
+                duration: currentDuration,
+                selectedProduct: null
+            });
+
+            document.getElementById('click-modal').classList.remove('active');
+            document.getElementById('product-list-wrapper').classList.remove('modal-open');
+            currentPhaseIndex++;
+            setTimeout(() => startNextPhase(), 500);
+        }
+
+        // ===== SHOW RESULTS =====
+        function showResults() {
+            log('📊 Affichage des résultats');
+
+            document.getElementById('main-content').classList.remove('active');
+            document.getElementById('results-screen').classList.add('active');
+
+            const resultsHTML = testResults.map(result => `
+                <div class="test-result">
+                    <h3>⏱️ Test ${result.phase} - ${result.duration} secondes</h3>
+                    ${result.selectedProduct ? `
+                        <div class="result-item">
+                            <strong>${result.selectedProduct.title}</strong><br>
+                            ${result.selectedProduct.price}€ • ${result.selectedProduct.seller} • ${result.selectedProduct.location}
+                        </div>
+                        ${result.motivations && result.motivations.length > 0 ? `
+                            <div class="result-item" style="margin-top: 8px; padding: 8px; background-color: #f0f0f0; border-radius: 4px;">
+                                <strong>Motivations:</strong> ${result.motivations.map(m => {
+                                    const labels = {
+                                        'prix-bas': '💰 Prix bas',
+                                        'prix-eleve': '📈 Prix élevé',
+                                        'condition': '✨ Bon état/Condition',
+                                        'vendeur': '👤 Vendeur fiable',
+                                        'localisation': '📍 Localisation',
+                                        'marque': '🏷️ Marque/Modèle',
+                                        'recente': '⏰ Annonce récente'
+                                    };
+                                    return labels[m] || m;
+                                }).join(', ')}
+                            </div>
+                        ` : `
+                            <div class="result-item" style="margin-top: 8px; color: #999;">
+                                <em>Aucune motivation sélectionnée</em>
+                            </div>
+                        `}
+                    ` : `
+                        <div class="result-item">
+                            ✅ Aucune sélection
+                        </div>
+                    `}
+                </div>
+            `).join('');
+
+            document.getElementById('results-content').innerHTML = resultsHTML;
+        }
+
+        // ===== DOWNLOAD RESULTS =====
+        function downloadResults() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                tests: testResults
+            };
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `phase3-results-${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            log(`✅ Résultats téléchargés`);
+        }
+
+        // ===== INITIALIZATION =====
+        log('✅ Application initialisée');
+    </script>
+</body>
+</html>
