@@ -117,9 +117,15 @@ const annonces = [
     disc: "-27%",
     secure: true,
     likes: 15,
-    desc: "iPhone 12 en bon état de fonctionnement, réinitialisé.",
-    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/fa/67/af/fa67af61390a2820d2fc2ba7a60055b5c31721e9.jpg?rule=ad-large",
-    seller: { name: "E.Leclerc", badges: ["Pro", "Top Vendeur"], rate: 4.0, ads: 13, photo: "" }
+    desc: "iPhone 12 en bon état de fonctionnement, réinitialisé et prêt à l'emploi. Vente avec câble de chargement. Expédition seulement.",
+    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/fa/67/af/fa67af61390a2820d2fc2ba7a60055b5c31721e9.jpg?rule=classified-1200x800-webp",
+    seller: {
+      name: "E.Leclerc",
+      badges: ["Pro", "Top Vendeur"],
+      rate: 4.0,
+      ads: 13,
+      photo: "https://img.leboncoin.fr/api/v1/lbcpb1/images/63/a7/b4/63a7b4af-7571-4988-8400-617ed0064931?rule=bo-thumb"
+    }
   },
   {
     id: "A2",
@@ -127,71 +133,107 @@ const annonces = [
     price: "189,00 €",
     oldPrice: "",
     disc: "",
-    secure: false,
+    secure: false, // badge sécurisé retiré
     likes: 23,
-    desc: "Très bon état, fonctionnement impeccable.",
-    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/9d/35/ac/9d35ac3233341deb38c9710ea79de6818d5cfc80.jpg?rule=ad-large",
-    seller: { name: "MARKET PHONE", badges: ["Pro", "Réactif"], rate: 5.0, ads: 6234, photo: "" }
+    desc: "Google Pixel 7 en très bon état. Réinitialisé, prêt à l’utilisation. Câble inclus.",
+    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/9d/35/ac/9d35ac3233341deb38c9710ea79de6818d5cfc80.jpg?rule=classified-1200x800-webp",
+    seller: {
+      name: "MARKET PHONE",
+      badges: ["Pro", "Réactif"],
+      rate: 5.0,
+      ads: 6234,
+      photo: "https://img.leboncoin.fr/api/v1/lbcpb1/images/98/12/44/9812444c-cb6e-4c4d-9a87-5edf47b541f0?rule=bo-thumb"
+    }
   },
   {
     id: "A3",
-    title: "iPhone 15 PLUS",
+    title: "iPhone 15 Plus",
     price: "550,00 €",
     oldPrice: "",
     disc: "",
-    secure: true,
+    secure: true, // transaction sécurisée rétablie
     likes: 9,
-    desc: "iPhone 15 PLUS très bon état général.",
+    desc: "iPhone 15 Plus en très bon état général. Vente avec câble. Disponible en boutique ou par livraison.",
     img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/e5/34/93/e5349380cb51f69a05a9a9f9ca0af9cc0de34f8d.jpg?rule=ad-large",
-    seller: { name: "PHONESTART", badges: ["Pro"], rate: 5.0, ads: 22, photo: "" }
+    seller: {
+      name: "PHONESTART",
+      badges: [], // tous les badges retirés
+      rate: 5.0,
+      ads: 22,
+      photo: ""
+    }
   },
   {
     id: "A4",
-    title: "IPhone 15 Pro Max",
+    title: "iPhone 15 Pro Max",
     price: "690,00 €",
-    oldPrice: "",
-    disc: "",
+    oldPrice: "766,67 €",
+    disc: "-10%",
     secure: true,
     likes: 18,
-    desc: "Apple en très bon état de fonctionnement. Réinitialisé.",
+    desc: "Téléphone entièrement fonctionnel, en bon état. Légère rayure. Câble inclus. Expédition seulement.",
     img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/01/1f/00/011f00ac2eaf872bb6cdf7f2cdbfd8bf8926ff99.jpg?rule=ad-large",
-    seller: { name: "UNIVACK", badges: ["Particulier", "Top Vendeur"], rate: 5.0, ads: 39750, photo: "" }
+    seller: {
+      name: "UNIVACK",
+      badges: ["Particulier", "Top Vendeur"], // incohérence volontaire conservée
+      rate: 5.0,
+      ads: 39750,
+      photo: ""
+    }
   },
   {
     id: "A5",
-    title: "IPhone 15 Plus",
+    title: "iPhone 15 Plus",
     price: "550,00 €",
     oldPrice: "",
     disc: "",
-    secure: false,
+    secure: false, // sécurité retirée
     likes: 16,
-    desc: "Accessoires d'origine inclus.",
+    desc: "iPhone 15 en très bon état. Réinitialisé, prêt à l’emploi. Câble inclus.",
     img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/a0/04/34/a004347f09407463ca104bd73f510935e8c3671f.jpg?rule=ad-large",
-    seller: { name: "cireluz", badges: ["Pro"], rate: 4.6, ads: 13, photo: "" }
+    seller: {
+      name: "cireluz",
+      badges: ["Pro"],
+      rate: 4.6,
+      ads: 13,
+      photo: ""
+    }
   },
   {
     id: "A6",
-    title: "IPhone 11",
+    title: "iPhone 11",
     price: "165,00 €",
     oldPrice: "",
     disc: "",
     secure: true,
     likes: 3,
-    desc: "État de fonctionnement acceptable. Petite rayure.",
+    desc: "iPhone 11 en état satisfaisant. Fonctionnel. Accessoires inclus.",
     img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/22/a7/ff/22a7ff5eedbab467c7d90ce452829aa469324d74.jpg?rule=ad-large",
-    seller: { name: "FUTURX", badges: ["Pro"], rate: 3.1, ads: 1611, photo: "" }
+    seller: {
+      name: "FUTURX",
+      badges: ["Pro"],
+      rate: null, // avis retirés
+      ads: 0,
+      photo: ""
+    }
   },
   {
     id: "A7",
-    title: "IPhone 14 Pro",
+    title: "iPhone 14 Pro",
     price: "150,00 €",
     oldPrice: "",
     disc: "",
-    secure: true,
+    secure: false, // garantie de paiement retirée
     likes: 13,
-    desc: "Téléphone neuf, la boîte n'a jamais été ouverte.",
-    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/b7/90/4d/b7904d08e1d38e287ee96a3eef41f3dfb55bbabb.jpg?rule=ad-large",
-    seller: { name: "Dude30", badges: ["Pro"], rate: 0, ads: 0, photo: "" }
+    desc: "Téléphone neuf, boîte jamais ouverte.",
+    img: "",
+    seller: {
+      name: "Dude30",
+      badges: ["Réactif", "Identité vérifiée"],
+      rate: null,
+      ads: 2,
+      photo: ""
+    }
   },
   {
     id: "A8",
@@ -199,25 +241,39 @@ const annonces = [
     price: "209,00 €",
     oldPrice: "",
     disc: "",
-    secure: false,
+    secure: true,
     likes: 17,
-    desc: "Huawei neuf. Parfait état, jamais utilisé.",
+    desc: "Huawei P30 Pro neuf. Jamais utilisé.",
     img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/7f/bf/3b/7fbf3be309d7efc2dde6d32b06b6a90a1b330f71.jpg?rule=ad-large",
-    seller: { name: "Julien R", badges: ["Identité vérifiée"], rate: 5.0, ads: 4, photo: "" }
+    seller: {
+      name: "Enola",
+      badges: ["Profil recommandé"],
+      rate: 5.0,
+      ads: 14,
+      photo: "https://img.leboncoin.fr/api/v1/tenants/9a6387a1-6259-4f2c-a887-7e67f23dd4cb/domains/20bda58f-d650-462e-a72a-a5a7ecf2bf88/buckets/21d2b0bc-e54c-4b64-a30b-89127b18b785/images/profile/pictures/73f89309-6ed7-5d1b-a34e-b44cb5e575c3?rule=pp-large"
+    }
   },
   {
     id: "A9",
-    title: "IPhone 15 Pro",
+    title: "iPhone 15 Pro",
     price: "929,00 €",
     oldPrice: "1327,14 €",
     disc: "-30%",
     secure: true,
     likes: 14,
-    desc: "",
+    desc: "Téléphone testé et fonctionnel. Accessoires non inclus.",
     img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/0a/d8/a7/0ad8a7529da8ccacbe77ac5aeab7612fc48bdaae.jpg?rule=ad-large",
-    seller: { name: "Maxime", badges: ["Réactif", "Identité vérifiée", "Top Vendeur"], rate: 3.1, ads: 100, photo: "" }
+    seller: {
+      name: "Maxime",
+      badges: ["Réactif", "Identité vérifiée", "Elite"], // badge elite + note faible
+      rate: 3.1,
+      ads: 100,
+      photo: "https://img.leboncoin.fr/api/v1/tenants/9a6387a1-6259-4f2c-a887-7e67f23dd4cb/domains/20bda58f-d650-462e-a72a-a5a7ecf2bf88/buckets/21d2b0bc-e54c-4b64-a30b-89127b18b785/images/profile/pictures/7d675dac-40be-5280-84e8-ad15962dab9f?rule=pp-large"
+    }
   }
 ];
+
+  
 function renderTrial() {
   const data = annonces[currentTrial];
   const container = document.getElementById("content");
