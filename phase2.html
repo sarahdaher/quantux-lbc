@@ -166,7 +166,7 @@ border-radius:50%
 <div class="modal" id="modalClick">
   <div class="modal-content">
     <h3>Trust Influence</h3>
-    <p>fter clicking the button below, <strong>click on the element on the page</strong> that most influenced your trust level.</p>
+    <p>After clicking the button below, <strong>click on the element on the page</strong> that most influenced your trust level.</p>
     <button onclick="enableClickCapture()">OK</button>
   </div>
 </div>
@@ -218,7 +218,7 @@ border-radius:50%
 </div>
 
 <script>
-const annonces = [
+const annonces_all = [
   {
     "ID": 1,
     "Produit": "iPhone 12",
@@ -404,6 +404,16 @@ const annonces = [
     "Badge": "A la une"
   }
 ]
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+const annonces = shuffleArray([...annonces_all]).slice(0, 5);
 /* ===== LOGIQUE UX ORIGINALE CONSERVÉE ===== */
 let currentTrial = 0;
 let clickMode = "off";
