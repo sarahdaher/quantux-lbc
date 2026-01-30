@@ -13,7 +13,7 @@
         <div class="ux-modal-content">
             <h3>UX Study – Phase 1</h3>
             <p><strong>Instructions:</strong> What are the 3 products you would choose ?</p>
-            <p>Click on <strong>3 elements</strong> that catch your attention (positively or negatively).</p>
+            <p>Click on <strong>3 elements</strong> that catch your attention.</p>
             <button class="ux-btn" id="btnStart">Start Exploration</button>
         </div>
     </div>
@@ -32,13 +32,6 @@
                 <option value="seller">Seller / Rating</option>
                 <option value="badges">Badges / Tags</option>
                 <option value="other">Other</option>
-            </select>
-
-            <label>How does this make you feel?</label>
-            <select id="uxTrust">
-                <option value="positive">👍 Trust / Positive</option>
-                <option value="negative">👎 Distrust / Negative</option>
-                <option value="neutral">😐 Neutral</option>
             </select>
 
             <button class="ux-btn" id="btnSaveClick">Submit</button>
@@ -145,15 +138,13 @@
     // --- SAVE CLICK DATA ---
     document.getElementById('btnSaveClick').addEventListener('click', () => {
         const reason = document.getElementById('uxReason').value;
-        const trust = document.getElementById('uxTrust').value;
         
         if (!reason) { alert("Please select a reason."); return; }
 
         interactionData.push({
             participant: participantId,
             ...currentClickTemp,
-            reason: reason,
-            trust: trust
+            reason: reason
         });
 
         document.getElementById('modalQuestion').style.display = 'none';
@@ -191,9 +182,9 @@
         sessionStorage.setItem('ux_participant_id', participantId);
 
         // 2. Download CSV (Backup)
-        let csvContent = "Participant,Element,Tag,Reason,Trust,Timestamp,X,Y\n";
+        let csvContent = "Participant,Element,Tag,Reason,Timestamp,X,Y\n";
         interactionData.forEach(d => {
-            csvContent += `${d.participant},"${d.element}",${d.tag},${d.reason},${d.trust},${d.timestamp},${d.x},${d.y}\n`;
+            csvContent += `${d.participant},"${d.element}",${d.tag},${d.reason},${d.timestamp},${d.x},${d.y}\n`;
         });
         
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
