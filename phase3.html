@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phase 3 - Test d'Attention - Le Boncoin UX Research</title>
+    <title>Phase 3 - Attention Test - Le Boncoin UX Research</title>
     <style>
         * {
             margin: 0;
@@ -451,19 +451,19 @@
     </style>
 </head>
 <body>
-<header>Phase 3 - Test d'Attention & Fiabilité - Le Boncoin 🎯</header>
+<header>Phase 3 - Attention and reliability Test - Le Boncoin 🎯</header>
 
 <div id="app">
     <!-- INTRO SCREEN -->
     <div id="intro-screen">
-        <h1>🎯 Phase 3 : Test d'Attention</h1>
+        <h1>🎯 Phase 3 : Attention Test</h1>
         <p>
-            Vous verrez des listes de produits pendant <strong>10, 30 et 60 secondes</strong>.<br>
-            <strong>Vous pouvez scroller</strong> et observer les annonces.<br>
+            You will see product lists for <strong>10, 30 et 60 secondes</strong>.<br>
+            <strong>You can scroll</strong> and observe the listings.<br>
             <br>
-            À la fin de chaque durée, <strong>on vous demandera de cliquer sur l'annonce</strong> qui vous a le plus intéressé.
+            At the end of each duration, <strong>you will be asked to click on the listing</strong> that interested you the most.
         </p>
-        <button onclick="startTest()">Commencer le test</button>
+        <button onclick="startTest()">Start the test</button>
     </div>
 
     <div id="prepare-screen" style="display:none; width:100%; height:100%; background:#764ba2; color:white; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:32px;">
@@ -476,7 +476,7 @@
         <div id="instructions">
             <div>
                 <h3 id="phase-title">Phase 1/3</h3>
-                <p id="phase-text">En attente...</p>
+                <p id="phase-text">Waiting...</p>
             </div>
             <div class="timer" id="timer">-</div>
         </div>
@@ -493,15 +493,15 @@
     <div class="modal-overlay" id="click-modal">
         <div class="modal-content">
             <img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" alt="Choisissez" style="width:100px; margin-bottom:20px;">
-            <h2 id="modal-title">🕒 Vous avez 10 secondes pour choisir !</h2>
-            <p id="modal-text">Cliquez sur l'annonce qui vous intéresse le plus.</p>
+            <h2 id="modal-title">🕒 You have 10 seconds to choose!</h2>
+            <p id="modal-text">Click on the listing that interests you the most.</p>
             <div class="selected-info empty" id="selected-info" style="margin-top:20px;">
-                <h4>✅ Sélection :</h4>
+                <h4>✅ Selection :</h4>
                 <p id="selected-product"></p>
             </div>
             <div class="modal-buttons" style="margin-top:20px;">
-                <button class="modal-btn secondary" onclick="skipQuestion()">Passer</button>
-                <button class="modal-btn primary" id="confirm-btn" style="display:none;" onclick="confirmSelection()">Confirmer</button>
+                <button class="modal-btn secondary" onclick="skipQuestion()">Skip</button>
+                <button class="modal-btn primary" id="confirm-btn" style="display:none;" onclick="confirmSelection()">Confirm</button>
             </div>
         </div>
     </div>
@@ -513,30 +513,30 @@
             <p id="motivation-text">Qu'est-ce qui vous a motivé à choisir cette annonce ? (plusieurs choix possibles)</p>
             <div id="motivation-checkboxes" style="text-align: left; margin-bottom: 20px;">
                 <label style="display: block; margin: 10px 0; cursor: pointer;">
-                    <input type="checkbox" name="motivation" value="prix-bas"> 💰 Prix bas
+                    <input type="checkbox" name="motivation" value="prix-bas"> 💰 Low price
                 </label>
                 <label style="display: block; margin: 10px 0; cursor: pointer;">
-                    <input type="checkbox" name="motivation" value="prix-eleve"> 📈 Prix élevé
+                    <input type="checkbox" name="motivation" value="prix-eleve"> 📈 High price
                 </label>
                 <label style="display: block; margin: 10px 0; cursor: pointer;">
-                    <input type="checkbox" name="motivation" value="condition"> ✨ Bon état/Condition
+                    <input type="checkbox" name="motivation" value="condition"> ✨ Good Condition
                 </label>
                 <label style="display: block; margin: 10px 0; cursor: pointer;">
-                    <input type="checkbox" name="motivation" value="vendeur"> 👤 Vendeur fiable
+                    <input type="checkbox" name="motivation" value="vendeur"> 👤 Reliable seller
                 </label>
                 <label style="display: block; margin: 10px 0; cursor: pointer;">
-                    <input type="checkbox" name="motivation" value="localisation"> 📍 Localisation
+                    <input type="checkbox" name="motivation" value="localisation"> 📍 Location
                 </label>
                 <label style="display: block; margin: 10px 0; cursor: pointer;">
-                    <input type="checkbox" name="motivation" value="marque"> 🏷️ Marque/Modèle
+                    <input type="checkbox" name="motivation" value="marque"> 🏷️ Brand/Model
                 </label>
                 <label style="display: block; margin: 10px 0; cursor: pointer;">
-                    <input type="checkbox" name="motivation" value="recente"> ⏰ Annonce récente
+                    <input type="checkbox" name="motivation" value="recente"> ⏰ Recent listing
                 </label>
             </div>
             <div class="modal-buttons">
-                <button class="modal-btn secondary" onclick="skipMotivation()">Passer</button>
-                <button class="modal-btn primary" onclick="confirmMotivation()">Continuer</button>
+                <button class="modal-btn secondary" onclick="skipMotivation()">Skip</button>
+                <button class="modal-btn primary" onclick="confirmMotivation()">Continue</button>
             </div>
         </div>
     </div>
@@ -544,13 +544,13 @@
     <!-- RESULTS SCREEN -->
     <div id="results-screen">
         <div class="results-container">
-            <h2>📊 Résultats de vos tests d'attention</h2>
+            <h2>📊 Your attention test results</h2>
             <div id="results-content">
                 <!-- Résultats générés dynamiquement -->
             </div>
             <div class="final-buttons">
-                <button class="final-btn secondary" onclick="downloadResults()">📥 Télécharger résultats</button>
-                <button class="final-btn primary" onclick="location.reload()">↻ Recommencer</button>
+                <button class="final-btn secondary" onclick="downloadResults()">📥 Download results</button>
+                <button class="final-btn primary" onclick="location.reload()">↻ Restart</button>
             </div>
         </div>
     </div>
@@ -641,7 +641,7 @@
         document.getElementById('main-content').style.display = 'none';
         const prep = document.getElementById('prepare-screen');
         prep.style.display = 'flex';
-        document.getElementById('prepare-text').textContent = `📌 Vous aurez ${duration} secondes pour observer les annonces`;
+        document.getElementById('prepare-text').textContent = `📌 You will have ${duration} seconds to observe the listings`;
         
         setTimeout(() => {
             prep.style.display = 'none';
@@ -657,7 +657,7 @@
         timeRemaining = duration;
 
         document.getElementById('phase-title').textContent = `Phase ${currentPhaseIndex + 1}/3`;
-        document.getElementById('phase-text').textContent = `Observez les annonces pendant ${duration}s. Vous pouvez scroller.`;
+        document.getElementById('phase-text').textContent = `Observe the listings for ${duration}s. You can scroll.`;
         document.getElementById('click-modal').classList.remove('active');
 
         renderProducts(false);
@@ -690,7 +690,7 @@ function completePhase() {
 
     // Créer un popup temporaire pour le message "Vous avez 5 secondes pour cliquer"
     const popup = document.createElement('div');
-    popup.textContent = '⏱️ Vous avez  3 secondes pour cliquer sur l\'annonce qui vous a intéressé!';
+    popup.textContent = '⏱️ You have 3 seconds to click on the listing that interested you!';
     popup.style.position = 'absolute';
     popup.style.top = '50%';
     popup.style.left = '50%';
@@ -826,7 +826,7 @@ function showResults() {
 
     const resultsHTML = testResults.map(result => `
         <div class="test-result">
-            <h3>⏱️ Test ${result.phase} - ${result.duration} secondes</h3>
+            <h3>⏱️ Test ${result.phase} - ${result.duration} seconds</h3>
             ${result.selectedProduct ? `
                 <div class="result-item">
                     <strong>${result.selectedProduct.title}</strong><br>
@@ -836,18 +836,18 @@ function showResults() {
                     <div class="result-item" style="margin-top: 8px; padding: 8px; background-color: #f0f0f0; border-radius: 4px;">
                         <strong>Motivations:</strong> ${result.motivations.map(m => {
                             const labels = {
-                                'prix-bas': '💰 Prix bas',
-                                'prix-eleve': '📈 Prix élevé',
-                                'condition': '✨ Bon état/Condition',
-                                'vendeur': '👤 Vendeur fiable',
-                                'localisation': '📍 Localisation',
-                                'marque': '🏷️ Marque/Modèle',
-                                'recente': '⏰ Annonce récente'
+                                'prix-bas': '💰 Low price',
+                                'prix-eleve': '📈 High price',
+                                'condition': '✨ Good Condition',
+                                'vendeur': '👤 Reliable seller',
+                                'localisation': '📍 Location',
+                                'marque': '🏷️ Brand/Model',
+                                'recente': '⏰ Recent listing'
                             };
                             return labels[m] || m;
                         }).join(', ')}
                     </div>
-                ` : `<div class="result-item" style="margin-top: 8px; color: #999;"><em>Aucune motivation sélectionnée</em></div>`}
+                ` : `<div class="result-item" style="margin-top: 8px; color: #999;"><em>No motivation selected</em></div>`}
             ` : `<div class="result-item">✅ Aucune sélection</div>`}
         </div>
     `).join('');
@@ -857,7 +857,7 @@ function showResults() {
     // Ajouter le bouton "Continuer vers la conclusion" correctement
     const finalButtonsDiv = document.querySelector('#results-screen .final-buttons');
     const conclusionBtn = document.createElement('button');
-    conclusionBtn.textContent = "➡️ Continuer vers la conclusion";
+    conclusionBtn.textContent = "➡️ Continue to the conclusion";
     conclusionBtn.className = "final-btn primary";
     conclusionBtn.onclick = showConclusion;
     finalButtonsDiv.appendChild(conclusionBtn);
@@ -897,10 +897,10 @@ function showResults() {
     conclusionDiv.style.borderRadius = '12px';
     conclusionDiv.style.boxShadow = '0 4px 16px rgba(0,0,0,0.1)';
     conclusionDiv.innerHTML = `
-        <h1>🎉 Merci pour votre participation !</h1>
-        <p>✅ N'oubliez pas de déposer les 3 fichiers sur le Drive :</p>
+        <h1>🎉 Thank you for your participation!</h1>
+        <p>✅ Don’t forget to upload the 3 files to the Drive:</p>
         <a href="https://drive.google.com/drive/folders/1V86xNzyIHldoCjV73pPFZZ8WjbUOY_uo?usp=sharing" target="_blank" style="color:#ff6e14; font-weight:bold; text-decoration:none;">📂 Ouvrir le Drive</a>
-        <p>Nous vous remercions pour votre temps et votre attention !</p>
+        <p>Thank you for your time and attention!</p>
     `;
 
     app.appendChild(conclusionDiv);
