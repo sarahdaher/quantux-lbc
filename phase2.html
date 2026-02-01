@@ -5,157 +5,287 @@
 <title>Étude UX – Confiance Leboncoin</title>
 
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#f6f6f6;color:#333}
-header{background:#ff6e14;color:#fff;padding:15px;font-size:22px;text-align:center;font-weight:bold}
-.page{max-width:1100px;margin:20px auto;padding:10px}
-
-.card{
-display:flex;
-gap:20px;
-background:#fff;
-padding:25px;
-border-radius:12px;
-box-shadow:0 4px 15px rgba(0,0,0,0.1)
+/* ===== GLOBAL ===== */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f6f6f6;
+    color: #333;
 }
 
-.seller{
-width:260px;
-flex-shrink:0;
-text-align:center;
-border-right:1px solid #eee;
-padding-right:20px
+header {
+    background: #ff6e14;
+    color: #fff;
+    padding: 18px;
+    font-size: 22px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
 }
 
-.seller img{
-width:110px;
-height:110px;
-border-radius:50%;
-object-fit:cover;
-margin-bottom:12px;
-background:#eee
+.page {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 10px;
 }
 
-.seller .info{font-weight:bold;font-size:17px;margin-bottom:6px}
-.seller .sub{font-size:13px;color:#666;margin-bottom:4px}
-
-.badge{
-display:inline-block;
-background:#eef7ff;
-color:#0078d4;
-padding:4px 8px;
-margin:3px;
-border-radius:4px;
-font-size:11px;
-font-weight:bold;
-border:1px solid #0078d4
+/* ===== CARDS ===== */
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 25px;
+}
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 }
 
-.badge.pro{background:#fff0e5;color:#ff6e14;border-color:#ff6e14}
-
-.rating{font-size:14px;color:#ffb400;margin-top:6px}
-
-.product{flex:1}
-
-.gallery{
-display:flex;
-gap:10px;
-margin-bottom:15px
+/* ===== SELLER ===== */
+.seller {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
 }
 
-.gallery img{
-width:100%;
-max-width:260px;
-height:180px;
-object-fit:contain;
-border-radius:8px;
-background:#f9f9f9
+.seller img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 12px;
+    background: #eee;
+    border: 2px solid #ff6e14;
 }
 
-.details h1{margin:0;font-size:24px;color:#000}
-
-.price{font-size:28px;font-weight:bold;margin:10px 0}
-.old{text-decoration:line-through;color:#888;font-size:16px;margin-left:10px}
-.discount{color:#ed0000;font-size:16px;margin-left:8px}
-
-.tag{font-size:14px;margin:4px 0}
-.secure{color:#2ecc71;font-weight:bold}
-
-.desc{
-margin-top:12px;
-padding:12px;
-border:1px solid #eee;
-border-radius:6px;
-background:#fcfcfc;
-font-size:14px;
-line-height:1.5
+.seller .info {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 4px;
 }
 
-.contact-btn{
-width:100%;
-background:#ff6e14;
-color:white;
-border:none;
-padding:15px;
-font-size:16px;
-font-weight:bold;
-border-radius:8px;
-cursor:pointer;
-margin-top:15px
+.seller .sub {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 3px;
 }
 
-.modal{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.7);
-align-items:center;
-justify-content:center;
-z-index:100
+/* ===== BADGES ===== */
+.badge {
+    display: inline-block;
+    background: #eef7ff;
+    color: #0078d4;
+    padding: 5px 10px;
+    margin: 2px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid #0078d4;
 }
 
-.modal-content{
-background:#fff;
-padding:30px;
-width:500px;
-border-radius:12px
+.badge.pro {
+    background: #fff0e5;
+    color: #ff6e14;
+    border-color: #ff6e14;
 }
 
-.modal-content h3{margin-top:0;color:#ff6e14}
-
-label{display:block;margin-top:15px;font-weight:bold}
-
-textarea,select{
-width:100%;
-margin-top:8px;
-padding:10px;
-border-radius:6px;
-border:1px solid #ccc
+/* ===== PRODUCT / GALERIE ===== */
+.product .gallery {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
 }
 
-.click-marker{
-position:fixed;
-transform:translate(-50%,-50%);
-pointer-events:none;
-z-index:9999
+.product .gallery img {
+    flex: 0 0 auto;
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    background: #f9f9f9;
+    transition: transform 0.2s;
+}
+.product .gallery img:hover {
+    transform: scale(1.05);
 }
 
-.click-dot{
-width:20px;
-height:20px;
-background:rgba(255,0,0,0.6);
-border:2px solid red;
-border-radius:50%
+/* ===== DETAILS ===== */
+.details {
+    margin-top: 10px;
 }
+
+.details .info {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ff6e14;
+}
+
+.details .price {
+    font-size: 26px;
+    font-weight: bold;
+    color: #ff6e14;
+    margin: 10px 0;
+}
+
+.details .discount {
+    color: #ed0000;
+    font-size: 16px;
+    margin-left: 8px;
+    font-weight: bold;
+}
+
+.details .tag {
+    font-size: 14px;
+    margin: 4px 0;
+}
+
+.details .secure {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+.desc {
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    background: #fafafa;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* ===== BOUTONS ===== */
+.contact-btn {
+    width: 100%;
+    background: #ff6e14;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.2s, transform 0.2s;
+}
+.contact-btn:hover {
+    background: #e05d0e;
+    transform: translateY(-2px);
+}
+
+/* ===== MODALS ===== */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 30px;
+    width: 500px;
+    max-width: 90%;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    text-align: left;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    color: #ff6e14;
+    border-bottom: 2px solid #ff6e14;
+    padding-bottom: 10px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+textarea,
+select {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* ===== CLICK MARKER ===== */
+.click-marker {
+    position: fixed;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.click-dot {
+    width: 20px;
+    height: 20px;
+    background: rgba(255,0,0,0.6);
+    border: 2px solid red;
+    border-radius: 50%;
+}
+/* ===== PHASE C GRID ===== */
+.phase-c-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.phase-c-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.phase-c-grid .col {
+  flex: 1 1 45%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.phase-c-grid label, .phase-c-grid select, .phase-c-grid textarea {
+  width: 100%;
+}
+
 </style>
 </head>
 
 <body>
+<!-- INTRO MODAL PHASE 2 -->
+<div class="modal" id="modalIntroPhase2" style="display:flex">
+  <div class="modal-content">
+    <h3>UX Study – Phase 2</h3>
+    <p><strong>Instructions:</strong> You will be shown multiple listings for mobile phones. For each listing, analyze which element makes you trust this listing the most (or not at all).</p>
+    <button onclick="closeModal('modalIntroPhase2');modalConsent.style.display='flex'">Start Phase 2</button>
+  </div>
+</div>
 
 <header>UX Study – Phase 2</header>
 <div class="page" id="content"></div>
 
 <!-- MODALS -->
-<div class="modal" id="modalConsent" style="display:flex">
+<div class="modal" id="modalConsent" style="display:none">
+
   <div class="modal-content">
     <h3>Consent</h3>
     <p>We will record mouse movements and clicks. Your data is anonymous and you can withdraw anytime.</p>
@@ -187,33 +317,86 @@ border-radius:50%
       <textarea id="reason"></textarea>
     </label>
     <button onclick="submitTrial()">Submit</button>
+    <button onclick="cancelClick()" style="margin-top:10px;background:#ccc;color:#333;">Cancel Click</button>
   </div>
 </div>
 
-
-<div class="modal" id="modalPhaseC">
-  <div class="modal-content">
+<div class="modal" id="modalPhaseC" style="display:none">
+  <div class="modal-content phase-c-content">
     <h3>Final Survey</h3>
 
-    <label>Which listing do you trust most?
-      <select id="mostTrusted"></select>
-    </label>
+    <div class="phase-c-grid">
+      <!-- Colonne 1 -->
+      <div class="col">
+        <label>Which listing do you trust most?
+          <select id="mostTrusted"></select>
+        </label>
 
-    <label>Which UX element most influenced your trust judgment?
-      <select id="mostInfluential"><option></option>
-        <option>Photos</option>
-        <option>Description</option>
-        <option>Price</option>
-        <option>Seller</option>
-        <option>Badges</option>
-        <option>Rating</option>
-      </select>
-    </label>
-    <label> Comments ? (optional)
-      <textarea id="reason"></textarea>
-    </label>
+        <label>Overall, how trustworthy did you find the listings you saw? (1–7)
+          <select id="overallTrust">
+            <option></option>
+            <option>1</option><option>2</option><option>3</option>
+            <option>4</option><option>5</option><option>6</option><option>7</option>
+          </select>
+        </label>
 
-    <button onclick="submitPhaseC()">Export CSV</button>
+        <label>Which single element most influenced your trust judgment?</label>
+        <select id="mostInfluential">
+          <option></option>
+          <option>Photos</option>
+          <option>Description</option>
+          <option>Price</option>
+          <option>Seller</option>
+          <option>Badges</option>
+          <option>Rating</option>
+          <option>Other (please specify in comments)</option>
+        </select>
+        <textarea id="mostInfluentialOther" placeholder="Other (optional)"></textarea>
+
+        <label>How likely are you to contact sellers on classified platforms? (1–7)</label>
+        <select id="contactLikelyC">
+          <option></option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option><option>7</option>
+        </select>
+
+        <label>Which elements most influence your decision to contact a seller? (select up to 3 + optional text)</label>
+<div id="contactFactorsCheckboxes">
+  <label><input type="checkbox" name="contactFactors" value="Photos"> Photos</label>
+  <label><input type="checkbox" name="contactFactors" value="Description"> Description</label>
+  <label><input type="checkbox" name="contactFactors" value="Price"> Price</label>
+  <label><input type="checkbox" name="contactFactors" value="Seller"> Seller</label>
+  <label><input type="checkbox" name="contactFactors" value="Badges"> Badges</label>
+  <label><input type="checkbox" name="contactFactors" value="Rating"> Rating</label>
+  <label><input type="checkbox" name="contactFactors" value="Other"> Other (please specify in comments)</label>
+</div>
+<textarea id="contactFactorsOther" placeholder="Other (optional)"></textarea>
+
+
+      <!-- Colonne 2 -->
+      <div class="col">
+        <label>Would you prefer listings with more photos or more detailed descriptions?</label>
+        <select id="photosVsDesc">
+          <option></option>
+          <option>More photos</option>
+          <option>More detailed descriptions</option>
+          <option>Other (please specify in comments)</option>
+        </select>
+        <textarea id="photosVsDescOther" placeholder="Other (optional)"></textarea>
+
+        <label>Rate overall visual appeal of the listings you saw (1–7)</label>
+        <select id="visualAppeal">
+          <option></option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option><option>7</option>
+        </select>
+
+        <label>Open feedback: free text</label>
+        <textarea id="finalComment"></textarea>
+      </div>
+    </div>
+
+    <button onclick="submitPhaseC()" class="contact-btn" style="margin-top:20px;">Export CSV</button>
   </div>
 </div>
 
@@ -444,14 +627,14 @@ function renderTrial(){
       </div>
 
       <div class="details">
-        <h1>${a.Produit}</h1>
+        <div class="info"> ${a.Produit}</div>
+
         <div class="price">
   ${a.Prix} 
   ${a["Réduc"] && a["Réduc"] !== "0%" ? `<span class="discount">${a["Réduc"]}</span>` : ''}
 </div>
 
 
-        <div class="tag"><strong>ID :</strong> ${a.ID}</div>
         <div class="tag"><strong>Catégorie :</strong> ${a.Catégorie}</div>
         <div class="tag"><strong>État :</strong> ${a.Etat}</div>
         <div class="tag"><strong>Likes :</strong> ❤️ ${a.Likes}</div>
@@ -488,7 +671,13 @@ document.addEventListener("click",e=>{
   clickMode="off";
   modalSurvey.style.display="flex";
 });
-
+const reason = document.getElementById('reason');
+const trust = document.getElementById('trust');
+const sellerTrust = document.getElementById('sellerTrust');
+const contactLikely = document.getElementById('contactLikely');
+const modalSurvey = document.getElementById('modalSurvey');
+const modalPhaseC = document.getElementById('modalPhaseC');
+const mostTrusted = document.getElementById('mostTrusted');
 function submitTrial(){
   responses.push({
     produit:annonces[currentTrial].Produit,
@@ -508,18 +697,31 @@ function submitTrial(){
 
 function showFinal(){
   content.innerHTML="";
-  annonces.forEach(a=>{
-    let o=document.createElement("option");
-    o.text=a.Produit;
-    mostTrusted.appendChild(o);
-  });
+  annonces.forEach((a, idx)=>{
+  let o = document.createElement("option");
+  o.text = `Exemple ${idx + 1} : ${a.Produit}`; // <-- ajoute "Exemple X :"
+  mostTrusted.appendChild(o);
+});
+
   modalPhaseC.style.display="flex";
 }
+
 
 function submitPhaseC() {
     const final = {
         best: document.getElementById("mostTrusted").value,
-        factor: document.getElementById("mostInfluential").value
+        overallTrust: document.getElementById("overallTrust").value,
+        factor: document.getElementById("mostInfluential").value,
+        factorOther: document.getElementById("mostInfluentialOther").value,
+        contactLikely: document.getElementById("contactLikely").value,
+        contactFactors: Array.from(document.querySelectorAll('input[name="contactFactors"]:checked'))
+                             .map(cb => cb.value)
+                             .join("|"),
+        contactFactorsOther: document.getElementById("contactFactorsOther").value,
+        photosVsDesc: document.getElementById("photosVsDesc").value,
+        photosVsDescOther: document.getElementById("photosVsDescOther").value,
+        visualAppeal: document.getElementById("visualAppeal").value,
+        finalComment: document.getElementById("finalComment").value
     };
 
     closeModal('modalPhaseC');
@@ -527,33 +729,46 @@ function submitPhaseC() {
     let csv = "AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire\n";
 
     responses.forEach((r, i) => {
-        const a = annonces[i]; // correspond à la même annonce
-        csv += `${a.ID},`;
-        csv += `${r.click ? r.click.x : ''},`;
-        csv += `${r.click ? r.click.y : ''},`;
-        csv += `"${r.click ? r.click.target.replace(/"/g,'""') : ''}",`;
-        csv += `${r.trust || ''},`;
-        csv += `${r.sellerTrust || ''},`;
-        csv += `${r.contact || ''},`;
-        csv += `"${r.reason ? r.reason.replace(/"/g,'""') : ''}"\n`;
+        const a = annonces[i];
+        csv += `${a.ID},${r.click ? r.click.x : ''},${r.click ? r.click.y : ''},"${r.click ? r.click.target.replace(/"/g,'""') : ''}",${r.trust || ''},${r.sellerTrust || ''},${r.contact || ''},"${r.reason ? r.reason.replace(/"/g,'""') : ''}"\n`;
     });
 
-    csv += `\nPhase_Final,Meilleure_Annonce,${final.best}\nPhase_Final,Facteur_Principal,${final.factor}`;
+    csv += "\nPhaseC,Best_Listing," + final.best;
+    csv += "\nPhaseC,Overall_Trust," + final.overallTrust;
+    csv += "\nPhaseC,Trust_Factor," + final.factor;
+    csv += "\nPhaseC,Trust_Factor_Other,\"" + final.factorOther.replace(/"/g,'""') + "\"";
+    csv += "\nPhaseC,Contact_Likelihood," + final.contactLikely;
+    csv += "\nPhaseC,Contact_Factors,\"" + final.contactFactors.replace(/"/g,'""') + "\"";
+    csv += "\nPhaseC,Contact_Factors_Other,\"" + final.contactFactorsOther.replace(/"/g,'""') + "\"";
+    csv += "\nPhaseC,Photos_vs_Desc," + final.photosVsDesc;
+    csv += "\nPhaseC,Photos_vs_Desc_Other,\"" + final.photosVsDescOther.replace(/"/g,'""') + "\"";
+    csv += "\nPhaseC,Visual_Appeal," + final.visualAppeal;
+    csv += "\nPhaseC,Final_Comment,\"" + final.finalComment.replace(/"/g,'""') + "\"";
 
     const blob = new Blob([csv], { type: 'text/csv' });
     const a = document.createElement('a');
+    const annonceIDs = annonces.map(a => a.ID).join("_");
+    const randomHash = Math.random().toString(36).substring(2,8);
     a.href = URL.createObjectURL(blob);
-    a.download = 'phase2_userdata.csv';
+    a.download = `phase2_${annonceIDs}_${randomHash}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
 
-    document.getElementById("content").innerHTML = "<h2>Merci ! Vos résultats ont été générés. Redirection en cours...</h2>";
-
-    setTimeout(function() {
-        window.location.href = "phase3.html";
-    }, 2000);
+    document.getElementById("content").innerHTML = "<h2>Merci ! Vos résultats ont été générés.</h2>";
+    setTimeout(()=> window.location.href="phase3.html", 2000);
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('modalIntroPhase2').style.display = 'flex';
+});
+function cancelClick() {
+    clickData = null;          // supprime le click enregistré
+    clickMode = "capture";     // remet le mode capture pour relancer le click
+    modalSurvey.style.display = "none"; // ferme la modal
+    alert("Click canceled. Please click again on the element that influenced your trust.");
+}
+
 </script>
 </body>
 </html>
