@@ -533,6 +533,23 @@
                 <label style="display: block; margin: 10px 0; cursor: pointer;">
                     <input type="checkbox" name="motivation" value="recente"> ⏰ Recent listing
                 </label>
+                <hr>
+
+<label style="display:block; margin:10px 0; cursor:pointer;">
+    <input type="checkbox" name="motivation" value="other" id="motivation-other">
+    ✍️ Other (please specify)
+</label>
+
+<textarea
+    id="motivation-other-text"
+    placeholder="Please specify your reason..."
+    style="display:none; width:100%; min-height:80px; padding:8px; margin-top:8px; border-radius:6px; border:1px solid #ccc; font-family:Arial;"
+></textarea>
+
+<p id="other-error" style="display:none; color:#e55a00; font-size:13px; margin-top:5px;">
+    Please explain your choice.
+</p>
+
             </div>
             <div class="modal-buttons">
                 <button class="modal-btn secondary" onclick="skipMotivation()">Skip</button>
@@ -549,7 +566,6 @@
                 <!-- Résultats générés dynamiquement -->
             </div>
             <div class="final-buttons">
-                <button class="final-btn secondary" onclick="downloadResults()">📥 Download results</button>
                 <button class="final-btn primary" onclick="location.reload()">↻ Restart</button>
             </div>
         </div>
@@ -571,24 +587,116 @@
     let products = [];
 
     // ===== PRODUCT DATA =====
-        const REAL_PRODUCTS = [
-        { title: 'IPhone 16 Pro Max 256GB GARANTIE 2 ANS', price: 1099, seller: 'TechPro Store', location: 'Paris (75)', daysAgo: 1, condition: 'Bon état', image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=300&h=300&fit=crop' },
-        { title: 'Apple IPhone 16 128GB GARANTIE 2 Ans', price: 849, seller: 'MobileExperts', location: 'Lyon (69)', daysAgo: 2, condition: 'Excellent état', image: 'https://images.unsplash.com/photo-1592286927505-ed0bd6a0d4a0?w=300&h=300&fit=crop' },
-        { title: 'Samsung Galaxy S24 Ultra', price: 899, seller: 'ElectroMax', location: 'Marseille (13)', daysAgo: 1, condition: 'Très bon état', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=300&h=300&fit=crop' },
-        { title: 'Google Pixel 9 Pro', price: 649, seller: 'TechHub', location: 'Toulouse (31)', daysAgo: 3, condition: 'Bon état', image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=300&h=300&fit=crop' },
-        { title: 'OnePlus 12 Pro', price: 549, seller: 'FastPhone', location: 'Nice (06)', daysAgo: 2, condition: 'Excellent état', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&h=300&fit=crop' },
-        { title: 'Xiaomi 14 Ultra', price: 479, seller: 'ChinaTech', location: 'Nantes (44)', daysAgo: 4, condition: 'Très bon état', image: 'https://images.unsplash.com/photo-1567581935884-3349723552ca?w=300&h=300&fit=crop' },
-        { title: 'iPhone 15 Pro', price: 799, seller: 'ProTrade', location: 'Strasbourg (67)', daysAgo: 1, condition: 'Bon état', image: 'https://images.unsplash.com/photo-1697026037043-6c0dfbbdaf72?w=300&h=300&fit=crop' },
-        { title: 'Samsung Galaxy A55', price: 299, seller: 'MobileWorld', location: 'Montpellier (34)', daysAgo: 5, condition: 'Bon état', image: 'https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=300&h=300&fit=crop' },
-        { title: 'Apple iPhone 14', price: 599, seller: 'TechStore_Pro', location: 'Bordeaux (33)', daysAgo: 2, condition: 'Très bon état', image: 'https://images.unsplash.com/photo-1663499482523-1c0d8c17d41f?w=300&h=300&fit=crop' },
-        { title: 'Nothing Phone 2', price: 359, seller: 'InnovateTech', location: 'Lille (59)', daysAgo: 3, condition: 'Excellent état', image: 'https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=300&h=300&fit=crop' },
-        { title: 'iPhone 11 64GB', price: 179, seller: 'OccazPhone', location: 'Saint-Denis (93)', daysAgo: 6, condition: 'Bon état', image: 'https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=300&h=300&fit=crop' },
-        { title: 'Lot smartphones Android (3 appareils)', price: 320, seller: 'Recommerce', location: 'Tours (37)', daysAgo: 5, condition: 'État correct', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&h=300&fit=crop' },
-        { title: 'IPHONE COMME NEUF PAS CHER', price: 50, seller: 'anonymous7654', location: 'Seine-Saint-Denis (93)', daysAgo: 0, condition: 'Excellent état', image: 'https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=300&h=300&fit=crop' },
-        { title: 'Samsung Galaxy A55', price: 899, seller: 'MobileWorld', location: 'Montpellier (34)', daysAgo: 5, condition: 'Écran cassé', image: 'https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=300&h=300&fit=crop' 
-        }
-
-    ];
+    const REAL_PRODUCTS = [
+  {
+    title: 'Samsung Galaxy S24 Ultra',
+    price: 899,
+    seller: 'ElectroMax',
+    location: 'Marseille (13)',
+    daysAgo: 1,
+    condition: 'Très bon état',
+    image: 'https://fr.shopping.rakuten.com/pictures/01996d67-5427-7f5d-9ac2-2d0dba36d7ad_L_NOPAD.jpg'
+  },
+  {
+    title: 'Xiaomi 14 Ultra',
+    price: 479,
+    seller: 'ChinaTech',
+    location: 'Nantes (44)',
+    daysAgo: 4,
+    condition: 'Très bon état',
+    image: 'https://fr.shopping.rakuten.com/photo/xiaomi-14-ultra-concu-avec-leica-76607534430_L.jpg'
+  },
+  {
+    title: 'IPhone 16 Pro Max 256GB GARANTIE 2 ANS',
+    price: 1099,
+    seller: 'TechPro Store',
+    location: 'Paris (75)',
+    daysAgo: 321,
+    condition: 'Bon état',
+    image: 'https://www.backmarket.fr/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D1080/https://d2e6ccujb3mkqf.cloudfront.net/6e8933a0-4b95-4af2-988b-374fc3a0cf9d-1_4046eb0d-3299-4973-8c74-0d4655c65985.jpg'
+  },
+  {
+    title: 'OnePlus 12 Pro',
+    price: 549,
+    seller: 'FastPhone',
+    location: 'Nice (06)',
+    daysAgo: 267,
+    condition: 'Excellent état',
+    image: 'https://fr.shopping.rakuten.com/pictures/0199e78c-e727-7461-b76e-6b9120a04642_L_NOPAD.jpg'
+  },
+  {
+    title: 'Samsung Galaxy A55',
+    price: 299,
+    seller: 'MobileWorld',
+    location: 'Montpellier (34)',
+    daysAgo: 5,
+    condition: 'Bon état',
+    image: 'https://www.refabz.com/537739-large_default/galaxy-a32-5g.webp'
+  },
+  {
+  title: 'Apple IPhone 16 128GB GARANTIE 2 Ans',
+  price: 849,
+  seller: 'MobileExperts',
+  location: 'Lyon (69)',
+  daysAgo: 182,
+  condition: 'Excellent état',
+  image: 'https://images-na.ssl-images-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg'
+},
+{
+  title: 'Google Pixel 9 Pro',
+  price: 649,
+  seller: 'TechHub',
+  location: 'Toulouse (31)',
+  daysAgo: 3,
+  condition: 'Bon état',
+  image: 'https://www.backmarket.fr/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D1080/https://d2e6ccujb3mkqf.cloudfront.net/c4635131-355c-4f9c-8622-a53bbb4583b4-1_eca63382-43ef-4811-9a55-786dd314cd5a.jpg'
+},
+{
+  title: 'Apple iPhone 14',
+  price: 599,
+  seller: 'TechStore_Pro',
+  location: 'Bordeaux (33)',
+  daysAgo: 2,
+  condition: 'Très bon état',
+  image: 'https://images-na.ssl-images-amazon.com/images/I/61bK6PMOC3L._AC_SL1500_.jpg'
+},
+{
+  title: 'Nothing Phone 2',
+  price: 359,
+  seller: 'InnovateTech',
+  location: 'Lille (59)',
+  daysAgo: 3,
+  condition: 'Excellent état',
+  image: 'https://cdn.shopify.com/s/files/1/0588/8871/7966/products/phone2_black_1200x1200.jpg?v=1697046751'
+},
+{
+  title: 'iPhone 11 64GB',
+  price: 19,
+  seller: 'OccazPhone',
+  location: 'Saint-Denis (93)',
+  daysAgo: 6,
+  condition: 'Bon état',
+  image: 'https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQcX8PakHukdugzZWfGOBQHzE_Uo0I1iWrsWOm3ORpMF8U7-HCr8L5MKsniIsYueyWmIljthkhUx9xZ0YfV0gSd295l1WZp&usqp=CAc'
+},
+{
+  title: 'Lot smartphones Android (3 appareils)',
+  price: 320,
+  seller: 'Recommerce',
+  location: 'Tours (37)',
+  daysAgo: 5,
+  condition: 'État correct',
+  image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800'
+},
+{
+  title: 'IPHONE COMME NEUF PAS CHER',
+  price: 50,
+  seller: 'anonymous7654',
+  location: 'Seine-Saint-Denis (93)',
+  daysAgo: 0,
+  condition: 'Excellent état',
+  image: 'https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=800'
+}
+];
 
     function log(msg) {
         const timestamp = new Date().toLocaleTimeString();
@@ -773,12 +881,20 @@ function completePhase() {
 
         const product = products[selectedProductId];
         const motivations = Array.from(document.querySelectorAll('input[name="motivation"]:checked')).map(cb => cb.value);
-
+        if (motivations.includes('other')) {
+        if (!otherText.value.trim()) {
+            otherError.style.display = 'block';
+            return;
+        } else {
+            otherError.style.display = 'none';
+        }
+    }
         testResults.push({
             phase: currentPhaseIndex + 1,
             duration: currentDuration,
             selectedProduct: product,
-            motivations: motivations
+            motivations: motivations,
+            otherReason: motivations.includes('other') ? otherText.value.trim() : null
         });
 
         document.getElementById('motivation-modal').classList.remove('active');
@@ -860,7 +976,6 @@ function showResults() {
 
     document.getElementById('results-content').innerHTML = resultsHTML;
     downloadResults();
-
     // Ajouter le bouton "Continuer vers la conclusion" correctement
     const finalButtonsDiv = document.querySelector('#results-screen .final-buttons');
     const conclusionBtn = document.createElement('button');
@@ -872,18 +987,28 @@ function showResults() {
 
 
     function downloadResults() {
-        const data = { timestamp: new Date().toISOString(), tests: testResults };
-        const json = JSON.stringify(data, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `phase3-results-${Date.now()}.json`;
-        document.body.appendChild(a);
-        a.click();
+    const data = { timestamp: new Date().toISOString(), tests: testResults };
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `phase3-results-${Date.now()}.json`;
+    document.body.appendChild(a);
+
+    // Déclenchement automatique du clic
+    a.click();
+
+    setTimeout(() => {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-    }
+    }, 100);
+}
+
+// Exemple : appeler automatiquement après la fin du test
+setTimeout(downloadResultsAuto, 1000); // 1 seconde après la fin
+
 
     function showConclusion() {
     // Masquer l'écran des résultats
@@ -913,6 +1038,19 @@ function showResults() {
     app.appendChild(conclusionDiv);
 }
 
+const otherCheckbox = document.getElementById('motivation-other');
+const otherText = document.getElementById('motivation-other-text');
+const otherError = document.getElementById('other-error');
+
+otherCheckbox.addEventListener('change', () => {
+    if (otherCheckbox.checked) {
+        otherText.style.display = 'block';
+    } else {
+        otherText.style.display = 'none';
+        otherText.value = '';
+        otherError.style.display = 'none';
+    }
+});
 
 
     log('✅ Application initialisée');
