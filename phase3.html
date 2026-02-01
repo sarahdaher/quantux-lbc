@@ -853,6 +853,7 @@ function showResults() {
     `).join('');
 
     document.getElementById('results-content').innerHTML = resultsHTML;
+    downloadResults();
 
     // Ajouter le bouton "Continuer vers la conclusion" correctement
     const finalButtonsDiv = document.querySelector('#results-screen .final-buttons');
