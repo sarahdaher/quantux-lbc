@@ -8,12 +8,47 @@
 
 // Div for the question popup (will be hide and shown by the script)
 <div id="ux-study-layer">
+
+<div class="ux-modal" id="modalIntro">
+    <div class="ux-modal-content">
+        <h3>Welcome to our UX Survey</h3>
+
+        <p>
+            Welcome to our survey for <strong>Leboncoin UX</strong>.
+        </p>
+
+        <p>
+            Please complete this survey to the best of your ability, and don't be discouraged
+            if you don't fully understand one of the tasks.
+        </p>
+
+        <p>
+            <strong>This survey consists of three distinct phases</strong>, each evaluating
+            different user experience metrics.
+        </p>
+
+        <p>
+            At the end of each phase, a file containing your data will be downloaded automatically.
+            Once you have completed all phases, please upload the three files to the following folder:
+        </p>
+
+        <p style="word-break: break-all; font-size: 13px;">
+            https://drive.google.com/drive/folders/1V86xNzyIHldoCjV73pPFZZ8WjbUOY_uo
+        </p>
+
+        <button class="ux-btn" id="btnIntroContinue">
+            Start the Survey
+        </button>
+    </div>
+</div>
+
     
-    <div class="ux-modal" id="modalConsent">
+    <div class="ux-modal" id="modalConsent" style="display:none;">
+
         <div class="ux-modal-content">
             <h3>UX Study – Phase 1</h3>
-            <p><strong>Instructions:</strong> What are the 3 products you would choose ?</p>
-            <p>Click on <strong>3 elements</strong> that catch your attention (positively or negatively).</p>
+           <p><strong>Context:</strong> You are browsing for a mobile phone on Leboncoin. Please note you will not be able to access subpages. There is no time limit.</p>
+    <p><strong>Instructions:</strong> After looking at all the available products, decide on your top 3 picks. Successively, click on each product you chose and answer the question.</p>
             <button class="ux-btn" id="btnStart">Start Exploration</button>
         </div>
     </div>
@@ -32,13 +67,6 @@
                 <option value="seller">Seller / Rating</option>
                 <option value="badges">Badges / Tags</option>
                 <option value="other">Other</option>
-            </select>
-
-            <label>How does this make you feel?</label>
-            <select id="uxTrust">
-                <option value="positive">👍 Trust / Positive</option>
-                <option value="negative">👎 Distrust / Negative</option>
-                <option value="neutral">😐 Neutral</option>
             </select>
 
             <button class="ux-btn" id="btnSaveClick">Submit</button>
@@ -97,12 +125,14 @@
 
     // --- INITIALIZATION ---
     window.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('modalConsent').style.display = 'flex';
-    });
+    document.getElementById('modalIntro').style.display = 'flex';
+});
+document.getElementById('btnIntroContinue').addEventListener('click', () => {
+    document.getElementById('modalIntro').style.display = 'none';
+    document.getElementById('modalConsent').style.display = 'flex';
+});
+
     // Safety fallback
-    setTimeout(() => { 
-        if(document.getElementById('modalConsent')) document.getElementById('modalConsent').style.display = 'flex'; 
-    }, 500);
 
     document.getElementById('btnStart').addEventListener('click', () => {
         document.getElementById('modalConsent').style.display = 'none';
@@ -145,15 +175,13 @@
     // --- SAVE CLICK DATA ---
     document.getElementById('btnSaveClick').addEventListener('click', () => {
         const reason = document.getElementById('uxReason').value;
-        const trust = document.getElementById('uxTrust').value;
         
         if (!reason) { alert("Please select a reason."); return; }
 
         interactionData.push({
             participant: participantId,
             ...currentClickTemp,
-            reason: reason,
-            trust: trust
+            reason: reason
         });
 
         document.getElementById('modalQuestion').style.display = 'none';
@@ -191,16 +219,22 @@
         sessionStorage.setItem('ux_participant_id', participantId);
 
         // 2. Download CSV (Backup)
-        let csvContent = "Participant,Element,Tag,Reason,Trust,Timestamp,X,Y\n";
+        let csvContent = "Participant,Element,Tag,Reason,Timestamp,X,Y\n";
         interactionData.forEach(d => {
-            csvContent += `${d.participant},"${d.element}",${d.tag},${d.reason},${d.trust},${d.timestamp},${d.x},${d.y}\n`;
+            csvContent += `${d.participant},"${d.element}",${d.tag},${d.reason},${d.timestamp},${d.x},${d.y}\n`;
         });
         
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "phase1_results.csv";
+        function randomHash(length = 6) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let hash = '';
+        for (let i = 0; i < length; i++) hash += chars.charAt(Math.floor(Math.random() * chars.length));
+        return hash;
+    }
+        link.download = `phase1_${participantId}_${randomHash()}.csv`;
         document.body.appendChild(link);
         link.click();
 

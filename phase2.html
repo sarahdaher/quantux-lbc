@@ -3,64 +3,301 @@
 <head>
 <meta charset="UTF-8">
 <title>Étude UX – Confiance Leboncoin</title>
+
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#f6f6f6;color:#333}
-header{background:#ff6e14;color:#fff;padding:15px;font-size:22px;text-align:center;font-weight:bold}
-.page{max-width:900px;margin:20px auto;padding:10px}
-.card{display:flex;gap:20px;background:#fff;padding:25px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
-.seller{width:220px;flex-shrink:0;text-align:center;border-right:1px solid #eee;padding-right:20px}
-.seller img{width:110px;height:110px;border-radius:50%;object-fit:cover;margin-bottom:12px;background:#eee}
-.seller .info{font-weight:bold;font-size:16px;margin-bottom:8px;color:#000}
-.seller .badge{display:inline-block;background:#eef7ff;color:#0078d4;padding:4px 8px;margin:3px;border-radius:4px;font-size:11px;font-weight:bold;border:1px solid #0078d4}
-.seller .badge.pro{background:#fff0e5;color:#ff6e14;border-color:#ff6e14}
-.seller .rating{font-size:15px;color:#ffb400;margin-top:8px;font-weight:bold}
-.seller .numListings{font-size:13px;color:#666;margin-top:5px}
+/* ===== GLOBAL ===== */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f6f6f6;
+    color: #333;
+}
 
-.product{flex:1;display:flex;flex-direction:column;gap:12px}
-.gallery-main img#mainImg{width:100%;height:350px;object-fit:contain;border-radius:8px;background:#f9f9f9}
+header {
+    background: #ff6e14;
+    color: #fff;
+    padding: 18px;
+    font-size: 22px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
 
-.details h1{margin:0;font-size:24px;display:flex;align-items:center;gap:10px;color:#000}
-.details .price{font-size:28px;font-weight:bold;color:#000;margin:10px 0}
-.details .old{font-size:16px;text-decoration:line-through;color:#888;margin-left:8px;font-weight:normal}
-.details .discount{font-size:16px;color:#ed0000;margin-left:8px}
-.details .tag{display:inline-block;font-size:14px;padding:4px 0;color:#333}
-.details .tag.secure{color:#2ecc71;font-weight:bold}
-.details .tag.warning{color:#e67e22;font-weight:bold}
-.details .description{margin-top:15px;padding:12px;border:1px solid #eee;border-radius:6px;background:#fcfcfc;line-height:1.5;font-size:14px;color:#444}
-.contact-btn{width:100%;background:#ff6e14;color:white;border:none;padding:15px;font-size:16px;font-weight:bold;border-radius:8px;cursor:pointer;margin-top:15px;transition:0.2s}
-.contact-btn:hover{background:#e65c00}
+.page {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 10px;
+}
 
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);align-items:center;justify-content:center;z-index:100}
-.modal-content{background:#fff;padding:30px;width:480px;border-radius:12px;text-align:left}
-.modal-content h3{margin-top:0;color:#ff6e14}
-.modal-content label{display:block;margin-top:15px;font-size:14px;font-weight:bold}
-textarea,select{width:100%;margin-top:8px;padding:10px;border-radius:6px;border:1px solid #ccc;font-size:14px}
-textarea{height:80px;resize:none}
-.modal-content button{width:100%;background:#333;color:white;border:none;padding:12px;margin-top:20px;border-radius:6px;cursor:pointer;font-weight:bold}
+/* ===== CARDS ===== */
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 25px;
+}
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
 
-.click-marker{position:fixed;transform:translate(-50%,-50%);pointer-events:none;z-index:9999}
-.click-dot{width:20px;height:20px;background:rgba(255,0,0,0.6);border:2px solid red;border-radius:50%}
+/* ===== SELLER ===== */
+.seller {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.seller img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 12px;
+    background: #eee;
+    border: 2px solid #ff6e14;
+}
+
+.seller .info {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+
+.seller .sub {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 3px;
+}
+
+/* ===== BADGES ===== */
+.badge {
+    display: inline-block;
+    background: #eef7ff;
+    color: #0078d4;
+    padding: 5px 10px;
+    margin: 2px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid #0078d4;
+}
+
+.badge.pro {
+    background: #fff0e5;
+    color: #ff6e14;
+    border-color: #ff6e14;
+}
+
+/* ===== PRODUCT / GALERIE ===== */
+.product .gallery {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.product .gallery img {
+    flex: 0 0 auto;
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    background: #f9f9f9;
+    transition: transform 0.2s;
+}
+.product .gallery img:hover {
+    transform: scale(1.05);
+}
+
+/* ===== DETAILS ===== */
+.details {
+    margin-top: 10px;
+}
+
+.details .info {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ff6e14;
+}
+
+.details .price {
+    font-size: 26px;
+    font-weight: bold;
+    color: #ff6e14;
+    margin: 10px 0;
+}
+
+.details .discount {
+    color: #ed0000;
+    font-size: 16px;
+    margin-left: 8px;
+    font-weight: bold;
+}
+
+.details .tag {
+    font-size: 14px;
+    margin: 4px 0;
+}
+
+.details .secure {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+.desc {
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    background: #fafafa;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* ===== BOUTONS ===== */
+.contact-btn {
+    width: 100%;
+    background: #ff6e14;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.2s, transform 0.2s;
+}
+.contact-btn:hover {
+    background: #e05d0e;
+    transform: translateY(-2px);
+}
+
+/* ===== MODALS ===== */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 30px;
+    width: 500px;
+    max-width: 90%;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    text-align: left;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    color: #ff6e14;
+    border-bottom: 2px solid #ff6e14;
+    padding-bottom: 10px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+textarea,
+select {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* ===== CLICK MARKER ===== */
+.click-marker {
+    position: fixed;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.click-dot {
+    width: 20px;
+    height: 20px;
+    background: rgba(255,0,0,0.6);
+    border: 2px solid red;
+    border-radius: 50%;
+}
+/* ===== PHASE C GRID ===== */
+.phase-c-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.phase-c-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.phase-c-grid .col {
+  flex: 1 1 45%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.phase-c-grid label, .phase-c-grid select, .phase-c-grid textarea {
+  width: 100%;
+}
+
 </style>
 </head>
+
 <body>
-
-<header>Leboncoin UX Study - 2026</header>
-<div class="page" id="content"></div>
-
-<div class="modal" id="modalConsent" style="display:flex">
+<!-- INTRO MODAL PHASE 2 -->
+<div class="modal" id="modalIntroPhase2" style="display:flex">
   <div class="modal-content">
-    <h3>Consent </h3>
-    <p>Nous allons analyser vos interactions avec 9 annonces. Vos clics seront enregistrés de manière anonyme.</p>
-    <button onclick="closeModal('modalConsent');startStudy();">Agree & Continue</button>
+    <h3>UX Study – Phase 2</h3>
+    <p><strong>Instructions:</strong> You will be shown multiple listings for mobile phones. For each listing, analyze which element makes you trust this listing the most (or not at all).</p>
+    <button onclick="closeModal('modalIntroPhase2');modalConsent.style.display='flex'">Start Phase 2</button>
   </div>
 </div>
 
+<header>UX Study – Phase 2</header>
+<div class="page" id="content"></div>
+
+<!-- MODALS -->
+<div class="modal" id="modalConsent" style="display:none">
+
+  <div class="modal-content">
+    <h3>Consent</h3>
+    <p>We will record mouse movements and clicks. Your data is anonymous and you can withdraw anytime.</p>
+    <button onclick="closeModal('modalConsent');startStudy()">Agree & Continue</button>
+  </div>
+</div>
 
 <div class="modal" id="modalClick">
   <div class="modal-content">
     <h3>Trust Influence</h3>
     <p>After clicking the button below, <strong>click on the element on the page</strong> that most influenced your trust level.</p>
-    <button onclick="enableClickCapture()">I understand</button>
+    <button onclick="enableClickCapture()">OK</button>
   </div>
 </div>
 
@@ -68,322 +305,470 @@ textarea{height:80px;resize:none}
   <div class="modal-content">
     <h3>Listing Survey</h3>
     <label>I think this listing is trustworthy (1-5):
-      <select id="trust"><option value=""></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      <select id="trust"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
     </label>
-    <label>I think this seller is trustworthy (1-5): :
-      <select id="sellerTrust"><option value=""></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    <label>I think this seller is trustworthy (1-5):
+      <select id="sellerTrust"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
     </label>
     <label>Likelihood to contact this seller (1-5):
-      <select id="contactLikely"><option value=""></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      <select id="contactLikely"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
     </label>
     <label>Why? (optional)
-      <textarea id="reason" placeholder="Ex: Pas de paiement sécurisé, vendeur pro, prix trop bas..."></textarea>
+      <textarea id="reason"></textarea>
     </label>
     <button onclick="submitTrial()">Submit</button>
+    <button onclick="cancelClick()" style="margin-top:10px;background:#ccc;color:#333;">Cancel Click</button>
   </div>
 </div>
 
-<div class="modal" id="modalPhaseC">
-  <div class="modal-content">
-    <h3>Overall Desirability Survey</h3>
-    <label>Which listing do you trust most?
-      <select id="mostTrusted"></select>
-    </label>
-    <label>Which UX element most influenced your trust judgment?
-      <select id="mostInfluential"><option></option>
-        <option>Photos</option>
-        <option>Description</option>
-        <option>Price</option>
-        <option>Seller</option>
-        <option>Badges</option>
-        <option>Rating</option>
-        <option>Other</option>
-      </select>
-    </label>
-    <input type="text" id="otherValue" placeholder="Precise here" style="display:none; margin-top:10px;">
-    <button onclick="submitPhaseC()">Submit & Export CSV</button>
+<div class="modal" id="modalPhaseC" style="display:none">
+  <div class="modal-content phase-c-content">
+    <h3>Final Survey</h3>
+
+    <div class="phase-c-grid">
+      <!-- Colonne 1 -->
+      <div class="col">
+        <label>Which listing do you trust most?
+          <select id="mostTrusted"></select>
+        </label>
+
+        <label>Overall, how trustworthy did you find the listings you saw? (1–7)
+          <select id="overallTrust">
+            <option></option>
+            <option>1</option><option>2</option><option>3</option>
+            <option>4</option><option>5</option><option>6</option><option>7</option>
+          </select>
+        </label>
+
+        <label>Which single element most influenced your trust judgment?</label>
+        <select id="mostInfluential">
+          <option></option>
+          <option>Photos</option>
+          <option>Description</option>
+          <option>Price</option>
+          <option>Seller</option>
+          <option>Badges</option>
+          <option>Rating</option>
+          <option>Other (please specify in comments)</option>
+        </select>
+        <textarea id="mostInfluentialOther" placeholder="Other (optional)"></textarea>
+
+        <label>How likely are you to contact sellers on classified platforms? (1–7)</label>
+        <select id="contactLikelyC">
+          <option></option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option><option>7</option>
+        </select>
+
+        <label>Which elements most influence your decision to contact a seller? (select up to 3 + optional text)</label>
+<div id="contactFactorsCheckboxes">
+  <label><input type="checkbox" name="contactFactors" value="Photos"> Photos</label>
+  <label><input type="checkbox" name="contactFactors" value="Description"> Description</label>
+  <label><input type="checkbox" name="contactFactors" value="Price"> Price</label>
+  <label><input type="checkbox" name="contactFactors" value="Seller"> Seller</label>
+  <label><input type="checkbox" name="contactFactors" value="Badges"> Badges</label>
+  <label><input type="checkbox" name="contactFactors" value="Rating"> Rating</label>
+  <label><input type="checkbox" name="contactFactors" value="Other"> Other (please specify in comments)</label>
+</div>
+<textarea id="contactFactorsOther" placeholder="Other (optional)"></textarea>
+
+
+      <!-- Colonne 2 -->
+      <div class="col">
+        <label>Would you prefer listings with more photos or more detailed descriptions?</label>
+        <select id="photosVsDesc">
+          <option></option>
+          <option>More photos</option>
+          <option>More detailed descriptions</option>
+          <option>Other (please specify in comments)</option>
+        </select>
+        <textarea id="photosVsDescOther" placeholder="Other (optional)"></textarea>
+
+        <label>Rate overall visual appeal of the listings you saw (1–7)</label>
+        <select id="visualAppeal">
+          <option></option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option><option>7</option>
+        </select>
+
+        <label>Open feedback: free text</label>
+        <textarea id="finalComment"></textarea>
+      </div>
+    </div>
+
+    <button onclick="submitPhaseC()" class="contact-btn" style="margin-top:20px;">Export CSV</button>
   </div>
 </div>
 
 <script>
-let clickMode = "off", currentTrial = 0, responses = [], clickData = null;
-
-const annonces = [
+const annonces_all = [
   {
-    id: "A1",
-    title: "iPhone 12",
-    price: "380,00 €",
-    oldPrice: "520,55 €",
-    disc: "-27%",
-    secure: true,
-    likes: 15,
-    desc: "iPhone 12 en bon état de fonctionnement, réinitialisé et prêt à l'emploi. Vente avec câble de chargement. Expédition seulement.",
-    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/fa/67/af/fa67af61390a2820d2fc2ba7a60055b5c31721e9.jpg?rule=classified-1200x800-webp",
-    seller: {
-      name: "E.Leclerc",
-      badges: ["Pro", "Top Vendeur"],
-      rate: 4.0,
-      ads: 13,
-      photo: "https://img.leboncoin.fr/api/v1/lbcpb1/images/63/a7/b4/63a7b4af-7571-4988-8400-617ed0064931?rule=bo-thumb"
-    }
+    "ID": 1,
+    "Produit": "iPhone 12",
+    "Catégorie": "iPhone 12",
+    "Prix": "380€",
+    "Réduc": "-27%",
+    "Description": "iPhone 12 en bon état de fonctionnement, réinitialisé et prêt à l'emploi.\nVente du téléphone avec le câble de chargement.\nExpédition seulement",
+    "Likes": 15,
+    "Etat": "Bon",
+    "PDP du vendeur": "https://img.leboncoin.fr/api/v1/lbcpb1/images/63/a7/b4/63a7b4af-7571-4988-8400-617ed0064931?rule=bo-thumb",
+    "Vendeur": "E.Leclerc",
+    "Badge Vendeur": "Pro, Top Vendeur",
+    "Avis": "4.5 (15)",
+    "Annonces": 13,
+    "Lieu": "Le Bosc",
+    "Photo 1": "https://img.leboncoin.fr/api/v1/lbcpb1/images/fa/67/af/fa67af61390a2820d2fc2ba7a60055b5c31721e9.jpg?rule=classified-1200x800-webp",
+    "Photo 2": "https://img.leboncoin.fr/api/v1/lbcpb1/images/98/40/56/98405657ebf4379e79f18c0f7846336df5695a21.jpg?rule=classified-1200x800-webp",
+    "Photo 3": "https://img.leboncoin.fr/api/v1/lbcpb1/images/00/09/07/000907cb1000115439da1df683dcbd02c8659865.jpg?rule=classified-1200x800-webp",
+    "Colonne 1": "BASE : Profil Pro institutionnel standard.",
+    "Colonne 2": "securise",
+    "Badge": "Transaction sécurisée incluse"
   },
   {
-    id: "A2",
-    title: "Google Pixel 7",
-    price: "189,00 €",
-    oldPrice: "",
-    disc: "",
-    secure: false, // badge sécurisé retiré
-    likes: 23,
-    desc: "Google Pixel 7 en très bon état. Réinitialisé, prêt à l’utilisation. Câble inclus.",
-    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/9d/35/ac/9d35ac3233341deb38c9710ea79de6818d5cfc80.jpg?rule=classified-1200x800-webp",
-    seller: {
-      name: "MARKET PHONE",
-      badges: ["Pro", "Réactif"],
-      rate: 5.0,
-      ads: 6234,
-      photo: "https://img.leboncoin.fr/api/v1/lbcpb1/images/98/12/44/9812444c-cb6e-4c4d-9a87-5edf47b541f0?rule=bo-thumb"
-    }
+    "ID": 2,
+    "Produit": "Pixel 7",
+    "Catégorie": "Google",
+    "Prix": "189€",
+    "Réduc": "0%",
+    "Description": "Téléphone portable (Google Pixel 7) en très bon état.\nTéléphone réinitialisé et prêt à l’utilisation.\nFourni avec câble de chargement.\nDisponible en boutique ou par livraison.",
+    "Likes": 23,
+    "Etat": "Très bon",
+    "PDP du vendeur": "https://img.leboncoin.fr/api/v1/lbcpb1/images/98/12/44/9812444c-cb6e-4c4d-9a87-5edf47b541f0?rule=bo-thumb",
+    "Vendeur": "MARKET PHONE",
+    "Badge Vendeur": "Pro, Réactif",
+    "Avis": "5.0 (562)",
+    "Annonces": 6234,
+    "Lieu": "Villeurbanne",
+    "Photo 1": "https://img.leboncoin.fr/api/v1/lbcpb1/images/9d/35/ac/9d35ac3233341deb38c9710ea79de6818d5cfc80.jpg?rule=classified-1200x800-webp",
+    "Photo 2": "https://img.leboncoin.fr/api/v1/lbcpb1/images/31/4a/a2/314aa2360d988aed98f8798ac26f23fea66e04fe.jpg?rule=classified-1200x800-webp",
+    "Photo 3": "https://img.leboncoin.fr/api/v1/lbcpb1/images/a8/bb/6e/a8bb6e37773bab040ba2eeec1291038bd368bf74.jpg?rule=classified-1200x800-webp",
+    "Colonne 1": "AJOUT : On ajoute le badge 'Réactif' et on booste la note à 5/5, mais on RETIRE le badge 'Sécurisé'",
+    "Colonne 2": "pas securise + reactif + 5/5",
+    "Badge": "\"Livraison dès 2,99e\", Nouveau"
   },
   {
-    id: "A3",
-    title: "iPhone 15 Plus",
-    price: "550,00 €",
-    oldPrice: "",
-    disc: "",
-    secure: true, // transaction sécurisée rétablie
-    likes: 9,
-    desc: "iPhone 15 Plus en très bon état général. Vente avec câble. Disponible en boutique ou par livraison.",
-    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/e5/34/93/e5349380cb51f69a05a9a9f9ca0af9cc0de34f8d.jpg?rule=ad-large",
-    seller: {
-      name: "PHONESTART",
-      badges: [], // tous les badges retirés
-      rate: 5.0,
-      ads: 22,
-      photo: ""
-    }
+    "ID": 3,
+    "Produit": "iPhone 15+",
+    "Catégorie": "iPhone 15",
+    "Prix": "550€",
+    "Réduc": "0%",
+    "Description": "Vente iPhone 15 PLUS en très bon état général, toutes les fonctionnalités sont fonctionnelles. Vente avec câble de chargement. Disponible en boutique ou par livraison.",
+    "Likes": 9,
+    "Etat": "Très bon",
+    "PDP du vendeur": null,
+    "Vendeur": "PHONESTART",
+    "Badge Vendeur": "Pro",
+    "Avis": "5.0 (52)",
+    "Annonces": 22,
+    "Lieu": "Troyes",
+    "Photo 1": "https://img.leboncoin.fr/api/v1/lbcpb1/images/e5/34/93/e5349380cb51f69a05a9a9f9ca0af9cc0de34f8d.jpg?rule=ad-large",
+    "Photo 2": "https://img.leboncoin.fr/api/v1/lbcpb1/images/e5/34/93/e5349380cb51f69a05a9a9f9ca0af9cc0de34f8d.jpg?rule=ad-large",
+    "Photo 3": null,
+    "Badge": "Transaction sécurisée incluse, \"Livraison dès 2,99e\""
   },
   {
-    id: "A4",
-    title: "iPhone 15 Pro Max",
-    price: "690,00 €",
-    oldPrice: "766,67 €",
-    disc: "-10%",
-    secure: true,
-    likes: 18,
-    desc: "Téléphone entièrement fonctionnel, en bon état. Légère rayure. Câble inclus. Expédition seulement.",
-    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/01/1f/00/011f00ac2eaf872bb6cdf7f2cdbfd8bf8926ff99.jpg?rule=ad-large",
-    seller: {
-      name: "UNIVACK",
-      badges: ["Particulier", "Top Vendeur"], // incohérence volontaire conservée
-      rate: 5.0,
-      ads: 39750,
-      photo: ""
-    }
+    "ID": 4,
+    "Produit": "15 Pro Max",
+    "Catégorie": "iPhone 15",
+    "Prix": "690€",
+    "Réduc": "-10%",
+    "Description": "iPhone 11 entièrement fonctionnel, en bon état. Légère rayure\nTéléphone prêt à l’emploi, réinitialisé.\nCâble de chargement inclus.\nExpédition seulement.",
+    "Likes": 18,
+    "Etat": "Bon",
+    "PDP du vendeur": null,
+    "Vendeur": "UNIVACK",
+    "Badge Vendeur": "Pro",
+    "Avis": "5.0 (59758)",
+    "Annonces": 39750,
+    "Lieu": "Paris 12",
+    "Photo 1": "https://img.leboncoin.fr/api/v1/lbcpb1/images/01/1f/00/011f00ac2eaf872bb6cdf7f2cdbfd8bf8926ff99.jpg?rule=ad-large",
+    "Photo 2": "https://img.leboncoin.fr/api/v1/lbcpb1/images/10/33/ea/1033ea1870fc8b3845527d4106d365ef4b3c6a6c.jpg?rule=ad-large",
+    "Photo 3": null,
+    "Badge": "Transaction sécurisée incluse, A la une"
   },
   {
-    id: "A5",
-    title: "iPhone 15 Plus",
-    price: "550,00 €",
-    oldPrice: "",
-    disc: "",
-    secure: false, // sécurité retirée
-    likes: 16,
-    desc: "iPhone 15 en très bon état. Réinitialisé, prêt à l’emploi. Câble inclus.",
-    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/a0/04/34/a004347f09407463ca104bd73f510935e8c3671f.jpg?rule=ad-large",
-    seller: {
-      name: "cireluz",
-      badges: ["Pro"],
-      rate: 4.6,
-      ads: 13,
-      photo: ""
-    }
+    "ID": 5,
+    "Produit": "iPhone 15+",
+    "Catégorie": "iPhone 15",
+    "Prix": "550€",
+    "Réduc": "0%",
+    "Description": "Vends iPhone 15 en très bon état. Le téléphone fonctionne parfaitement, aucun souci à signaler, il a été réinitialisé et est prêt à l’emploi. Vendu avec son câble de chargement. Remise en main propre possible ou envoi selon préférence.",
+    "Likes": 16,
+    "Etat": "Très bon",
+    "PDP du vendeur": null,
+    "Vendeur": "cireluz",
+    "Badge Vendeur": "Profil recommandé",
+    "Avis": "4.6 (13)",
+    "Annonces": 13,
+    "Lieu": "La Couronne",
+    "Photo 1": "https://img.leboncoin.fr/api/v1/lbcpb1/images/a0/04/34/a004347f09407463ca104bd73f510935e8c3671f.jpg?rule=ad-large",
+    "Photo 2": "https://img.leboncoin.fr/api/v1/lbcpb1/images/b7/f3/fd/b7f3fdd2168f28108b9dd9ffeaebb0fee167e6a6.jpg?rule=ad-large",
+    "Photo 3": "https://img.leboncoin.fr/api/v1/lbcpb1/images/94/a7/ae/94a7ae31beb9d8363b20f63243ab5450fc34aced.jpg?rule=ad-large",
+    "Badge": "Livraison possible"
   },
   {
-    id: "A6",
-    title: "iPhone 11",
-    price: "165,00 €",
-    oldPrice: "",
-    disc: "",
-    secure: true,
-    likes: 3,
-    desc: "iPhone 11 en état satisfaisant. Fonctionnel. Accessoires inclus.",
-    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/22/a7/ff/22a7ff5eedbab467c7d90ce452829aa469324d74.jpg?rule=ad-large",
-    seller: {
-      name: "FUTURX",
-      badges: ["Pro"],
-      rate: null, // avis retirés
-      ads: 0,
-      photo: ""
-    }
+    "ID": 6,
+    "Produit": "iPhone 11",
+    "Catégorie": "iPhone 12",
+    "Prix": "165€",
+    "Réduc": "0%",
+    "Description": "iPhone 11 en très bon état de fonctionnement.\nTous les accessoires d'origine, dont le câble de charge, sont inclus.",
+    "Likes": 3,
+    "Etat": "Satisfaisant",
+    "PDP du vendeur": null,
+    "Vendeur": "FUTURX",
+    "Badge Vendeur": "Pro",
+    "Avis": "3.1 (1900)",
+    "Annonces": 1611,
+    "Lieu": "Paris 11",
+    "Photo 1": "https://img.leboncoin.fr/api/v1/lbcpb1/images/22/a7/ff/22a7ff5eedbab467c7d90ce452829aa469324d74.jpg?rule=ad-large",
+    "Photo 2": "https://img.leboncoin.fr/api/v1/lbcpb1/images/85/94/74/859474a05eb1783a0b13e2010b8661eae471d95c.jpg?rule=ad-large",
+    "Photo 3": "https://img.leboncoin.fr/api/v1/lbcpb1/images/57/23/81/572381718b23e9a8aeb277c9fd4c4e717fc25397.jpg?rule=ad-large",
+    "Badge": "Transaction sécurisée incluse"
   },
   {
-    id: "A7",
-    title: "iPhone 14 Pro",
-    price: "150,00 €",
-    oldPrice: "",
-    disc: "",
-    secure: false, // garantie de paiement retirée
-    likes: 13,
-    desc: "Téléphone neuf, boîte jamais ouverte.",
-    img: "",
-    seller: {
-      name: "Dude30",
-      badges: ["Réactif", "Identité vérifiée"],
-      rate: null,
-      ads: 2,
-      photo: ""
-    }
+    "ID": 7,
+    "Produit": "iPhone 14 Pro",
+    "Catégorie": "iPhone 14",
+    "Prix": "150€",
+    "Réduc": "0%",
+    "Description": "Téléphone neuf, la boîte n'a jamais été ouverte.",
+    "Likes": 13,
+    "Etat": "Neuf",
+    "PDP du vendeur": null,
+    "Vendeur": "Dude30",
+    "Badge Vendeur": "Réactif",
+    "Avis": null,
+    "Annonces": 2,
+    "Lieu": "St-Ambroix",
+    "Photo 1": null,
+    "Photo 2": null,
+    "Photo 3": null,
+    "Badge": "Nouveau"
   },
   {
-    id: "A8",
-    title: "Huawei P30 Pro",
-    price: "209,00 €",
-    oldPrice: "",
-    disc: "",
-    secure: true,
-    likes: 17,
-    desc: "Huawei P30 Pro neuf. Jamais utilisé.",
-    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/7f/bf/3b/7fbf3be309d7efc2dde6d32b06b6a90a1b330f71.jpg?rule=ad-large",
-    seller: {
-      name: "Enola",
-      badges: ["Profil recommandé"],
-      rate: 5.0,
-      ads: 14,
-      photo: "https://img.leboncoin.fr/api/v1/tenants/9a6387a1-6259-4f2c-a887-7e67f23dd4cb/domains/20bda58f-d650-462e-a72a-a5a7ecf2bf88/buckets/21d2b0bc-e54c-4b64-a30b-89127b18b785/images/profile/pictures/73f89309-6ed7-5d1b-a34e-b44cb5e575c3?rule=pp-large"
-    }
+    "ID": 8,
+    "Produit": "Huawei P30",
+    "Catégorie": "Huawei",
+    "Prix": "209€",
+    "Réduc": "0%",
+    "Description": "Vends téléphone Huawei P30 Pro neuf. Il est en parfait état et n’a jamais été utilisé. Tous les accessoires d’origine sont inclus.",
+    "Likes": 17,
+    "Etat": "Neuf",
+    "PDP du vendeur": "https://img.leboncoin.fr/api/v1/tenants/9a6387a1-6259-4f2c-a887-7e67f23dd4cb/domains/20bda58f-d650-462e-a72a-a5a7ecf2bf88/buckets/21d2b0bc-e54c-4b64-a30b-89127b18b785/images/profile/pictures/73f89309-6ed7-5d1b-a34e-b44cb5e575c3?rule=pp-large",
+    "Vendeur": "Enola",
+    "Badge Vendeur": "Profil recommandé",
+    "Avis": "5.0 (14)",
+    "Annonces": 14,
+    "Lieu": "Villeurbanne",
+    "Photo 1": "https://img.leboncoin.fr/api/v1/lbcpb1/images/7f/bf/3b/7fbf3be309d7efc2dde6d32b06b6a90a1b330f71.jpg?rule=ad-large",
+    "Photo 2": "https://img.leboncoin.fr/api/v1/lbcpb1/images/6f/c5/55/6fc55579fd1f03cb83928a4c4b0d285de261eb18.jpg?rule=ad-large",
+    "Photo 3": "https://img.leboncoin.fr/api/v1/lbcpb1/images/5e/62/1a/5e621ab0cf1ee635555c0095bda575d7fc8eb84a.jpg?rule=ad-large",
+    "Badge": null
   },
   {
-    id: "A9",
-    title: "iPhone 15 Pro",
-    price: "929,00 €",
-    oldPrice: "1327,14 €",
-    disc: "-30%",
-    secure: true,
-    likes: 14,
-    desc: "Téléphone testé et fonctionnel. Accessoires non inclus.",
-    img: "https://img.leboncoin.fr/api/v1/lbcpb1/images/0a/d8/a7/0ad8a7529da8ccacbe77ac5aeab7612fc48bdaae.jpg?rule=ad-large",
-    seller: {
-      name: "Maxime",
-      badges: ["Réactif", "Identité vérifiée", "Elite"], // badge elite + note faible
-      rate: 3.1,
-      ads: 100,
-      photo: "https://img.leboncoin.fr/api/v1/tenants/9a6387a1-6259-4f2c-a887-7e67f23dd4cb/domains/20bda58f-d650-462e-a72a-a5a7ecf2bf88/buckets/21d2b0bc-e54c-4b64-a30b-89127b18b785/images/profile/pictures/7d675dac-40be-5280-84e8-ad15962dab9f?rule=pp-large"
-    }
+    "ID": 9,
+    "Produit": "iPhone 15 Pro",
+    "Catégorie": "iPhone 15",
+    "Prix": "929€",
+    "Réduc": "-30%",
+    "Description": "Vends téléphone portable en excellent état de fonctionnement. Toutes les fonctionnalités ont été testées et vérifiées. Les accessoires ne sont pas inclus. Envoi possible.",
+    "Likes": 14,
+    "Etat": "Neuf",
+    "PDP du vendeur": "https://img.leboncoin.fr/api/v1/tenants/9a6387a1-6259-4f2c-a887-7e67f23dd4cb/domains/20bda58f-d650-462e-a72a-a5a7ecf2bf88/buckets/21d2b0bc-e54c-4b64-a30b-89127b18b785/images/profile/pictures/7d675dac-40be-5280-84e8-ad15962dab9f?rule=pp-large",
+    "Vendeur": "Maxime",
+    "Badge Vendeur": "Réactif, Identité vérifiée",
+    "Avis": "4.9 (100)",
+    "Annonces": 100,
+    "Lieu": "Pompignac",
+    "Photo 1": "https://img.leboncoin.fr/api/v1/lbcpb1/images/0a/d8/a7/0ad8a7529da8ccacbe77ac5aeab7612fc48bdaae.jpg?rule=ad-large",
+    "Photo 2": "https://img.leboncoin.fr/api/v1/lbcpb1/images/b9/95/fe/b995febc503785ded7152717f686fb8412d4bfe5.jpg?rule=ad-large",
+    "Photo 3": "https://img.leboncoin.fr/api/v1/lbcpb1/images/a2/9f/1e/a29f1e9532861d779aebe653349f807d07247af2.jpg?rule=ad-large",
+    "Badge": "A la une"
   }
-];
+]
 
-  
-function renderTrial() {
-  const data = annonces[currentTrial];
-  const container = document.getElementById("content");
-  container.innerHTML = `
-    <div class="card">
-      <div class="seller">
-        <img src="${data.seller.photo || 'https://via.placeholder.com/100?text=?'}" alt="Seller">
-        <div class="info">${data.seller.name}</div>
-        ${data.seller.badges.map(b => `<span class="badge ${b === 'Pro' ? 'pro' : ''}">${b}</span>`).join('')}
-        <div class="rating">★ ${data.seller.rate || 'N/A'}</div>
-        <div class="numListings">${data.seller.ads} annonces</div>
-      </div>
-      <div class="product">
-        <div class="gallery-main"><img id="mainImg" src="${data.img}"></div>
-        <div class="details">
-          <h1>${data.title}</h1>
-          <div class="price">${data.price} ${data.oldPrice ? `<span class="old">${data.oldPrice}</span><span class="discount">${data.disc}</span>` : ''}</div>
-          
-          ${data.secure ? '<div class="tag secure">🛡️ Transaction sécurisée</div>' : ''}
-          
-          <div class="tag">📦 Livraison ou main propre</div>
-          <div class="description">${data.desc}</div>
-          <button class="contact-btn" onclick="openClickModal()">Évaluer cette annonce</button>
-        </div>
-      </div>
-    </div>`;
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
-function openClickModal() { modalClick.style.display = "flex"; }
-function closeModal(id) { document.getElementById(id).style.display = "none"; }
-function enableClickCapture() { closeModal('modalClick'); clickMode = "capture"; }
 
-document.addEventListener("click", e => {
-  if (clickMode !== "capture") return;
-  if (e.target.closest('.modal-content') || e.target.classList.contains('contact-btn')) return;
+const annonces = shuffleArray([...annonces_all]).slice(0, 5);
+/* ===== LOGIQUE UX ORIGINALE CONSERVÉE ===== */
+let currentTrial = 0;
+let clickMode = "off";
+let responses = [];
+let clickData = null;
 
-  const dot = document.createElement("div");
-  dot.className = "click-marker";
-  dot.style.left = e.clientX + "px"; dot.style.top = e.clientY + "px";
-  dot.innerHTML = `<div class="click-dot"></div>`;
+function renderTrial(){
+  const a = annonces[currentTrial];
+  const c = document.getElementById("content");
+
+  c.innerHTML = `
+  <div class="card">
+
+    <div class="seller">
+      <img src="${a["PDP du vendeur"] || 'https://via.placeholder.com/110'}">
+      <div class="info">${a.Vendeur}</div>
+      <div class="sub">${a.Lieu}</div>
+      <div class="sub">${a.Avis || "Aucun avis"}</div>
+      <div class="sub">${a.Annonces} annonces</div>
+      ${(a["Badge Vendeur"]||"").split(",").map(b=>`<span class="badge ${b.trim()==='Pro'?'pro':''}">${b.trim()}</span>`).join("")}
+    </div>
+
+    <div class="product">
+      <div class="gallery">
+        ${a["Photo 1"]?`<img src="${a["Photo 1"]}">`:""}
+        ${a["Photo 2"]?`<img src="${a["Photo 2"]}">`:""}
+        ${a["Photo 3"]?`<img src="${a["Photo 3"]}">`:""}
+      </div>
+
+      <div class="details">
+        <div class="info"> ${a.Produit}</div>
+
+        <div class="price">
+  ${a.Prix} 
+  ${a["Réduc"] && a["Réduc"] !== "0%" ? `<span class="discount">${a["Réduc"]}</span>` : ''}
+</div>
+
+
+        <div class="tag"><strong>Catégorie :</strong> ${a.Catégorie}</div>
+        <div class="tag"><strong>État :</strong> ${a.Etat}</div>
+        <div class="tag"><strong>Likes :</strong> ❤️ ${a.Likes}</div>
+        <div class="tag secure">${a.Badge || ""}</div>
+        
+
+        <div class="desc">${a.Description.replace(/\n/g,"<br>")}</div>
+
+        <button class="contact-btn" onclick="openClickModal()">Evaluate this listing</button>
+      </div>
+    </div>
+
+  </div>`;
+}
+
+function openClickModal(){modalClick.style.display="flex"}
+function closeModal(id){document.getElementById(id).style.display="none"}
+function enableClickCapture(){closeModal("modalClick");clickMode="capture"}
+function startStudy(){renderTrial()}
+
+document.addEventListener("click",e=>{
+  if(clickMode!=="capture")return;
+  if(e.target.closest(".modal-content"))return;
+
+  const dot=document.createElement("div");
+  dot.className="click-marker";
+  dot.style.left=e.clientX+"px";
+  dot.style.top=e.clientY+"px";
+  dot.innerHTML="<div class='click-dot'></div>";
   document.body.appendChild(dot);
-  setTimeout(() => dot.remove(), 1000);
+  setTimeout(()=>dot.remove(),1000);
 
-  clickData = { x: e.clientX, y: e.clientY, target: e.target.innerText || e.target.tagName };
-  clickMode = "off";
-  modalSurvey.style.display = "flex";
+  clickData={x:e.clientX,y:e.clientY,target:e.target.innerText||e.target.tagName};
+  clickMode="off";
+  modalSurvey.style.display="flex";
+});
+const reason = document.getElementById('reason');
+const trust = document.getElementById('trust');
+const sellerTrust = document.getElementById('sellerTrust');
+const contactLikely = document.getElementById('contactLikely');
+const modalSurvey = document.getElementById('modalSurvey');
+const modalPhaseC = document.getElementById('modalPhaseC');
+const mostTrusted = document.getElementById('mostTrusted');
+function submitTrial(){
+  responses.push({
+    produit:annonces[currentTrial].Produit,
+    click:clickData,
+    trust:trust.value,
+    sellerTrust:sellerTrust.value,
+    contact:contactLikely.value,
+    reason:reason.value
+  });
+
+  modalSurvey.style.display="none";
+  trust.value=sellerTrust.value=contactLikely.value=reason.value="";
+  currentTrial++;
+  if(currentTrial<annonces.length)renderTrial();
+  else showFinal();
+}
+
+function showFinal(){
+  content.innerHTML="";
+  annonces.forEach((a, idx)=>{
+  let o = document.createElement("option");
+  o.text = `Exemple ${idx + 1} : ${a.Produit}`; // <-- ajoute "Exemple X :"
+  mostTrusted.appendChild(o);
 });
 
-function startWarmUp() { modalWarmUp.style.display = "flex"; clickMode = "warmup"; }
-function startStudy() { clickMode = "off"; renderTrial(); }
-
-function submitTrial() {
-  responses.push({
-    id: currentTrial + 1,
-    produit: annonces[currentTrial].title,
-    clickX: clickData.x,
-    clickY: clickData.y,
-    clickTarget: clickData.target.substring(0, 20),
-    trust: document.getElementById("trust").value,
-    sellerTrust: document.getElementById("sellerTrust").value,
-    contact: document.getElementById("contactLikely").value,
-    reason: document.getElementById("reason").value.replace(/,/g, " ")
-  });
-
-  closeModal('modalSurvey');
-  // Reset fields
-  document.getElementById("trust").value = ""; document.getElementById("sellerTrust").value = "";
-  document.getElementById("contactLikely").value = ""; document.getElementById("reason").value = "";
-
-  currentTrial++;
-  if (currentTrial < annonces.length) renderTrial(); else showFinalSurvey();
+  modalPhaseC.style.display="flex";
 }
 
-function showFinalSurvey() {
-  document.getElementById("content").innerHTML = "";
-  const select = document.getElementById("mostTrusted");
-  annonces.forEach((a, i) => {
-    let opt = document.createElement("option"); opt.value = a.title; opt.text = a.title; select.add(opt);
-  });
-  modalPhaseC.style.display = "flex";
-}
 
 function submitPhaseC() {
-  const final = {
-    best: document.getElementById("mostTrusted").value,
-    factor: document.getElementById("mostInfluential").value
-  };
-  closeModal('modalPhaseC');
-  
-  // Message de transition
-  document.getElementById("content").innerHTML = "<h2>Merci ! Vos résultats ont été générés. Redirection en cours...</h2>";
-  
-  // 1. GÉNÉRATION ET EXPORT DU CSV
-  let csv = "ID,Produit,Clic_X,Clic_Y,Element_Clique,Trust_Annonce,Trust_Vendeur,Contact,Commentaire\n";
-  responses.forEach(r => {
-    csv += `${r.id},${r.produit},${r.clickX},${r.clickY},${r.clickTarget},${r.trust},${r.sellerTrust},${r.contact},${r.reason}\n`;
-  });
-  csv += `\nBILAN FINAL\nMeilleure Annonce,${final.best}\nFacteur Principal,${final.factor}`;
+    const final = {
+        best: document.getElementById("mostTrusted").value,
+        overallTrust: document.getElementById("overallTrust").value,
+        factor: document.getElementById("mostInfluential").value,
+        factorOther: document.getElementById("mostInfluentialOther").value,
+        contactLikely: document.getElementById("contactLikely").value,
+        contactFactors: Array.from(document.querySelectorAll('input[name="contactFactors"]:checked'))
+                             .map(cb => cb.value)
+                             .join("|"),
+        contactFactorsOther: document.getElementById("contactFactorsOther").value,
+        photosVsDesc: document.getElementById("photosVsDesc").value,
+        photosVsDescOther: document.getElementById("photosVsDescOther").value,
+        visualAppeal: document.getElementById("visualAppeal").value,
+        finalComment: document.getElementById("finalComment").value
+    };
 
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'phase2.csv';
-  document.body.appendChild(a); 
-  a.click();
-  document.body.removeChild(a);
+    closeModal('modalPhaseC');
 
-  setTimeout(function() {
-    window.location.href = "phase3.html";
-  }, 2000);
+    let csv = "AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire\n";
+
+    responses.forEach((r, i) => {
+        const a = annonces[i];
+        csv += `${a.ID},${r.click ? r.click.x : ''},${r.click ? r.click.y : ''},"${r.click ? r.click.target.replace(/"/g,'""') : ''}",${r.trust || ''},${r.sellerTrust || ''},${r.contact || ''},"${r.reason ? r.reason.replace(/"/g,'""') : ''}"\n`;
+    });
+
+    csv += "\nPhaseC,Best_Listing," + final.best;
+    csv += "\nPhaseC,Overall_Trust," + final.overallTrust;
+    csv += "\nPhaseC,Trust_Factor," + final.factor;
+    csv += "\nPhaseC,Trust_Factor_Other,\"" + final.factorOther.replace(/"/g,'""') + "\"";
+    csv += "\nPhaseC,Contact_Likelihood," + final.contactLikely;
+    csv += "\nPhaseC,Contact_Factors,\"" + final.contactFactors.replace(/"/g,'""') + "\"";
+    csv += "\nPhaseC,Contact_Factors_Other,\"" + final.contactFactorsOther.replace(/"/g,'""') + "\"";
+    csv += "\nPhaseC,Photos_vs_Desc," + final.photosVsDesc;
+    csv += "\nPhaseC,Photos_vs_Desc_Other,\"" + final.photosVsDescOther.replace(/"/g,'""') + "\"";
+    csv += "\nPhaseC,Visual_Appeal," + final.visualAppeal;
+    csv += "\nPhaseC,Final_Comment,\"" + final.finalComment.replace(/"/g,'""') + "\"";
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    const annonceIDs = annonces.map(a => a.ID).join("_");
+    const randomHash = Math.random().toString(36).substring(2,8);
+    a.href = URL.createObjectURL(blob);
+    a.download = `phase2_${annonceIDs}_${randomHash}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    document.getElementById("content").innerHTML = "<h2>Merci ! Vos résultats ont été générés. Redirection vers la phase 3</h2>";
+    setTimeout(()=> window.location.href="phase3.html", 2000);
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('modalIntroPhase2').style.display = 'flex';
+});
+function cancelClick() {
+    clickData = null;          // supprime le click enregistré
+    clickMode = "capture";     // remet le mode capture pour relancer le click
+    modalSurvey.style.display = "none"; // ferme la modal
+    alert("Click canceled. Please click again on the element that influenced your trust.");
+}
+
 </script>
 </body>
 </html>
