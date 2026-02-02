@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-02-01T12:21:48.935Z",
+  "tests": [
+    {
+      "phase": 1,
+      "duration": 10,
+      "selectedProduct": {
+        "title": "Xiaomi 14 Ultra",
+        "price": 479,
+        "seller": "ChinaTech",
+        "location": "Nantes (44)",
+        "daysAgo": 4,
+        "condition": "Très bon état",
+        "image": "https://fr.shopping.rakuten.com/photo/xiaomi-14-ultra-concu-avec-leica-76607534430_L.jpg"
+      },
+      "motivations": [
+        "prix-bas",
+        "marque"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "Xiaomi 14 Ultra",
+        "price": 479,
+        "seller": "ChinaTech",
+        "location": "Nantes (44)",
+        "daysAgo": 4,
+        "condition": "Très bon état",
+        "image": "https://fr.shopping.rakuten.com/photo/xiaomi-14-ultra-concu-avec-leica-76607534430_L.jpg"
+      },
+      "motivations": [
+        "prix-bas",
+        "condition",
+        "marque"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "Xiaomi 14 Ultra",
+        "price": 479,
+        "seller": "ChinaTech",
+        "location": "Nantes (44)",
+        "daysAgo": 4,
+        "condition": "Très bon état",
+        "image": "https://fr.shopping.rakuten.com/photo/xiaomi-14-ultra-concu-avec-leica-76607534430_L.jpg"
+      },
+      "motivations": [
+        "prix-bas",
+        "condition",
+        "vendeur",
+        "marque"
+      ],
+      "otherReason": null
+    }
+  ]
+}

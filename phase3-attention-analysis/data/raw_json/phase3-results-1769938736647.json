@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-02-01T09:38:56.644Z",
+  "tests": [
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "OnePlus 12 Pro",
+        "price": 549,
+        "seller": "FastPhone",
+        "location": "Nice (06)",
+        "daysAgo": 2,
+        "condition": "Excellent état",
+        "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&h=300&fit=crop"
+      },
+      "motivations": [
+        "marque"
+      ]
+    }
+  ]
+}

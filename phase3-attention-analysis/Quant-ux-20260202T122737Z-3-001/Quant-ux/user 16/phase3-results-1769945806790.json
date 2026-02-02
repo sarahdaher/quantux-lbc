@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-02-01T11:36:46.788Z",
+  "tests": [
+    {
+      "phase": 1,
+      "duration": 10,
+      "selectedProduct": {
+        "title": "Apple iPhone 14",
+        "price": 599,
+        "seller": "TechStore_Pro",
+        "location": "Bordeaux (33)",
+        "daysAgo": 2,
+        "condition": "Très bon état",
+        "image": "https://images-na.ssl-images-amazon.com/images/I/61bK6PMOC3L._AC_SL1500_.jpg"
+      },
+      "motivations": [
+        "condition",
+        "vendeur"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "Apple iPhone 14",
+        "price": 599,
+        "seller": "TechStore_Pro",
+        "location": "Bordeaux (33)",
+        "daysAgo": 2,
+        "condition": "Très bon état",
+        "image": "https://images-na.ssl-images-amazon.com/images/I/61bK6PMOC3L._AC_SL1500_.jpg"
+      },
+      "motivations": [
+        "condition",
+        "vendeur",
+        "marque"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "Apple iPhone 14",
+        "price": 599,
+        "seller": "TechStore_Pro",
+        "location": "Bordeaux (33)",
+        "daysAgo": 2,
+        "condition": "Très bon état",
+        "image": "https://images-na.ssl-images-amazon.com/images/I/61bK6PMOC3L._AC_SL1500_.jpg"
+      },
+      "motivations": [
+        "prix-bas",
+        "condition",
+        "vendeur",
+        "marque"
+      ],
+      "otherReason": null
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-02-01T10:52:01.231Z",
+  "tests": [
+    {
+      "phase": 1,
+      "duration": 10,
+      "selectedProduct": {
+        "title": "IPHONE COMME NEUF PAS CHER",
+        "price": 50,
+        "seller": "anonymous7654",
+        "location": "Seine-Saint-Denis (93)",
+        "daysAgo": 0,
+        "condition": "Excellent état",
+        "image": "https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=800"
+      },
+      "motivations": [
+        "marque"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "Apple iPhone 14",
+        "price": 599,
+        "seller": "TechStore_Pro",
+        "location": "Bordeaux (33)",
+        "daysAgo": 2,
+        "condition": "Très bon état",
+        "image": "https://images-na.ssl-images-amazon.com/images/I/61bK6PMOC3L._AC_SL1500_.jpg"
+      },
+      "motivations": [
+        "vendeur",
+        "recente"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "Samsung Galaxy A55",
+        "price": 299,
+        "seller": "MobileWorld",
+        "location": "Montpellier (34)",
+        "daysAgo": 5,
+        "condition": "Bon état",
+        "image": "https://www.refabz.com/537739-large_default/galaxy-a32-5g.webp"
+      },
+      "motivations": [
+        "prix-bas",
+        "condition",
+        "vendeur",
+        "marque",
+        "recente"
+      ],
+      "otherReason": null
+    }
+  ]
+}

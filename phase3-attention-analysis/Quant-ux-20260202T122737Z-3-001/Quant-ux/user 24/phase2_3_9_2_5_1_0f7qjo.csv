@@ -1,0 +1,23 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+3,869,122,"5.0 (52)",3,3,4,""
+9,871,150,"Maxime
+Pompignac
+4.9 (100)
+100 annonces
+Réactif
+Identité vérifiée",4,4,1,"Seems trustworthy because of the id certification, put the pricing is way to high."
+2,862,91,"5.0 (562)",3,4,2,"The pricing seems too low to be true, same goes for the average rating of 5.0 on 562 customer feedbacks..."
+5,874,264,"Profil recommandé",4,3,3,""
+1,872,116,"E.Leclerc",4,4,2,""
+
+PhaseC,Best_Listing,Exemple 2 : iPhone 15 Pro
+PhaseC,Overall_Trust,5
+PhaseC,Trust_Factor,Seller
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Price|Seller|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,5
+PhaseC,Final_Comment,""

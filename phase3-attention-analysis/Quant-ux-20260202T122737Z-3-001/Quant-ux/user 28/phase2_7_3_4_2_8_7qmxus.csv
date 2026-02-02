@@ -1,0 +1,34 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+7,129,683,"Evaluate this listing",,,,""
+3,93,734,"Likes : ❤️ 9",4,4,2,"Too expensive"
+4,179,762,"15 Pro Max
+690€ -10%
+Catégorie : iPhone 15
+État : Bon
+Likes : ❤️ 18
+Transaction sécurisée incluse, A la une
+iPhone 11 entièrement fonctionnel, en bon état. Légère rayure
+Téléphone prêt à l’emploi, réinitialisé.
+Câble de chargement inclus.
+Expédition seulement.
+Evaluate this listing",2,2,1,""
+2,521,254,"MARKET PHONE",4,5,4,""
+8,92,699,"Huawei P30
+209€
+Catégorie : Huawei
+État : Neuf
+Likes : ❤️ 17
+Vends téléphone Huawei P30 Pro neuf. Il est en parfait état et n’a jamais été utilisé. Tous les accessoires d’origine sont inclus.
+Evaluate this listing",3,3,2,""
+
+PhaseC,Best_Listing,Exemple 1 : iPhone 14 Pro
+PhaseC,Overall_Trust,5
+PhaseC,Trust_Factor,Seller
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Seller|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,5
+PhaseC,Final_Comment,""

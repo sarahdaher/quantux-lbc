@@ -1,0 +1,57 @@
+{
+  "timestamp": "2026-02-01T13:05:51.356Z",
+  "tests": [
+    {
+      "phase": 1,
+      "duration": 10,
+      "selectedProduct": {
+        "title": "Samsung Galaxy S24 Ultra",
+        "price": 899,
+        "seller": "ElectroMax",
+        "location": "Marseille (13)",
+        "daysAgo": 1,
+        "condition": "Très bon état",
+        "image": "https://fr.shopping.rakuten.com/pictures/01996d67-5427-7f5d-9ac2-2d0dba36d7ad_L_NOPAD.jpg"
+      },
+      "motivations": [
+        "condition"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "Samsung Galaxy S24 Ultra",
+        "price": 899,
+        "seller": "ElectroMax",
+        "location": "Marseille (13)",
+        "daysAgo": 1,
+        "condition": "Très bon état",
+        "image": "https://fr.shopping.rakuten.com/pictures/01996d67-5427-7f5d-9ac2-2d0dba36d7ad_L_NOPAD.jpg"
+      },
+      "motivations": [
+        "vendeur"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "Samsung Galaxy S24 Ultra",
+        "price": 899,
+        "seller": "ElectroMax",
+        "location": "Marseille (13)",
+        "daysAgo": 1,
+        "condition": "Très bon état",
+        "image": "https://fr.shopping.rakuten.com/pictures/01996d67-5427-7f5d-9ac2-2d0dba36d7ad_L_NOPAD.jpg"
+      },
+      "motivations": [
+        "condition",
+        "vendeur"
+      ],
+      "otherReason": null
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+4,376,811,"iPhone 11 entièrement fonctionnel, en bon état. Légère rayure
+Téléphone prêt à l’emploi, réinitialisé.
+Câble de chargement inclus.
+Expédition seulement.",4,3,4,"I would ask for more pictures"
+9,199,576,"IMG",1,1,1,"The pictures are too suspicious, that funny smile on the pp wont make me forget that"
+7,511,303,"Aucun avis",1,1,1,"no pictures, no ratings, nothing, scam price"
+2,466,208,"IMG",2,2,1,"Why are there different phones on pictures ?"
+1,502,188,"IMG",4,5,4,"All seems round, the brand on the pictures match that of the seller"
+
+PhaseC,Best_Listing,Exemple 5 : iPhone 12
+PhaseC,Overall_Trust,3
+PhaseC,Trust_Factor,Photos
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Seller|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More photos
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,5
+PhaseC,Final_Comment,""

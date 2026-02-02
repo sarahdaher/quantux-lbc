@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-02-01T11:06:04.753Z",
+  "tests": [
+    {
+      "phase": 1,
+      "duration": 10,
+      "selectedProduct": {
+        "title": "Samsung Galaxy S24 Ultra",
+        "price": 899,
+        "seller": "ElectroMax",
+        "location": "Marseille (13)",
+        "daysAgo": 1,
+        "condition": "Très bon état",
+        "image": "https://fr.shopping.rakuten.com/pictures/01996d67-5427-7f5d-9ac2-2d0dba36d7ad_L_NOPAD.jpg"
+      },
+      "motivations": [
+        "vendeur"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "iPhone 11 64GB",
+        "price": 19,
+        "seller": "OccazPhone",
+        "location": "Saint-Denis (93)",
+        "daysAgo": 6,
+        "condition": "Bon état",
+        "image": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQcX8PakHukdugzZWfGOBQHzE_Uo0I1iWrsWOm3ORpMF8U7-HCr8L5MKsniIsYueyWmIljthkhUx9xZ0YfV0gSd295l1WZp&usqp=CAc"
+      },
+      "motivations": [
+        "condition",
+        "vendeur"
+      ],
+      "otherReason": null
+    }
+  ]
+}

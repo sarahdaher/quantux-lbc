@@ -1,0 +1,18 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+9,544,660,"Evaluate this listing",3,3,3,"Rate is ok but too many ads"
+7,526,650,"Evaluate this listing",1,1,1,"Price too low for a new phone, no picture of the seller"
+8,651,628,"Evaluate this listing",3,3,3,"The ad is ok but I don't trust the seller because of her picture "
+5,500,629,"Evaluate this listing",4,4,4,"The ad is clear, the rating is good, pictures are nice"
+4,505,610,"Evaluate this listing",4,3,4,"No picture of the seller. Ad is clear and fair (he says there is a small scratch). Why is the phone only available by expedition ?"
+
+PhaseC,Best_Listing,Exemple 4 : iPhone 15+
+PhaseC,Overall_Trust,3
+PhaseC,Trust_Factor,Description
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Description|Price|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,4
+PhaseC,Final_Comment,""

@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-02-01T10:56:34.404Z",
+  "tests": [
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "Google Pixel 9 Pro",
+        "price": 649,
+        "seller": "TechHub",
+        "location": "Toulouse (31)",
+        "daysAgo": 3,
+        "condition": "Bon état",
+        "image": "https://www.backmarket.fr/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D1080/https://d2e6ccujb3mkqf.cloudfront.net/c4635131-355c-4f9c-8622-a53bbb4583b4-1_eca63382-43ef-4811-9a55-786dd314cd5a.jpg"
+      },
+      "motivations": [
+        "marque"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "Nothing Phone 2",
+        "price": 359,
+        "seller": "InnovateTech",
+        "location": "Lille (59)",
+        "daysAgo": 3,
+        "condition": "Excellent état",
+        "image": "https://cdn.shopify.com/s/files/1/0588/8871/7966/products/phone2_black_1200x1200.jpg?v=1697046751"
+      },
+      "motivations": [
+        "marque"
+      ],
+      "otherReason": null
+    }
+  ]
+}

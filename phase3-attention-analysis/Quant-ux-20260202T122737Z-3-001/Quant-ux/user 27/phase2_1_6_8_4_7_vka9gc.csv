@@ -1,0 +1,21 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+1,772,39,"Top Vendeur",4,5,4,""
+6,362,489,"Catégorie : iPhone 12",1,2,1,"Photos, incohérence iphone 11/iphone 12, prix"
+8,369,354,"IMG",4,4,4,""
+4,591,497,"iPhone 11 entièrement fonctionnel, en bon état. Légère rayure
+Téléphone prêt à l’emploi, réinitialisé.
+Câble de chargement inclus.
+Expédition seulement.",4,4,1,"prix chère mais honneteté"
+7,604,413,"150€",1,1,1,"abscence de photo"
+
+PhaseC,Best_Listing,Exemple 2 : iPhone 11
+PhaseC,Overall_Trust,5
+PhaseC,Trust_Factor,Photos
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Price|Seller"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More photos
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,5
+PhaseC,Final_Comment,""

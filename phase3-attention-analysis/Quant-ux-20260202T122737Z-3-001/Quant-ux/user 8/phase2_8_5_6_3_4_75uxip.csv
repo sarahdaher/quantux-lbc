@@ -1,0 +1,18 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+8,287,258,"IMG",2,3,4,""
+5,316,234,"IMG",4,3,4,""
+6,466,199,"IMG",4,5,4,"Having a real hand on the picture helps to trust the seller"
+3,294,234,"IMG",2,2,2,"Rose color make you think the seller is a female, with higher trust level"
+4,284,438,"IMG",2,2,3,""
+
+PhaseC,Best_Listing,Exemple 4 : iPhone 15+
+PhaseC,Overall_Trust,5
+PhaseC,Trust_Factor,Photos
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More photos
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,
+PhaseC,Final_Comment,""

@@ -1,0 +1,18 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+6,471,386,"IMG",5,,,""
+4,455,739,"Evaluate this listing",5,,,""
+1,303,394,"IMG",2,,,""
+5,323,382,"IMG",4,,,""
+9,458,365,"IMG",2,,,""
+
+PhaseC,Best_Listing,Exemple 1 : iPhone 11
+PhaseC,Overall_Trust,
+PhaseC,Trust_Factor,
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,""
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,
+PhaseC,Final_Comment,""

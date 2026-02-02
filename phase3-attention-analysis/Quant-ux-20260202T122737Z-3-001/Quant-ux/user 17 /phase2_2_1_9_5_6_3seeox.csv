@@ -1,0 +1,18 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+2,261,199,"IMG",4,5,4,""
+1,250,73,"IMG",4,4,4,""
+9,242,104,"IMG",4,4,3,""
+5,261,274,"IMG",3,3,3,""
+6,570,134,"IMG",4,3,3,""
+
+PhaseC,Best_Listing,Exemple 1 : Pixel 7
+PhaseC,Overall_Trust,5
+PhaseC,Trust_Factor,Photos
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Description|Price"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,5
+PhaseC,Final_Comment,""

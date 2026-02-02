@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-02-01T11:13:08.586Z",
+  "tests": [
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "OnePlus 12 Pro",
+        "price": 549,
+        "seller": "FastPhone",
+        "location": "Nice (06)",
+        "daysAgo": 267,
+        "condition": "Excellent état",
+        "image": "https://fr.shopping.rakuten.com/pictures/0199e78c-e727-7461-b76e-6b9120a04642_L_NOPAD.jpg"
+      },
+      "motivations": [
+        "condition",
+        "marque"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "Apple iPhone 14",
+        "price": 599,
+        "seller": "TechStore_Pro",
+        "location": "Bordeaux (33)",
+        "daysAgo": 2,
+        "condition": "Très bon état",
+        "image": "https://images-na.ssl-images-amazon.com/images/I/61bK6PMOC3L._AC_SL1500_.jpg"
+      },
+      "motivations": [
+        "prix-bas"
+      ],
+      "otherReason": null
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+9,473,374,"Identité vérifiée",4,4,4,""
+6,485,354,"Pro",4,4,3,""
+5,503,304,"4.6 (13)",3,4,2,""
+4,492,362,"UNIVACK
+Paris 12
+5.0 (59758)
+39750 annonces
+Pro",4,4,3,""
+1,480,359,"E.Leclerc
+Le Bosc
+4.5 (15)
+13 annonces
+Pro
+Top Vendeur",4,3,2,""
+
+PhaseC,Best_Listing,Exemple 1 : iPhone 15 Pro
+PhaseC,Overall_Trust,5
+PhaseC,Trust_Factor,Badges
+PhaseC,Trust_Factor_Other,"Rating"
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Price|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More photos
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,4
+PhaseC,Final_Comment,""

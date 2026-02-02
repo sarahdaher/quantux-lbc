@@ -1,0 +1,19 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+6,766,258,"Pro",4,3,4,"the global rating"
+4,767,313,"5.0 (59758)",5,5,5,"the number of note
+"
+9,765,276,"Identité vérifiée",3,4,3,""
+7,766,223,"Aucun avis",1,1,1,""
+2,753,117,"Pro",4,3,4,""
+
+PhaseC,Best_Listing,Exemple 3 : iPhone 15 Pro
+PhaseC,Overall_Trust,5
+PhaseC,Trust_Factor,Rating
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Badges|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,4
+PhaseC,Final_Comment,""

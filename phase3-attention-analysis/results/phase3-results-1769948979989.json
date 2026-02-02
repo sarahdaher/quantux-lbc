@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-02-01T12:29:39.988Z",
+  "tests": [
+    {
+      "phase": 1,
+      "duration": 10,
+      "selectedProduct": {
+        "title": "Apple iPhone 14",
+        "price": 599,
+        "seller": "TechStore_Pro",
+        "location": "Bordeaux (33)",
+        "daysAgo": 2,
+        "condition": "Très bon état",
+        "image": "https://images-na.ssl-images-amazon.com/images/I/61bK6PMOC3L._AC_SL1500_.jpg"
+      },
+      "motivations": [
+        "marque"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "Apple IPhone 16 128GB GARANTIE 2 Ans",
+        "price": 849,
+        "seller": "MobileExperts",
+        "location": "Lyon (69)",
+        "daysAgo": 182,
+        "condition": "Excellent état",
+        "image": "https://images-na.ssl-images-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg"
+      },
+      "motivations": [
+        "prix-bas"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "Apple IPhone 16 128GB GARANTIE 2 Ans",
+        "price": 849,
+        "seller": "MobileExperts",
+        "location": "Lyon (69)",
+        "daysAgo": 182,
+        "condition": "Excellent état",
+        "image": "https://images-na.ssl-images-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg"
+      },
+      "motivations": [
+        "prix-bas"
+      ],
+      "otherReason": null
+    }
+  ]
+}

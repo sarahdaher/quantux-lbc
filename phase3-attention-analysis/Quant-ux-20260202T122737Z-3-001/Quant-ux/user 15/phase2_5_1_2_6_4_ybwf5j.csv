@@ -1,0 +1,18 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+5,281,574,"Likes : ❤️ 16",3,3,4,""
+1,311,474,"-27%",4,3,4,""
+2,325,411,"Catégorie : Google",3,1,1,""
+6,297,471,"Likes : ❤️ 3",1,1,1,""
+4,276,450,"État : Bon",4,4,1,""
+
+PhaseC,Best_Listing,Exemple 1 : iPhone 15+
+PhaseC,Overall_Trust,3
+PhaseC,Trust_Factor,Rating
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Description|Price|Seller|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,4
+PhaseC,Final_Comment,""

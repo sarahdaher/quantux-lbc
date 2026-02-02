@@ -1,0 +1,18 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+9,713,375,"Identité vérifiée",5,5,4,"Since the seller is verified and has a good rating, I trust that this is not a scam."
+6,316,496,"Transaction sécurisée incluse",3,3,2,"The seller doesn't have a very good rating, it must seems that some people who buy his products have bad experiences. I wouldn't dare try buying a product if I'm not 100% sure it's good."
+1,713,72,"Pro",4,5,4,"The seller is a pro, so there is less chance for it to be a scam. Even if it was, I could probably contact the brand and do reclamations, which is reassuring."
+4,721,123,"5.0 (59758)",5,5,5,"The rating is great (high rate with many reviews)"
+3,243,499,"Transaction sécurisée incluse, ""Livraison dès 2,99e""",4,4,3,""
+
+PhaseC,Best_Listing,Exemple 4 : 15 Pro Max
+PhaseC,Overall_Trust,4
+PhaseC,Trust_Factor,Rating
+PhaseC,Trust_Factor_Other,"seller rating and badges"
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Seller|Badges|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,3
+PhaseC,Final_Comment,""

@@ -1,0 +1,18 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+6,758,39,"Pro",2,3,3,"Iphone 11 listed as (catégorie) iphone 12, seller is pro"
+9,380,228,"IMG",4,4,5,"Aappears as réactif, good price (with the -30% tag)"
+7,764,143,"Dude30",2,2,2,"Price too low, no account picture"
+8,622,281,"IMG",3,4,4,"5.0 rating, account picture"
+4,521,69,"IMG",4,5,4,"Seller is pro with lots of liked ans good product pictures"
+
+PhaseC,Best_Listing,Exemple 5 : 15 Pro Max
+PhaseC,Overall_Trust,3
+PhaseC,Trust_Factor,Price
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Price|Seller"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,4
+PhaseC,Final_Comment,""

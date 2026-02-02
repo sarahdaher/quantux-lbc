@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-02-01T11:32:56.872Z",
+  "tests": [
+    {
+      "phase": 1,
+      "duration": 10,
+      "selectedProduct": {
+        "title": "Xiaomi 14 Ultra",
+        "price": 479,
+        "seller": "ChinaTech",
+        "location": "Nantes (44)",
+        "daysAgo": 4,
+        "condition": "Très bon état",
+        "image": "https://fr.shopping.rakuten.com/photo/xiaomi-14-ultra-concu-avec-leica-76607534430_L.jpg"
+      },
+      "motivations": [],
+      "otherReason": null
+    },
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "Google Pixel 9 Pro",
+        "price": 649,
+        "seller": "TechHub",
+        "location": "Toulouse (31)",
+        "daysAgo": 3,
+        "condition": "Bon état",
+        "image": "https://www.backmarket.fr/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D1080/https://d2e6ccujb3mkqf.cloudfront.net/c4635131-355c-4f9c-8622-a53bbb4583b4-1_eca63382-43ef-4811-9a55-786dd314cd5a.jpg"
+      },
+      "motivations": [],
+      "otherReason": null
+    },
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "Samsung Galaxy S24 Ultra",
+        "price": 899,
+        "seller": "ElectroMax",
+        "location": "Marseille (13)",
+        "daysAgo": 1,
+        "condition": "Très bon état",
+        "image": "https://fr.shopping.rakuten.com/pictures/01996d67-5427-7f5d-9ac2-2d0dba36d7ad_L_NOPAD.jpg"
+      },
+      "motivations": [],
+      "otherReason": null
+    }
+  ]
+}

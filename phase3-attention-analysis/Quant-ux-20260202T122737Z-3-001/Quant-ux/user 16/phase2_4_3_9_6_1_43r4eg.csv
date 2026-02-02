@@ -1,0 +1,22 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+4,804,99,"UNIVACK
+Paris 12
+5.0 (59758)
+39750 annonces
+Pro",3,3,5,"A 5.0 rating after 59758 votes seems a bit suspicious. Also the description says it is for an iphone 11 so it makes me think that there was not much attention paid to the ad. But I lose nothing if I contact the seller so I'm doing it regardless."
+3,613,730,"Evaluate this listing",4,4,5,"Ad is neat and consice, with logical ratings (with the number of reviews taken into account). Photo seems legit and not some photo taken off the internet."
+9,452,806,"Evaluate this listing",3,3,5,""
+6,524,728,"Evaluate this listing",2,2,2,""
+1,540,774,"Evaluate this listing",3,3,3,""
+
+PhaseC,Best_Listing,Exemple 2 : iPhone 15+
+PhaseC,Overall_Trust,4
+PhaseC,Trust_Factor,Rating
+PhaseC,Trust_Factor_Other,"Descriptions and photos played a role too."
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Description|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,5
+PhaseC,Final_Comment,""

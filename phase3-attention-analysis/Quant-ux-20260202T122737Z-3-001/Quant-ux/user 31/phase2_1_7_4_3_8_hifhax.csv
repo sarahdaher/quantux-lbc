@@ -1,0 +1,21 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+1,340,474,"-27%",3,3,4,"the description seems accurate and it has many likes"
+7,303,495,"150€",1,1,1,"it seems too cheap to be in a good condition and for it to have never been used"
+4,632,591,"iPhone 11 entièrement fonctionnel, en bon état. Légère rayure
+Téléphone prêt à l’emploi, réinitialisé.
+Câble de chargement inclus.
+Expédition seulement.",4,4,4,"the seller has been honest about the defects in his product and the price seems reasonable"
+3,817,641,"Vente iPhone 15 PLUS en très bon état général, toutes les fonctionnalités sont fonctionnelles. Vente avec câble de chargement. Disponible en boutique ou par livraison.",3,3,2,"the seller didn't give many details about the product which makes it seem a little suspicious about its real condition"
+8,328,612,"Likes : ❤️ 17",3,3,4,"it has many likes and it really seems to have never been used ans as a huawei phone for that price it seems like a good deal"
+
+PhaseC,Best_Listing,Exemple 3 : 15 Pro Max
+PhaseC,Overall_Trust,4
+PhaseC,Trust_Factor,Description
+PhaseC,Trust_Factor_Other,"the accuracy of the photos with the description"
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Description|Price|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,6
+PhaseC,Final_Comment,""

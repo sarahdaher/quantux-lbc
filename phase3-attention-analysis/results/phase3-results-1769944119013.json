@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-02-01T11:08:39.013Z",
+  "tests": [
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "IPhone 16 Pro Max 256GB GARANTIE 2 ANS",
+        "price": 1099,
+        "seller": "TechPro Store",
+        "location": "Paris (75)",
+        "daysAgo": 321,
+        "condition": "Bon état",
+        "image": "https://www.backmarket.fr/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D1080/https://d2e6ccujb3mkqf.cloudfront.net/6e8933a0-4b95-4af2-988b-374fc3a0cf9d-1_4046eb0d-3299-4973-8c74-0d4655c65985.jpg"
+      },
+      "motivations": [
+        "prix-eleve",
+        "condition"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "Apple iPhone 14",
+        "price": 599,
+        "seller": "TechStore_Pro",
+        "location": "Bordeaux (33)",
+        "daysAgo": 2,
+        "condition": "Très bon état",
+        "image": "https://images-na.ssl-images-amazon.com/images/I/61bK6PMOC3L._AC_SL1500_.jpg"
+      },
+      "motivations": [
+        "prix-eleve",
+        "condition",
+        "marque",
+        "recente"
+      ],
+      "otherReason": null
+    }
+  ]
+}

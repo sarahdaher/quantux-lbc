@@ -1,0 +1,57 @@
+{
+  "timestamp": "2026-02-01T20:39:29.557Z",
+  "tests": [
+    {
+      "phase": 1,
+      "duration": 10,
+      "selectedProduct": {
+        "title": "Samsung Galaxy A55",
+        "price": 299,
+        "seller": "MobileWorld",
+        "location": "Montpellier (34)",
+        "daysAgo": 5,
+        "condition": "Bon état",
+        "image": "https://www.refabz.com/537739-large_default/galaxy-a32-5g.webp"
+      },
+      "motivations": [
+        "prix-bas"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "IPhone 16 Pro Max 256GB GARANTIE 2 ANS",
+        "price": 1099,
+        "seller": "TechPro Store",
+        "location": "Paris (75)",
+        "daysAgo": 321,
+        "condition": "Bon état",
+        "image": "https://www.backmarket.fr/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D1080/https://d2e6ccujb3mkqf.cloudfront.net/6e8933a0-4b95-4af2-988b-374fc3a0cf9d-1_4046eb0d-3299-4973-8c74-0d4655c65985.jpg"
+      },
+      "motivations": [
+        "prix-eleve",
+        "condition"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "Apple IPhone 16 128GB GARANTIE 2 Ans",
+        "price": 849,
+        "seller": "MobileExperts",
+        "location": "Lyon (69)",
+        "daysAgo": 182,
+        "condition": "Excellent état",
+        "image": "https://images-na.ssl-images-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg"
+      },
+      "motivations": [
+        "condition"
+      ],
+      "otherReason": null
+    }
+  ]
+}

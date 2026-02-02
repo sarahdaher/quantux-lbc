@@ -1,0 +1,28 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+5,212,822,"Vends iPhone 15 en très bon état. Le téléphone fonctionne parfaitement, aucun souci à signaler, il a été réinitialisé et est prêt à l’emploi. Vendu avec son câble de chargement. Remise en main propre possible ou envoi selon préférence.",3,2,2,""
+6,367,824,"iPhone 11 en très bon état de fonctionnement.
+Tous les accessoires d'origine, dont le câble de charge, sont inclus.",2,3,2,""
+3,90,653,"550€",2,2,2,""
+1,528,260,"E.Leclerc
+Le Bosc
+4.5 (15)
+13 annonces
+Pro
+Top Vendeur",4,4,5,""
+4,524,332,"UNIVACK
+Paris 12
+5.0 (59758)
+39750 annonces
+Pro",4,4,5,""
+
+PhaseC,Best_Listing,Exemple 1 : iPhone 15+
+PhaseC,Overall_Trust,4
+PhaseC,Trust_Factor,Price
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Description|Seller|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,5
+PhaseC,Final_Comment,""

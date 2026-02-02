@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-02-01T18:48:22.098Z",
+  "tests": [
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "Samsung Galaxy A55",
+        "price": 299,
+        "seller": "MobileWorld",
+        "location": "Montpellier (34)",
+        "daysAgo": 5,
+        "condition": "Bon état",
+        "image": "https://www.refabz.com/537739-large_default/galaxy-a32-5g.webp"
+      },
+      "motivations": [
+        "prix-bas",
+        "condition",
+        "vendeur",
+        "marque"
+      ],
+      "otherReason": null
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+4,417,512,"iPhone 11 entièrement fonctionnel, en bon état. Légère rayure
+Téléphone prêt à l’emploi, réinitialisé.
+Câble de chargement inclus.
+Expédition seulement.",4,4,3,""
+1,364,555,"iPhone 12 en bon état de fonctionnement, réinitialisé et prêt à l'emploi.
+Vente du téléphone avec le câble de chargement.
+Expédition seulement",3,3,2,"Les photos n'ont pas l'air d'être les photos du vrai téléphone"
+2,490,563,"Téléphone portable (Google Pixel 7) en très bon état.
+Téléphone réinitialisé et prêt à l’utilisation.
+Fourni avec câble de chargement.
+Disponible en boutique ou par livraison.",3,3,2,""
+5,452,249,"IMG",4,4,3,""
+6,438,267,"IMG",4,3,3,""
+
+PhaseC,Best_Listing,Exemple 1 : 15 Pro Max
+PhaseC,Overall_Trust,5
+PhaseC,Trust_Factor,Photos
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Description|Price"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,
+PhaseC,Final_Comment,""

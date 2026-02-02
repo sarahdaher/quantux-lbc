@@ -1,0 +1,32 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+3,284,408,"IMG",2,2,1,""
+4,270,442,"IMG",1,1,1,"Bcp de 5.0. peut être fake"
+6,280,438,"IMG",3,2,2,""
+7,271,396,"
+Dude30
+St-Ambroix
+Aucun avis
+2 annonces
+Réactif
+iPhone 14 Pro
+150€
+Catégorie : iPhone 14
+État : Neuf
+Likes : ❤️ 13
+Nouveau
+Téléphone neuf, la boîte n'a jamais été ouverte.
+Evaluate this listing
+",1,1,1,""
+2,219,354,"IMG",2,2,1,""
+
+PhaseC,Best_Listing,Exemple 3 : iPhone 11
+PhaseC,Overall_Trust,3
+PhaseC,Trust_Factor,Rating
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Seller|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More photos
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,2
+PhaseC,Final_Comment,""

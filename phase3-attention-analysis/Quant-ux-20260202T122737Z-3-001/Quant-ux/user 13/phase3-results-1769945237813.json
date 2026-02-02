@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-02-01T11:27:17.808Z",
+  "tests": [
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "iPhone 11 64GB",
+        "price": 19,
+        "seller": "OccazPhone",
+        "location": "Saint-Denis (93)",
+        "daysAgo": 6,
+        "condition": "Bon état",
+        "image": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQcX8PakHukdugzZWfGOBQHzE_Uo0I1iWrsWOm3ORpMF8U7-HCr8L5MKsniIsYueyWmIljthkhUx9xZ0YfV0gSd295l1WZp&usqp=CAc"
+      },
+      "motivations": [
+        "marque"
+      ],
+      "otherReason": null
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+2,266,433,"Likes : ❤️ 23",2,3,4,"the number of likes shows that the listing is relatively trusted, whereas the category google and the name of the seller are sus"
+3,721,313,"5.0 (52)",4,3,5,""
+9,297,415,"-30%",5,5,5,""
+6,305,425,"Catégorie : iPhone 12",1,1,2,""
+7,729,224,"Aucun avis",1,1,1,""
+
+PhaseC,Best_Listing,Exemple 3 : iPhone 15 Pro
+PhaseC,Overall_Trust,3
+PhaseC,Trust_Factor,Badges
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Badges|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,6
+PhaseC,Final_Comment,""

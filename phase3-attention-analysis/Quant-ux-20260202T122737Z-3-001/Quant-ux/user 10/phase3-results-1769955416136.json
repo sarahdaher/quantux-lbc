@@ -1,0 +1,57 @@
+{
+  "timestamp": "2026-02-01T14:16:56.136Z",
+  "tests": [
+    {
+      "phase": 1,
+      "duration": 10,
+      "selectedProduct": {
+        "title": "OnePlus 12 Pro",
+        "price": 549,
+        "seller": "FastPhone",
+        "location": "Nice (06)",
+        "daysAgo": 267,
+        "condition": "Excellent état",
+        "image": "https://fr.shopping.rakuten.com/pictures/0199e78c-e727-7461-b76e-6b9120a04642_L_NOPAD.jpg"
+      },
+      "motivations": []
+    },
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "Xiaomi 14 Ultra",
+        "price": 479,
+        "seller": "ChinaTech",
+        "location": "Nantes (44)",
+        "daysAgo": 4,
+        "condition": "Très bon état",
+        "image": "https://fr.shopping.rakuten.com/photo/xiaomi-14-ultra-concu-avec-leica-76607534430_L.jpg"
+      },
+      "motivations": [
+        "condition",
+        "marque"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "OnePlus 12 Pro",
+        "price": 549,
+        "seller": "FastPhone",
+        "location": "Nice (06)",
+        "daysAgo": 267,
+        "condition": "Excellent état",
+        "image": "https://fr.shopping.rakuten.com/pictures/0199e78c-e727-7461-b76e-6b9120a04642_L_NOPAD.jpg"
+      },
+      "motivations": [
+        "prix-bas",
+        "prix-eleve",
+        "condition",
+        "marque"
+      ],
+      "otherReason": null
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-02-01T19:58:39.137Z",
+  "tests": [
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "Samsung Galaxy A55",
+        "price": 299,
+        "seller": "MobileWorld",
+        "location": "Montpellier (34)",
+        "daysAgo": 5,
+        "condition": "Bon état",
+        "image": "https://www.refabz.com/537739-large_default/galaxy-a32-5g.webp"
+      },
+      "motivations": [
+        "condition",
+        "vendeur"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 3,
+      "duration": 60,
+      "selectedProduct": {
+        "title": "Google Pixel 9 Pro",
+        "price": 649,
+        "seller": "TechHub",
+        "location": "Toulouse (31)",
+        "daysAgo": 3,
+        "condition": "Bon état",
+        "image": "https://www.backmarket.fr/cdn-cgi/image/format%3Dauto%2Cquality%3D75%2Cwidth%3D1080/https://d2e6ccujb3mkqf.cloudfront.net/c4635131-355c-4f9c-8622-a53bbb4583b4-1_eca63382-43ef-4811-9a55-786dd314cd5a.jpg"
+      },
+      "motivations": [
+        "marque"
+      ],
+      "otherReason": null
+    }
+  ]
+}

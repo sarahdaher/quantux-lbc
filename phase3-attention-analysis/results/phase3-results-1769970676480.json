@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-02-01T18:31:16.460Z",
+  "tests": [
+    {
+      "phase": 1,
+      "duration": 10,
+      "selectedProduct": {
+        "title": "iPhone 11 64GB",
+        "price": 19,
+        "seller": "OccazPhone",
+        "location": "Saint-Denis (93)",
+        "daysAgo": 6,
+        "condition": "Bon état",
+        "image": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQcX8PakHukdugzZWfGOBQHzE_Uo0I1iWrsWOm3ORpMF8U7-HCr8L5MKsniIsYueyWmIljthkhUx9xZ0YfV0gSd295l1WZp&usqp=CAc"
+      },
+      "motivations": [
+        "prix-bas"
+      ],
+      "otherReason": null
+    },
+    {
+      "phase": 2,
+      "duration": 30,
+      "selectedProduct": {
+        "title": "Samsung Galaxy A55",
+        "price": 299,
+        "seller": "MobileWorld",
+        "location": "Montpellier (34)",
+        "daysAgo": 5,
+        "condition": "Bon état",
+        "image": "https://www.refabz.com/537739-large_default/galaxy-a32-5g.webp"
+      },
+      "motivations": [
+        "prix-bas",
+        "prix-eleve"
+      ],
+      "otherReason": null
+    }
+  ]
+}

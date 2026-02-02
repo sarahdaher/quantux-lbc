@@ -1,0 +1,18 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+6,870,839,"Evaluate this listing",5,5,4,"I'm just not sure about the price, it's a bit low no ?"
+5,739,810,"Evaluate this listing",5,5,5,""
+9,975,299,"Identité vérifiée",3,5,5,""
+4,656,646,"Transaction sécurisée incluse, A la une",4,5,3,""
+2,515,401,"IMG",2,2,1,""
+
+PhaseC,Best_Listing,Exemple 1 : iPhone 11
+PhaseC,Overall_Trust,5
+PhaseC,Trust_Factor,Photos
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Description|Price|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More photos
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,6
+PhaseC,Final_Comment,""

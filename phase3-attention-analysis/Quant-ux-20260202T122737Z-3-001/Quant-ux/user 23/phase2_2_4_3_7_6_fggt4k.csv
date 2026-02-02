@@ -1,0 +1,30 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+2,438,670,"Evaluate this listing",3,3,2,""
+4,178,374,"15 Pro Max",1,1,1,"Title doesn't match description, iphone 11 vs 15 and doesn't want to give it in person"
+3,1053,657,"Vente iPhone 15 PLUS en très bon état général, toutes les fonctionnalités sont fonctionnelles. Vente avec câble de chargement. Disponible en boutique ou par livraison.",4,4,3,""
+7,201,374,"Dude30
+St-Ambroix
+Aucun avis
+2 annonces
+Réactif
+iPhone 14 Pro
+150€
+Catégorie : iPhone 14
+État : Neuf
+Likes : ❤️ 13
+Nouveau
+Téléphone neuf, la boîte n'a jamais été ouverte.
+Evaluate this listing",1,1,1,"No picture"
+6,272,560,"Catégorie : iPhone 12",2,3,3,"Title doesn't match description"
+
+PhaseC,Best_Listing,Exemple 1 : Pixel 7
+PhaseC,Overall_Trust,4
+PhaseC,Trust_Factor,Description
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Description|Seller"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,4
+PhaseC,Final_Comment,""

@@ -1,0 +1,22 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+8,691,335,"Enola
+Villeurbanne
+5.0 (14)
+14 annonces
+Profil recommandé",3,3,2,"I feel like the price is too low and she doesn't give too many details of the product"
+2,647,128,"Pro",4,4,3,"It has a pro tag"
+6,149,274,"165€",2,2,2,"The price is very low for an iphone in such a good state"
+3,1063,369,"Vente iPhone 15 PLUS en très bon état général, toutes les fonctionnalités sont fonctionnelles. Vente avec câble de chargement. Disponible en boutique ou par livraison.",3,3,3,"The ""disponible"" en boutique is weird"
+1,608,235,"Top Vendeur",4,3,4,"the tags"
+
+PhaseC,Best_Listing,Exemple 4 : iPhone 15+
+PhaseC,Overall_Trust,4
+PhaseC,Trust_Factor,Badges
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Description|Badges"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,3
+PhaseC,Final_Comment,""

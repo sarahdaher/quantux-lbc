@@ -1,0 +1,18 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+1,734,310,"Top Vendeur",4,4,3,""
+7,715,283,"Aucun avis",1,1,1,"Aucune photo, aucun avis"
+4,335,553,"Transaction sécurisée incluse, A la une",3,3,3,"A priori sécurisé, mais trop parfait (5/5 avec 59 758 avis ???) + bcp d'annonces, donc méfiance même si semble ok, à étudier"
+2,300,280,"IMG",4,4,4,""
+9,726,200,"4.9 (100)",3,3,3,"un peu cher"
+
+PhaseC,Best_Listing,Exemple 4 : Pixel 7
+PhaseC,Overall_Trust,4
+PhaseC,Trust_Factor,Rating
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Price|Seller|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,5
+PhaseC,Final_Comment,""

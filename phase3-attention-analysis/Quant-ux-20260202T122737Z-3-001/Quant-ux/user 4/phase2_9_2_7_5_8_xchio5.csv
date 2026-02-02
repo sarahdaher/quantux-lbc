@@ -1,0 +1,84 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+9,591,741,"UX Study – Phase 2
+Maxime
+Pompignac
+4.9 (100)
+100 annonces
+Réactif
+Identité vérifiée
+iPhone 15 Pro
+929€ -30%
+Catégorie : iPhone 15
+État : Neuf
+Likes : ❤️ 14
+A la une
+Vends téléphone portable en excellent état de fonctionnement. Toutes les fonctionnalités ont été testées et vérifiées. Les accessoires ne sont pas inclus. Envoi possible.
+Evaluate this listing",3,2,2,""
+2,427,723,"UX Study – Phase 2
+MARKET PHONE
+Villeurbanne
+5.0 (562)
+6234 annonces
+Pro
+Réactif
+Pixel 7
+189€
+Catégorie : Google
+État : Très bon
+Likes : ❤️ 23
+""Livraison dès 2,99e"", Nouveau
+Téléphone portable (Google Pixel 7) en très bon état.
+Téléphone réinitialisé et prêt à l’utilisation.
+Fourni avec câble de chargement.
+Disponible en boutique ou par livraison.
+Evaluate this listing",2,1,1,""
+7,477,686,"Dude30
+St-Ambroix
+Aucun avis
+2 annonces
+Réactif
+iPhone 14 Pro
+150€
+Catégorie : iPhone 14
+État : Neuf
+Likes : ❤️ 13
+Nouveau
+Téléphone neuf, la boîte n'a jamais été ouverte.
+Evaluate this listing",1,1,1,""
+5,497,704,"cireluz
+La Couronne
+4.6 (13)
+13 annonces
+Profil recommandé
+iPhone 15+
+550€
+Catégorie : iPhone 15
+État : Très bon
+Likes : ❤️ 16
+Livraison possible
+Vends iPhone 15 en très bon état. Le téléphone fonctionne parfaitement, aucun souci à signaler, il a été réinitialisé et est prêt à l’emploi. Vendu avec son câble de chargement. Remise en main propre possible ou envoi selon préférence.
+Evaluate this listing",1,1,1,""
+8,451,714,"Enola
+Villeurbanne
+5.0 (14)
+14 annonces
+Profil recommandé
+Huawei P30
+209€
+Catégorie : Huawei
+État : Neuf
+Likes : ❤️ 17
+Vends téléphone Huawei P30 Pro neuf. Il est en parfait état et n’a jamais été utilisé. Tous les accessoires d’origine sont inclus.
+Evaluate this listing",2,2,2,""
+
+PhaseC,Best_Listing,Exemple 1 : iPhone 15 Pro
+PhaseC,Overall_Trust,5
+PhaseC,Trust_Factor,Seller
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Photos|Seller|Rating"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,
+PhaseC,Final_Comment,""

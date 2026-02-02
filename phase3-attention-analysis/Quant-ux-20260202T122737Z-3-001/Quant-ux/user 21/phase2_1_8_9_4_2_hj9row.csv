@@ -1,0 +1,18 @@
+AnnonceID,ClickX,ClickY,ClickTarget,Trust_Annonce,Trust_Vendeur,Contact,Commentaire
+1,421,272,"IMG",5,5,5,""
+8,420,365,"IMG",1,1,1,""
+9,503,355,"IMG",3,3,3,""
+4,445,312,"IMG",3,3,3,""
+2,490,335,"IMG",3,3,3,""
+
+PhaseC,Best_Listing,Exemple 1 : iPhone 12
+PhaseC,Overall_Trust,3
+PhaseC,Trust_Factor,Seller
+PhaseC,Trust_Factor_Other,""
+PhaseC,Contact_Likelihood,
+PhaseC,Contact_Factors,"Seller"
+PhaseC,Contact_Factors_Other,""
+PhaseC,Photos_vs_Desc,More detailed descriptions
+PhaseC,Photos_vs_Desc_Other,""
+PhaseC,Visual_Appeal,7
+PhaseC,Final_Comment,""
