@@ -55,6 +55,47 @@
             color: #ccc;
         }
 
+        #calibration-status {
+            font-size: 14px;
+            color: #9ad1ff;
+            margin-top: 10px;
+        }
+
+        .calibration-actions {
+            margin-top: 16px;
+            display: none;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .calibration-actions button {
+            background: #ff6e14;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .calibration-actions button.secondary {
+            background: #3b82f6;
+        }
+
+        .calibration-actions button:hover {
+            background: #e55a00;
+        }
+
+        .calibration-actions button.secondary:hover {
+            background: #2563eb;
+        }
+
+        .calibration-actions button:active {
+            transform: scale(0.98);
+        }
+
         #calibration-grid {
             position: relative;
             width: 90vw;
@@ -95,6 +136,15 @@
 
         .calibration-point.active {
             animation: pulse 0.5s ease-in-out;
+        }
+
+        .calibration-point.inactive {
+            opacity: 0.25;
+            pointer-events: none;
+        }
+
+        .calibration-point.active-target {
+            box-shadow: 0 0 20px rgba(255, 110, 20, 0.9);
         }
 
         @keyframes pulse {
@@ -521,12 +571,17 @@
         <div id="calibration-overlay">
             <div class="calibration-content">
                 <h1>🎯 Calibration du Eye-Tracker</h1>
-                <p>Cliquez 5 fois sur chaque point pour calibrer votre eye-tracker.</p>
-                <p>Les points changeront de couleur au fur et à mesure.</p>
+                <p>Fixez chaque point puis cliquez pour démarrer la capture (≈ 1s).</p>
+                <p>Restez immobile, regardez le point jusqu’à la fin.</p>
+                <p id="calibration-status">Préparation…</p>
+                <div class="calibration-actions" id="calibration-actions">
+                    <button id="calibration-restart">Recalibrer</button>
+                    <button id="calibration-continue" class="secondary">Continuer</button>
+                </div>
             </div>
             <div id="calibration-grid">
                 <div class="calibration-counter">
-                    <span id="calibration-progress">0/45 clics effectués</span>
+                    <span id="calibration-progress">Calibration: 0/0</span>
                 </div>
             </div>
         </div>
@@ -718,7 +773,13 @@
         let currentPageIndex = 0;
         const totalPages = 3;
         let calibrationComplete = false;
-        let calibrationClicks = {}; // { 'point-0': 0, 'point-1': 0, ... }
+        let calibrationPoints = [];
+        let calibrationIndex = 0;
+        let validationIndex = 0;
+        let validationErrors = [];
+        let isCalibrating = false;
+        let isValidating = false;
+        let isSamplingPoint = false;
         let isRecording = false;
         let webcamActive = false;
         let faceModel = null;
@@ -727,90 +788,280 @@
         const GAZE_SAMPLE_RATE_MS = 300;
         let gazeSamplingInterval = null;
         let lastGazePoint = null;
+        let lastPupilNormalized = null;
+        let pupilHistory = [];
+        let calibrationSamples = []; // {px, py, tx, ty}
+        let calibrationTransform = null; // {ax, ay, bx, by, cx, cy}
+        const CALIBRATION_HISTORY_SIZE = 8;
+        const CALIBRATION_GRID_SIZE = 4; // 4x4 = 16 points
+        const CALIBRATION_DWELL_MS = 1200;
+        const CALIBRATION_SAMPLE_INTERVAL_MS = 60;
+        const CALIBRATION_MIN_SAMPLES = 12;
+        const CALIBRATION_OUTLIER_THRESHOLD = 0.06;
+        const VALIDATION_ERROR_THRESHOLD_PX = 120;
         let directoryHandle = null;
         let gazeListenerCallCount = 0;
         let lastGazeListenerCall = 0;
         let libsLoaded = false;
 
-        // Initialize calibration clicks counter
-        for (let i = 0; i < 9; i++) {
-            calibrationClicks[`point-${i}`] = 0;
-        }
-
-        const TOTAL_CALIBRATION_CLICKS = 45; // 9 points × 5 clicks
+        const VALIDATION_POINTS = [
+            { x: 0.5, y: 0.5 },
+            { x: 0.12, y: 0.12 },
+            { x: 0.88, y: 0.12 },
+            { x: 0.12, y: 0.88 },
+            { x: 0.88, y: 0.88 }
+        ];
 
         // ===== SETUP CALIBRATION GRID =====
         function setupCalibrationGrid() {
             const grid = document.getElementById('calibration-grid');
+            grid.querySelectorAll('.calibration-point').forEach(p => p.remove());
+            calibrationPoints = [];
+
             const gridRect = grid.getBoundingClientRect();
             const width = gridRect.width;
             const height = gridRect.height;
+            const padding = 0.12;
+            const step = (1 - padding * 2) / (CALIBRATION_GRID_SIZE - 1);
 
-            // 3x3 grid positions
-            const positions = [
-                { x: 0, y: 0 },     // top-left
-                { x: 0.5, y: 0 },   // top-center
-                { x: 1, y: 0 },     // top-right
-                { x: 0, y: 0.5 },   // middle-left
-                { x: 0.5, y: 0.5 }, // middle-center
-                { x: 1, y: 0.5 },   // middle-right
-                { x: 0, y: 1 },     // bottom-left
-                { x: 0.5, y: 1 },   // bottom-center
-                { x: 1, y: 1 }      // bottom-right
-            ];
+            let index = 0;
+            for (let row = 0; row < CALIBRATION_GRID_SIZE; row++) {
+                for (let col = 0; col < CALIBRATION_GRID_SIZE; col++) {
+                    const pos = {
+                        x: padding + col * step,
+                        y: padding + row * step
+                    };
+                    const point = document.createElement('div');
+                    point.className = 'calibration-point inactive';
+                    point.id = `point-${index}`;
+                    point.innerHTML = index + 1;
 
-            positions.forEach((pos, index) => {
-                const point = document.createElement('div');
-                point.className = 'calibration-point';
-                point.id = `point-${index}`;
-                point.innerHTML = index + 1;
+                    const x = pos.x * width;
+                    const y = pos.y * height;
+                    point.style.left = (x - 25) + 'px';
+                    point.style.top = (y - 25) + 'px';
 
-                const x = pos.x * width;
-                const y = pos.y * height;
+                    point.addEventListener('click', () => handleCalibrationClick(index));
+                    grid.appendChild(point);
+                    calibrationPoints.push({ el: point });
+                    index++;
+                }
+            }
+        }
 
-                point.style.left = (x - 25) + 'px';
-                point.style.top = (y - 25) + 'px';
+        function setCalibrationStatus(message) {
+            const status = document.getElementById('calibration-status');
+            if (status) status.textContent = message;
+        }
 
-                point.addEventListener('click', () => handleCalibrationClick(index, point));
-                grid.appendChild(point);
+        function setCalibrationActionsVisible(visible) {
+            const actions = document.getElementById('calibration-actions');
+            if (actions) actions.style.display = visible ? 'flex' : 'none';
+        }
+
+        function updateCalibrationProgress() {
+            const progress = document.getElementById('calibration-progress');
+            if (!progress) return;
+            if (isCalibrating) {
+                progress.textContent = `Calibration: ${calibrationIndex + 1}/${calibrationPoints.length}`;
+            } else if (isValidating) {
+                progress.textContent = `Validation: ${validationIndex + 1}/${VALIDATION_POINTS.length}`;
+            } else {
+                progress.textContent = 'Calibration: 0/0';
+            }
+        }
+
+        function setActiveCalibrationPoint(index) {
+            calibrationPoints.forEach((p, i) => {
+                p.el.style.display = 'flex';
+                if (i === index) {
+                    p.el.classList.remove('inactive');
+                    p.el.classList.add('active-target');
+                } else {
+                    p.el.classList.add('inactive');
+                    p.el.classList.remove('active-target');
+                }
             });
         }
 
-        // ===== CALIBRATION CLICK HANDLER =====
-        function handleCalibrationClick(pointIndex, element) {
-            const pointId = `point-${pointIndex}`;
-            calibrationClicks[pointId]++;
+        function handleCalibrationClick(pointIndex) {
+            if (!isCalibrating || isSamplingPoint) return;
+            if (pointIndex !== calibrationIndex) return;
 
-            log(`🖱️ Clic sur point ${pointIndex + 1} (${calibrationClicks[pointId]}/5)`);
+            const point = calibrationPoints[pointIndex]?.el;
+            if (!point) return;
 
-            element.classList.add('active');
-            setTimeout(() => element.classList.remove('active'), 300);
-
-            if (calibrationClicks[pointId] === 5) {
-                element.classList.add('completed');
-                log(`✅ Point ${pointIndex + 1} complété!`);
-            }
-
-            // Update progress
-            const totalClicks = Object.values(calibrationClicks).reduce((a, b) => a + b, 0);
-            document.getElementById('calibration-progress').textContent = 
-                `${totalClicks}/${TOTAL_CALIBRATION_CLICKS} clics effectués`;
-
-            log(`📊 Progrès: ${totalClicks}/${TOTAL_CALIBRATION_CLICKS}`);
-
-            if (totalClicks === TOTAL_CALIBRATION_CLICKS) {
-                completeCalibration();
-            }
+            samplePoint(point, 'calibration');
         }
 
-        // ===== COMPLETE CALIBRATION (noop) =====
+        async function samplePoint(pointEl, mode) {
+            isSamplingPoint = true;
+            pointEl.classList.add('active');
+            setCalibrationStatus('Fixez le point… capture en cours');
+
+            const samples = await collectDwellSamples();
+            pointEl.classList.remove('active');
+
+            if (samples.length < CALIBRATION_MIN_SAMPLES) {
+                setCalibrationStatus('Pas assez de données, recommencez.');
+                isSamplingPoint = false;
+                return;
+            }
+
+            const median = medianPoint(samples);
+            const rect = pointEl.getBoundingClientRect();
+            const targetX = (rect.left + rect.width / 2) / window.innerWidth;
+            const targetY = (rect.top + rect.height / 2) / window.innerHeight;
+
+            if (mode === 'calibration') {
+                calibrationSamples.push({ px: median.x, py: median.y, tx: targetX, ty: targetY });
+                pointEl.classList.add('completed');
+
+                calibrationIndex++;
+                if (calibrationIndex >= calibrationPoints.length) {
+                    isCalibrating = false;
+                    completeCalibration();
+                } else {
+                    setActiveCalibrationPoint(calibrationIndex);
+                    updateCalibrationProgress();
+                    setCalibrationStatus('Cliquez pour démarrer la capture du prochain point');
+                }
+            }
+
+            if (mode === 'validation') {
+                const predicted = applyCalibrationTransform(median.x, median.y);
+                if (predicted) {
+                    const px = predicted.x * window.innerWidth;
+                    const py = predicted.y * window.innerHeight;
+                    const err = Math.hypot(px - rect.left - rect.width / 2, py - rect.top - rect.height / 2);
+                    validationErrors.push(err);
+                }
+                validationIndex++;
+                if (validationIndex >= VALIDATION_POINTS.length) {
+                    isValidating = false;
+                    finishValidation();
+                } else {
+                    showValidationPoint(validationIndex);
+                    updateCalibrationProgress();
+                    setCalibrationStatus('Cliquez pour démarrer la capture du point de validation');
+                }
+            }
+
+            isSamplingPoint = false;
+        }
+
+        function collectDwellSamples() {
+            return new Promise(resolve => {
+                const samples = [];
+                const start = performance.now();
+                const interval = setInterval(() => {
+                    const pupil = getSmoothedPupil();
+                    if (!pupil) return;
+
+                    if (samples.length > 0) {
+                        const last = samples[samples.length - 1];
+                        const dist = Math.hypot(pupil.x - last.x, pupil.y - last.y);
+                        if (dist > CALIBRATION_OUTLIER_THRESHOLD) return;
+                    }
+                    samples.push(pupil);
+                }, CALIBRATION_SAMPLE_INTERVAL_MS);
+
+                const timeout = setTimeout(() => {
+                    clearInterval(interval);
+                    resolve(samples);
+                }, CALIBRATION_DWELL_MS);
+
+                if (!timeout) {
+                    clearInterval(interval);
+                    resolve(samples);
+                }
+            });
+        }
+
+        function medianPoint(points) {
+            const xs = points.map(p => p.x).sort((a, b) => a - b);
+            const ys = points.map(p => p.y).sort((a, b) => a - b);
+            const mid = Math.floor(points.length / 2);
+            const medianX = points.length % 2 === 0 ? (xs[mid - 1] + xs[mid]) / 2 : xs[mid];
+            const medianY = points.length % 2 === 0 ? (ys[mid - 1] + ys[mid]) / 2 : ys[mid];
+            return { x: medianX, y: medianY };
+        }
+
+        // ===== COMPLETE CALIBRATION =====
         function completeCalibration() {
-            log('🎉 ✅ Calibration sautée (face-landmarks)');
+            calibrationTransform = computeCalibrationTransform(calibrationSamples);
+            if (!calibrationTransform) {
+                log('⚠️ Calibration incomplète - recalibration recommandée');
+                setCalibrationStatus('Calibration incomplète. Recalibrez pour de meilleurs résultats.');
+                setCalibrationActionsVisible(true);
+                return;
+            }
+
+            log('🎉 ✅ Calibration terminée (transform affine)');
+            startValidation();
+        }
+
+        function startValidation() {
+            isValidating = true;
+            isCalibrating = false;
+            validationIndex = 0;
+            validationErrors = [];
+            setCalibrationActionsVisible(false);
+            updateCalibrationProgress();
+            setCalibrationStatus('Validation: fixez le point puis cliquez pour démarrer la capture');
+
+            // Hide calibration points
+            calibrationPoints.forEach(p => p.el.style.display = 'none');
+            showValidationPoint(validationIndex);
+        }
+
+        function showValidationPoint(index) {
+            const grid = document.getElementById('calibration-grid');
+            let point = document.getElementById('validation-point');
+            if (!point) {
+                point = document.createElement('div');
+                point.id = 'validation-point';
+                point.className = 'calibration-point active-target';
+                point.innerHTML = '●';
+                grid.appendChild(point);
+                point.addEventListener('click', () => {
+                    if (!isValidating || isSamplingPoint) return;
+                    samplePoint(point, 'validation');
+                });
+            }
+
+            const gridRect = grid.getBoundingClientRect();
+            const width = gridRect.width;
+            const height = gridRect.height;
+            const pos = VALIDATION_POINTS[index];
+
+            point.style.left = (pos.x * width - 25) + 'px';
+            point.style.top = (pos.y * height - 25) + 'px';
+            point.style.display = 'flex';
+        }
+
+        function finishValidation() {
+            const avgError = validationErrors.length
+                ? validationErrors.reduce((a, b) => a + b, 0) / validationErrors.length
+                : Infinity;
+
+            if (avgError > VALIDATION_ERROR_THRESHOLD_PX) {
+                setCalibrationStatus(`Précision faible (≈ ${Math.round(avgError)}px). Recalibrez.`);
+                setCalibrationActionsVisible(true);
+                log(`⚠️ Validation échouée: erreur moyenne ${Math.round(avgError)}px`);
+                return;
+            }
+
+            setCalibrationStatus(`Validation OK (≈ ${Math.round(avgError)}px).`);
+            finalizeCalibration();
+        }
+
+        function finalizeCalibration() {
             calibrationComplete = true;
+            isRecording = true;
             document.getElementById('calibration-overlay').style.display = 'none';
             document.getElementById('webcam-container').style.display = 'block';
             document.getElementById('survey-container').style.display = 'block';
-            isRecording = true;
             startGazeTracking();
             log('✅ Enregistrement des données démarré.');
         }
@@ -886,17 +1137,37 @@
             }
         }
 
-        // ===== START CALIBRATION (noop now) =====
+        // ===== START CALIBRATION =====
         function startCalibration() {
-            log('🎯 Calibration sautée (face-landmarks ne requiert pas de calibration manuelle)');
-            document.getElementById('calibration-overlay').style.display = 'none';
+            log('🎯 Démarrage calibration manuelle (grille 4x4 + validation)');
+            calibrationComplete = false;
+            isRecording = false;
+            isCalibrating = true;
+            isValidating = false;
+            isSamplingPoint = false;
+            calibrationIndex = 0;
+            validationIndex = 0;
+            validationErrors = [];
+            calibrationSamples = [];
+            calibrationTransform = null;
+
+            document.getElementById('calibration-overlay').style.display = 'flex';
             document.getElementById('webcam-container').style.display = 'block';
+            document.getElementById('survey-container').style.display = 'none';
+
+            setCalibrationActionsVisible(false);
+            const validationPoint = document.getElementById('validation-point');
+            if (validationPoint) validationPoint.remove();
+            setupCalibrationGrid();
+            setActiveCalibrationPoint(calibrationIndex);
+            updateCalibrationProgress();
+            setCalibrationStatus('Cliquez pour démarrer la capture du premier point');
         }
 
         // ===== START GAZE TRACKING =====
         function startGazeTracking() {
             const gazePoint = document.getElementById('gaze-point');
-            gazePoint.style.display = 'block';
+            gazePoint.style.display = 'none';
             startDetectionLoop();
             startGazeSampling();
         }
@@ -1073,21 +1344,31 @@
                      // Mirror X axis because it's a webcam
                      const x = (1 - pupil.x); 
                      const y = pupil.y;
+
+                     updatePupilHistory(x, y);
+                     lastPupilNormalized = { x, y };
                      
-                     // Calibration / Sensitivity Factor
-                     // These "magic numbers" adjust the "Gains"
-                     // Since user eyes move effectively only within a generic 20% of the screen center
-                     const sensitivityX = 2.5;
-                     const sensitivityY = 3.5;
-                     const offsetX = 0.5; // Center
-                     const offsetY = 0.45; // Slightly above center usually
-                     
-                     let sx = (x - offsetX) * sensitivityX + 0.5;
-                     let sy = (y - offsetY) * sensitivityY + 0.5;
+                     let sx;
+                     let sy;
+                     const calibrated = applyCalibrationTransform(x, y);
+                     if (calibrated) {
+                         sx = calibrated.x;
+                         sy = calibrated.y;
+                     } else {
+                         // Fallback sensitivity mapping
+                         const sensitivityX = 2.5;
+                         const sensitivityY = 3.5;
+                         const offsetX = 0.5; // Center
+                         const offsetY = 0.45; // Slightly above center usually
+                         sx = (x - offsetX) * sensitivityX + 0.5;
+                         sy = (y - offsetY) * sensitivityY + 0.5;
+                         sx = Math.max(0, Math.min(1, sx));
+                         sy = Math.max(0, Math.min(1, sy));
+                     }
                      
                      // Clamp to screen
-                     sx = Math.max(0, Math.min(1, sx)) * window.innerWidth;
-                     sy = Math.max(0, Math.min(1, sy)) * window.innerHeight;
+                     sx = sx * window.innerWidth;
+                     sy = sy * window.innerHeight;
                      
                      lastGazePoint = { x: sx, y: sy, timestamp: Date.now() };
                      
@@ -1101,7 +1382,7 @@
         function updateVisuals(x, y, active) {
              const dot = document.getElementById('gaze-point');
              if (dot) {
-                 if (active) {
+                 if (active && calibrationComplete) {
                      dot.style.left = x + 'px';
                      dot.style.top = y + 'px';
                      dot.style.display = 'block';
@@ -1134,6 +1415,117 @@
                 };
             }
             return null;
+        }
+
+        function updatePupilHistory(x, y) {
+            pupilHistory.push({ x, y });
+            if (pupilHistory.length > CALIBRATION_HISTORY_SIZE) {
+                pupilHistory.shift();
+            }
+        }
+
+        function getSmoothedPupil() {
+            if (pupilHistory.length === 0) return null;
+            const sum = pupilHistory.reduce((acc, p) => {
+                acc.x += p.x;
+                acc.y += p.y;
+                return acc;
+            }, { x: 0, y: 0 });
+            return {
+                x: sum.x / pupilHistory.length,
+                y: sum.y / pupilHistory.length
+            };
+        }
+
+        function computeCalibrationTransform(samples) {
+            if (!samples || samples.length < 6) return null;
+
+            // Build normal equations for affine transform
+            let s00 = 0, s01 = 0, s02 = 0, s11 = 0, s12 = 0, s22 = 0;
+            let tx0 = 0, tx1 = 0, tx2 = 0;
+            let ty0 = 0, ty1 = 0, ty2 = 0;
+
+            samples.forEach(s => {
+                const x = s.px;
+                const y = s.py;
+                const b = 1;
+
+                s00 += x * x;
+                s01 += x * y;
+                s02 += x * b;
+                s11 += y * y;
+                s12 += y * b;
+                s22 += b * b;
+
+                tx0 += x * s.tx;
+                tx1 += y * s.tx;
+                tx2 += b * s.tx;
+
+                ty0 += x * s.ty;
+                ty1 += y * s.ty;
+                ty2 += b * s.ty;
+            });
+
+            const coeffX = solveSymmetric3x3(s00, s01, s02, s11, s12, s22, tx0, tx1, tx2);
+            const coeffY = solveSymmetric3x3(s00, s01, s02, s11, s12, s22, ty0, ty1, ty2);
+
+            if (!coeffX || !coeffY) return null;
+
+            return {
+                ax: coeffX[0],
+                ay: coeffX[1],
+                cx: coeffX[2],
+                bx: coeffY[0],
+                by: coeffY[1],
+                cy: coeffY[2]
+            };
+        }
+
+        function applyCalibrationTransform(x, y) {
+            if (!calibrationTransform) return null;
+            const tx = calibrationTransform.ax * x + calibrationTransform.ay * y + calibrationTransform.cx;
+            const ty = calibrationTransform.bx * x + calibrationTransform.by * y + calibrationTransform.cy;
+            return {
+                x: Math.max(0, Math.min(1, tx)),
+                y: Math.max(0, Math.min(1, ty))
+            };
+        }
+
+        function solveSymmetric3x3(a00, a01, a02, a11, a12, a22, b0, b1, b2) {
+            const m = [
+                [a00, a01, a02, b0],
+                [a01, a11, a12, b1],
+                [a02, a12, a22, b2]
+            ];
+
+            for (let i = 0; i < 3; i++) {
+                // Pivot
+                let maxRow = i;
+                for (let r = i + 1; r < 3; r++) {
+                    if (Math.abs(m[r][i]) > Math.abs(m[maxRow][i])) maxRow = r;
+                }
+                if (Math.abs(m[maxRow][i]) < 1e-10) return null;
+                if (maxRow !== i) {
+                    const tmp = m[i];
+                    m[i] = m[maxRow];
+                    m[maxRow] = tmp;
+                }
+
+                // Normalize row
+                const pivot = m[i][i];
+                for (let c = i; c < 4; c++) m[i][c] /= pivot;
+
+                // Eliminate
+                for (let r = 0; r < 3; r++) {
+                    if (r === i) continue;
+                    const factor = m[r][i];
+                    for (let c = i; c < 4; c++) {
+                        m[r][c] -= factor * m[i][c];
+                    }
+                }
+            }
+
+            return [m[0][3], m[1][3], m[2][3]];
         }
 
         // ===== RECORD CLICK =====
@@ -1302,7 +1694,22 @@
             log('🚀 INITIALISATION DE L\'APPLICATION (MediaPipe)');
             log('🚀 ═══════════════════════════════════════════════════');
             
-            document.getElementById('calibration-overlay').style.display = 'none';
+            document.getElementById('calibration-overlay').style.display = 'flex';
+
+            const restartBtn = document.getElementById('calibration-restart');
+            const continueBtn = document.getElementById('calibration-continue');
+            if (restartBtn) {
+                restartBtn.addEventListener('click', () => startCalibration());
+            }
+            if (continueBtn) {
+                continueBtn.addEventListener('click', () => {
+                    if (!calibrationTransform) {
+                        setCalibrationStatus('Calibration incomplète. Recalibrez pour continuer.');
+                        return;
+                    }
+                    finalizeCalibration();
+                });
+            }
 
             document.addEventListener('click', recordClick);
             log('✅ Event listener pour clics ajouté');
@@ -1315,8 +1722,7 @@
 
             if (ok) {
                 log('✅ Camera + modèle prêts');
-                // Auto-complete calibration for now since we use naive internal map
-                completeCalibration();
+                startCalibration();
             } else {
                 log('❌ Initialisation incomplète');
             }
