@@ -1,0 +1,155 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║        PHASE 3 - ATTENTION & TIME CONSTRAINT IN PRODUCT SELECTION            ║
+║                  Quantitative UX Study - Le Bon Coin                         ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+[3-4 minute oral presentation - Human Factors & Quant UX perspective]
+
+
+═══════════════════════════════════════════════════════════════════════════════
+1. RESEARCH QUESTION & METHOD
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════════════════════
+1. RESEARCH QUESTION & METHOD
+═══════════════════════════════════════════════════════════════════════════════
+
+Core Question:
+──────────────
+How does time pressure affect decision-making quality in e-commerce contexts?
+
+Human Factors Perspective:
+──────────────────────────
+• Time constraints force cognitive trade-offs (System 1 vs System 2 thinking)
+• Information processing under pressure = heuristics + selective attention
+• Bounded rationality in digital interfaces
+
+Experimental Design:
+────────────────────
+• Within-subject design: 3 time conditions (6s, 15s, 30s)
+• 10 Le Bon Coin smartphone listings (€299-€1099)
+• Task: Select the most interesting product after each exposure
+• N = 33 participants, 80 valid trials
+
+Measured Variables:
+───────────────────
+• Product selected (price, brand, condition)
+• Declared motivations (7 factors: price, brand, condition, seller, location, 
+  newness, high-price signal)
+• Multiple selections allowed to capture decision complexity
+
+
+═══════════════════════════════════════════════════════════════════════════════
+2. KEY FINDINGS - 5 VISUALIZATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+Graph 1: Motivation Evolution by Duration
+──────────────────────────────────────────
+What it shows: Frequency of each motivation factor across 6s/15s/30s conditions
+
+Human Factors Insight:
+• Tests whether time enables deeper information processing
+• Expected: Shift from heuristic cues (price, brand) to analytical factors 
+  (seller reputation, condition details)
+• Reveals cognitive load management strategies under time pressure
+
+Graph 2: Price Distribution Analysis
+─────────────────────────────────────
+What it shows: Mean price + variance across time conditions
+
+Human Factors Insight:
+• Does time improve value assessment or create over-analysis?
+• Two scenarios:
+  - Ascending price = Users appreciate quality with more time
+  - Descending price = Users optimize for deals with more time
+• Variance shows decision confidence (low variance = consensus)
+
+Graph 3: Condition Preference (State Quality)
+──────────────────────────────────────────────
+What it shows: Distribution of "Good / Very Good / Excellent" selections
+
+Human Factors Insight:
+• Quality-price trade-off tolerance
+• Is "excellent condition" a prerequisite or negotiable factor?
+• Informs information hierarchy in product cards
+
+Graph 4: Overall Motivation Ranking
+────────────────────────────────────
+What it shows: Global frequency of all 7 motivation factors
+
+Human Factors Insight:
+• Reveals natural decision criteria hierarchy
+• Price dominance would suggest high price sensitivity
+• Guides information architecture prioritization
+
+Graph 5: Time × Average Price Correlation
+──────────────────────────────────────────
+What it shows: Linear relationship between exposure time and mean selected price
+
+Human Factors Insight:
+• Direct test of time pressure effect on economic choices
+• Flat curve = Time doesn't affect value perception (other factors dominate)
+• Curved = Time enables better quality assessment or bargain hunting
+
+
+═══════════════════════════════════════════════════════════════════════════════
+3. EXPECTED RESULTS & UX IMPLICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+Hypothesis 1: Cognitive Complexity Increase
+────────────────────────────────────────────
+6s → Simple heuristics (price, brand recognition)
+15s → Multi-criteria comparison emerges  
+30s → Holistic evaluation with 3-4 factors
+
+→ UX Implication: Design for "fast mode" (price + brand prominent) vs 
+  "comparison mode" (detailed comparison tools)
+
+Hypothesis 2: Diminishing Returns of Time
+──────────────────────────────────────────
+Optimal decision time ≈ 15 seconds
+Beyond 15s: marginal improvement or over-analysis paralysis
+
+→ UX Implication: Encourage 10-15s engagement, not more (progressive disclosure)
+
+Hypothesis 3: Price Sensitivity Dominates
+──────────────────────────────────────────
+"Price low" selected in 60%+ of trials regardless of time
+
+→ UX Implication: Price is THE primary information - maximize its visibility
+  and clarity across all interfaces
+
+Human Factors Framework:
+────────────────────────
+This study bridges:
+• Attention & perception (what users notice under time pressure)
+• Decision-making (how choices change with cognitive load)
+• Applied ergonomics (optimizing digital interfaces for real-world constraints)
+
+Quantitative UX Contribution:
+─────────────────────────────
+• Moves beyond qualitative "users prefer X" to "time pressure changes decision 
+  criteria by Y%"
+• Data-driven design recommendations (not opinions)
+• Reproducible methodology for A/B testing validation
+
+
+═══════════════════════════════════════════════════════════════════════════════
+CONCLUSION (30 seconds)
+═══════════════════════════════════════════════════════════════════════════════
+
+This Phase 3 study quantifies the trade-off between speed and decision quality
+in e-commerce, using a controlled time manipulation paradigm.
+
+By measuring both behavioral outcomes (product selected) and cognitive processes
+(declared motivations), we can design interfaces that:
+1. Optimize information hierarchy for fast decisions
+2. Support deeper engagement when users have time
+3. Adapt to user behavior patterns (time on page)
+
+The human factors approach ensures our UX recommendations are grounded in 
+cognitive psychology, not just aesthetic preferences.
+
+Next step: Generate the 5 graphs and validate hypotheses with N=31 real users.
