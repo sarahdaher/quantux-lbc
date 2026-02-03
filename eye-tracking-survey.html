@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enquête UX Eye-Tracking - Le Boncoin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            overflow: hidden;
+        }
+
+        #app {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* ===== CALIBRATION OVERLAY ===== */
+        #calibration-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .calibration-content {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .calibration-content h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .calibration-content p {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        #calibration-status {
+            font-size: 14px;
+            color: #9ad1ff;
+            margin-top: 10px;
+        }
+
+        .calibration-actions {
+            margin-top: 16px;
+            display: none;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .calibration-actions button {
+            background: #ff6e14;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .calibration-actions button.secondary {
+            background: #3b82f6;
+        }
+
+        .calibration-actions button:hover {
+            background: #e55a00;
+        }
+
+        .calibration-actions button.secondary:hover {
+            background: #2563eb;
+        }
+
+        .calibration-actions button:active {
+            transform: scale(0.98);
+        }
+
+        #calibration-grid {
+            position: relative;
+            width: 90vw;
+            height: 80vh;
+            max-width: 1200px;
+            max-height: 700px;
+            border: 2px solid #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .calibration-point {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #ff6e14;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 12px;
+            user-select: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 110, 20, 0.5);
+        }
+
+        .calibration-point:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 110, 20, 0.8);
+        }
+
+        .calibration-point.completed {
+            background: #4caf50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+
+        .calibration-point.active {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        .calibration-point.inactive {
+            opacity: 0.25;
+            pointer-events: none;
+        }
+
+        .calibration-point.active-target {
+            box-shadow: 0 0 20px rgba(255, 110, 20, 0.9);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .calibration-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 16px;
+        }
+
+        /* ===== VIDEO WEBCAM ===== */
+        #webcam-container {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            width: 220px;
+            height: 165px;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 1500;
+            border: 2px solid #ff6e14;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            display: none;
+        }
+
+        #webcam-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #111;
+        }
+
+        /* ===== SURVEY CONTAINER ===== */
+        #survey-container {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .survey-page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            background: white;
+            overflow-y: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .survey-page.active {
+            display: block;
+        }
+
+        /* ===== PAGE LISTE ===== */
+        .page-header {
+            background: #ff6e14;
+            color: white;
+            padding: 15px;
+            margin: -20px -20px 20px -20px;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .product-card {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .product-info {
+            padding: 12px;
+        }
+
+        .product-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+        .product-price {
+            font-size: 18px;
+            color: #ff6e14;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .product-seller {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* ===== PAGE PRODUIT ===== */
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .product-gallery {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .thumbnails {
+            display: flex;
+            gap: 8px;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: #ff6e14;
+        }
+
+        .product-details-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-details-info h1 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .price-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .price-section .price {
+            font-size: 32px;
+            color: #ff6e14;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .price-section .old-price {
+            font-size: 14px;
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .seller-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .seller-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            border-radius: 50%;
+        }
+
+        .seller-details h3 {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .seller-details p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .product-description {
+            margin-bottom: 20px;
+        }
+
+        .product-description h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .product-description p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .contact-btn {
+            background: #ff6e14;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .contact-btn:hover {
+            background: #e55a00;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 500;
+        }
+
+        .nav-btn {
+            background: #ff6e14;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .nav-btn:hover {
+            background: #e55a00;
+        }
+
+        .nav-btn:active {
+            transform: scale(0.98);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .page-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #333;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== GAZE POINT (RED DOT) ===== */
+        #gaze-point {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: red;
+            border-radius: 50%;
+            border: 3px solid white;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.9);
+            transform: translate(-50%, -50%);
+        }
+        
+        #debug-overlay {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: lime;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 9999;
+            border-radius: 5px;
+            max-width: 400px;
+            line-height: 1.4;
+        }
+        
+        #debug-overlay div {
+            margin: 2px 0;
+        }
+
+        /* ===== HIDE DEFAULT WEBGAZER ELEMENTS ===== */
+        #webgazerVideoContainer {
+            display: none !important;
+        }
+        
+        #webgazerGazeDot {
+            display: none !important;
+        }
+
+        /* ===== COMPLETION SCREEN ===== */
+        #completion-screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 2000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        #completion-screen.active {
+            display: flex;
+        }
+
+        #completion-screen h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        #completion-screen p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        #completion-screen .btn-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .completion-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .completion-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .completion-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* ===== HIDDEN VIDEO ===== */
+        #webgazer-video {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- CALIBRATION OVERLAY -->
+        <div id="calibration-overlay">
+            <div class="calibration-content">
+                <h1>🎯 Calibration du Eye-Tracker</h1>
+                <p>Fixez chaque point puis cliquez pour démarrer la capture (≈ 1s).</p>
+                <p>Restez immobile, regardez le point jusqu’à la fin.</p>
+                <p id="calibration-status">Préparation…</p>
+                <div class="calibration-actions" id="calibration-actions">
+                    <button id="calibration-restart">Recalibrer</button>
+                    <button id="calibration-continue" class="secondary">Continuer</button>
+                </div>
+            </div>
+            <div id="calibration-grid">
+                <div class="calibration-counter">
+                    <span id="calibration-progress">Calibration: 0/0</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="webcam-container">
+            <video id="gaze-video" autoplay playsinline muted></video>
+        </div>
+
+        <!-- GAZE POINT (RED DOT) -->
+        <div id="gaze-point"></div>
+        
+        <!-- DEBUG OVERLAY -->
+        <div id="debug-overlay">
+            <div>🔍 <strong>DEBUG MODE</strong></div>
+            <div id="debug-webgazer">FaceModel: Initialisation...</div>
+            <div id="debug-listener">Polling: En attente...</div>
+            <div id="debug-position">Position: N/A</div>
+            <div id="debug-recording">Enregistrement: Non</div>
+            <div id="debug-events">Événements: 0 gaze / 0 clics</div>
+        </div>
+
+        <!-- SURVEY CONTAINER -->
+        <div id="survey-container">
+            <div class="page-counter">
+                <span id="page-counter-text">Page 1/3</span>
+            </div>
+
+            <!-- PAGE 1: LISTE DE PRODUITS -->
+            <div class="survey-page active" data-page-id="page-liste">
+                <div class="page-header">Liste de Produits - Le Boncoin</div>
+                <div class="product-list" id="products-list">
+                    <div class="product-card">
+                        <div class="product-image">iPhone 14 Pro</div>
+                        <div class="product-info">
+                            <div class="product-title">iPhone 14 Pro - État neuf</div>
+                            <div class="product-price">799€</div>
+                            <div class="product-seller">Vendeur: TechStore_Pro</div>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image">Samsung Galaxy S23</div>
+                        <div class="product-info">
+                            <div class="product-title">Samsung Galaxy S23 Ultra</div>
+                            <div class="product-price">699€</div>
+                            <div class="product-seller">Vendeur: MobileExperts</div>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image">Google Pixel 7</div>
+                        <div class="product-info">
+                            <div class="product-title">Google Pixel 7 Pro</div>
+                            <div class="product-price">599€</div>
+                            <div class="product-seller">Vendeur: GoogleFans</div>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image">OnePlus 11</div>
+                        <div class="product-info">
+                            <div class="product-title">OnePlus 11 Pro Max</div>
+                            <div class="product-price">549€</div>
+                            <div class="product-seller">Vendeur: FastPhone</div>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image">Xiaomi 13</div>
+                        <div class="product-info">
+                            <div class="product-title">Xiaomi 13 Ultra</div>
+                            <div class="product-price">499€</div>
+                            <div class="product-seller">Vendeur: ChinaTech</div>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image">AirPods Pro</div>
+                        <div class="product-info">
+                            <div class="product-title">Apple AirPods Pro Max</div>
+                            <div class="product-price">349€</div>
+                            <div class="product-seller">Vendeur: AudioHub</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 2: PRODUIT A (DÉTAIL) -->
+            <div class="survey-page" data-page-id="page-produit-a">
+                <div class="page-header">Détail Produit - iPhone 14 Pro</div>
+                <div class="product-detail">
+                    <div class="product-gallery">
+                        <div class="main-image">📱 iPhone 14 Pro Image</div>
+                        <div class="thumbnails">
+                            <div class="thumbnail active"></div>
+                            <div class="thumbnail"></div>
+                            <div class="thumbnail"></div>
+                            <div class="thumbnail"></div>
+                        </div>
+                    </div>
+                    <div class="product-details-info">
+                        <h1>iPhone 14 Pro 512GB Noir</h1>
+                        <div class="price-section">
+                            <div class="price">799€</div>
+                            <div class="old-price">Prix original: 1099€</div>
+                        </div>
+                        <div class="seller-info">
+                            <div class="seller-avatar"></div>
+                            <div class="seller-details">
+                                <h3>TechStore_Pro ⭐</h3>
+                                <p>4.8/5 (1247 avis) • 3200+ articles vendus</p>
+                            </div>
+                        </div>
+                        <div class="product-description">
+                            <h3>Description</h3>
+                            <p>iPhone 14 Pro en excellent état, très peu utilisé. Tous les accessoires d'origine inclus (boîte, câble, adaptateur). Pas de rayures ni de dommages. Batterie à 98%. Parfait pour un acheteur exigeant.</p>
+                        </div>
+                        <button class="contact-btn">Contacter le vendeur</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 3: PRODUIT B (DÉTAIL) -->
+            <div class="survey-page" data-page-id="page-produit-b">
+                <div class="page-header">Détail Produit - Samsung Galaxy S23 Ultra</div>
+                <div class="product-detail">
+                    <div class="product-gallery">
+                        <div class="main-image">📱 Samsung S23 Ultra Image</div>
+                        <div class="thumbnails">
+                            <div class="thumbnail active"></div>
+                            <div class="thumbnail"></div>
+                            <div class="thumbnail"></div>
+                            <div class="thumbnail"></div>
+                        </div>
+                    </div>
+                    <div class="product-details-info">
+                        <h1>Samsung Galaxy S23 Ultra 256GB Verde</h1>
+                        <div class="price-section">
+                            <div class="price">699€</div>
+                            <div class="old-price">Prix original: 1249€</div>
+                        </div>
+                        <div class="seller-info">
+                            <div class="seller-avatar"></div>
+                            <div class="seller-details">
+                                <h3>MobileExperts ⭐⭐</h3>
+                                <p>4.9/5 (2156 avis) • 5800+ articles vendus</p>
+                            </div>
+                        </div>
+                        <div class="product-description">
+                            <h3>Description</h3>
+                            <p>Samsung Galaxy S23 Ultra en parfait état de fonctionnement. Acheté il y a 3 mois, utilisé modérément. Écran AMOLED 6.8" 120Hz immaculé. Appareil photo 200MP + zoom optique 10x. Inclus: chargeur 45W, étui de protection premium, protecteur d'écran.</p>
+                        </div>
+                        <button class="contact-btn">Contacter le vendeur</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPLETION SCREEN -->
+        <div id="completion-screen">
+            <h1>✅ Enquête Terminée</h1>
+            <p>Merci d'avoir participé à notre étude UX sur la fiabilité des produits Le Boncoin!</p>
+            <p id="data-stats" style="font-size: 14px; margin-top: 20px;"></p>
+            <div class="btn-group">
+                <button class="completion-btn" onclick="downloadData()">📥 Télécharger les données</button>
+                <button class="completion-btn" onclick="location.reload()">↻ Recommencer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION BUTTONS -->
+    <div class="nav-buttons" id="nav-buttons">
+        <button class="nav-btn" id="prev-btn" onclick="showPrevPage()">← Précédent</button>
+        <button class="nav-btn" id="next-btn" onclick="showNextPage()">Suivant →</button>
+        <button class="nav-btn" id="finish-btn" onclick="finishSurvey()" style="display: none;">✓ Terminer</button>
+    </div>
+
+    <!-- Scripts chargés dynamiquement avec fallback dans le code -->
+
+    <script>
+        // ===== DEBUG MODE =====
+        const DEBUG = true;
+        function log(message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            console.log(`[${timestamp}] ${message}`, data || '');
+            // Aussi afficher en overlay pour debug
+            if (DEBUG && message.includes('ERROR') || message.includes('✅')) {
+                console.error(`[${timestamp}] ${message}`, data || '');
+            }
+        }
+
+        // ===== GLOBAL STATE =====
+        let gazeData = [];
+        let currentPageIndex = 0;
+        const totalPages = 3;
+        let calibrationComplete = false;
+        let calibrationPoints = [];
+        let calibrationIndex = 0;
+        let validationIndex = 0;
+        let validationErrors = [];
+        let isCalibrating = false;
+        let isValidating = false;
+        let isSamplingPoint = false;
+        let isRecording = false;
+        let webcamActive = false;
+        let faceModel = null;
+        let videoElement = null;
+        let detectionLoopHandle = null;
+        const GAZE_SAMPLE_RATE_MS = 300;
+        let gazeSamplingInterval = null;
+        let lastGazePoint = null;
+        let lastPupilNormalized = null;
+        let pupilHistory = [];
+        let calibrationSamples = []; // {px, py, tx, ty}
+        let calibrationTransform = null; // {ax, ay, bx, by, cx, cy}
+        const CALIBRATION_HISTORY_SIZE = 8;
+        const CALIBRATION_GRID_SIZE = 4; // 4x4 = 16 points
+        const CALIBRATION_DWELL_MS = 1200;
+        const CALIBRATION_SAMPLE_INTERVAL_MS = 60;
+        const CALIBRATION_MIN_SAMPLES = 12;
+        const CALIBRATION_OUTLIER_THRESHOLD = 0.06;
+        const VALIDATION_ERROR_THRESHOLD_PX = 120;
+        let directoryHandle = null;
+        let gazeListenerCallCount = 0;
+        let lastGazeListenerCall = 0;
+        let libsLoaded = false;
+
+        const VALIDATION_POINTS = [
+            { x: 0.5, y: 0.5 },
+            { x: 0.12, y: 0.12 },
+            { x: 0.88, y: 0.12 },
+            { x: 0.12, y: 0.88 },
+            { x: 0.88, y: 0.88 }
+        ];
+
+        // ===== SETUP CALIBRATION GRID =====
+        function setupCalibrationGrid() {
+            const grid = document.getElementById('calibration-grid');
+            grid.querySelectorAll('.calibration-point').forEach(p => p.remove());
+            calibrationPoints = [];
+
+            const gridRect = grid.getBoundingClientRect();
+            const width = gridRect.width;
+            const height = gridRect.height;
+            const padding = 0.12;
+            const step = (1 - padding * 2) / (CALIBRATION_GRID_SIZE - 1);
+
+            let index = 0;
+            for (let row = 0; row < CALIBRATION_GRID_SIZE; row++) {
+                for (let col = 0; col < CALIBRATION_GRID_SIZE; col++) {
+                    const pos = {
+                        x: padding + col * step,
+                        y: padding + row * step
+                    };
+                    const point = document.createElement('div');
+                    point.className = 'calibration-point inactive';
+                    point.id = `point-${index}`;
+                    point.innerHTML = index + 1;
+
+                    const x = pos.x * width;
+                    const y = pos.y * height;
+                    point.style.left = (x - 25) + 'px';
+                    point.style.top = (y - 25) + 'px';
+
+                    point.addEventListener('click', () => handleCalibrationClick(index));
+                    grid.appendChild(point);
+                    calibrationPoints.push({ el: point });
+                    index++;
+                }
+            }
+        }
+
+        function setCalibrationStatus(message) {
+            const status = document.getElementById('calibration-status');
+            if (status) status.textContent = message;
+        }
+
+        function setCalibrationActionsVisible(visible) {
+            const actions = document.getElementById('calibration-actions');
+            if (actions) actions.style.display = visible ? 'flex' : 'none';
+        }
+
+        function updateCalibrationProgress() {
+            const progress = document.getElementById('calibration-progress');
+            if (!progress) return;
+            if (isCalibrating) {
+                progress.textContent = `Calibration: ${calibrationIndex + 1}/${calibrationPoints.length}`;
+            } else if (isValidating) {
+                progress.textContent = `Validation: ${validationIndex + 1}/${VALIDATION_POINTS.length}`;
+            } else {
+                progress.textContent = 'Calibration: 0/0';
+            }
+        }
+
+        function setActiveCalibrationPoint(index) {
+            calibrationPoints.forEach((p, i) => {
+                p.el.style.display = 'flex';
+                if (i === index) {
+                    p.el.classList.remove('inactive');
+                    p.el.classList.add('active-target');
+                } else {
+                    p.el.classList.add('inactive');
+                    p.el.classList.remove('active-target');
+                }
+            });
+        }
+
+        function handleCalibrationClick(pointIndex) {
+            if (!isCalibrating || isSamplingPoint) return;
+            if (pointIndex !== calibrationIndex) return;
+
+            const point = calibrationPoints[pointIndex]?.el;
+            if (!point) return;
+
+            samplePoint(point, 'calibration');
+        }
+
+        async function samplePoint(pointEl, mode) {
+            isSamplingPoint = true;
+            pointEl.classList.add('active');
+            setCalibrationStatus('Fixez le point… capture en cours');
+
+            const samples = await collectDwellSamples();
+            pointEl.classList.remove('active');
+
+            if (samples.length < CALIBRATION_MIN_SAMPLES) {
+                setCalibrationStatus('Pas assez de données, recommencez.');
+                isSamplingPoint = false;
+                return;
+            }
+
+            const median = medianPoint(samples);
+            const rect = pointEl.getBoundingClientRect();
+            const targetX = (rect.left + rect.width / 2) / window.innerWidth;
+            const targetY = (rect.top + rect.height / 2) / window.innerHeight;
+
+            if (mode === 'calibration') {
+                calibrationSamples.push({ px: median.x, py: median.y, tx: targetX, ty: targetY });
+                pointEl.classList.add('completed');
+
+                calibrationIndex++;
+                if (calibrationIndex >= calibrationPoints.length) {
+                    isCalibrating = false;
+                    completeCalibration();
+                } else {
+                    setActiveCalibrationPoint(calibrationIndex);
+                    updateCalibrationProgress();
+                    setCalibrationStatus('Cliquez pour démarrer la capture du prochain point');
+                }
+            }
+
+            if (mode === 'validation') {
+                const predicted = applyCalibrationTransform(median.x, median.y);
+                if (predicted) {
+                    const px = predicted.x * window.innerWidth;
+                    const py = predicted.y * window.innerHeight;
+                    const err = Math.hypot(px - rect.left - rect.width / 2, py - rect.top - rect.height / 2);
+                    validationErrors.push(err);
+                }
+                validationIndex++;
+                if (validationIndex >= VALIDATION_POINTS.length) {
+                    isValidating = false;
+                    finishValidation();
+                } else {
+                    showValidationPoint(validationIndex);
+                    updateCalibrationProgress();
+                    setCalibrationStatus('Cliquez pour démarrer la capture du point de validation');
+                }
+            }
+
+            isSamplingPoint = false;
+        }
+
+        function collectDwellSamples() {
+            return new Promise(resolve => {
+                const samples = [];
+                const start = performance.now();
+                const interval = setInterval(() => {
+                    const pupil = getSmoothedPupil();
+                    if (!pupil) return;
+
+                    if (samples.length > 0) {
+                        const last = samples[samples.length - 1];
+                        const dist = Math.hypot(pupil.x - last.x, pupil.y - last.y);
+                        if (dist > CALIBRATION_OUTLIER_THRESHOLD) return;
+                    }
+                    samples.push(pupil);
+                }, CALIBRATION_SAMPLE_INTERVAL_MS);
+
+                const timeout = setTimeout(() => {
+                    clearInterval(interval);
+                    resolve(samples);
+                }, CALIBRATION_DWELL_MS);
+
+                if (!timeout) {
+                    clearInterval(interval);
+                    resolve(samples);
+                }
+            });
+        }
+
+        function medianPoint(points) {
+            const xs = points.map(p => p.x).sort((a, b) => a - b);
+            const ys = points.map(p => p.y).sort((a, b) => a - b);
+            const mid = Math.floor(points.length / 2);
+            const medianX = points.length % 2 === 0 ? (xs[mid - 1] + xs[mid]) / 2 : xs[mid];
+            const medianY = points.length % 2 === 0 ? (ys[mid - 1] + ys[mid]) / 2 : ys[mid];
+            return { x: medianX, y: medianY };
+        }
+
+        // ===== COMPLETE CALIBRATION =====
+        function completeCalibration() {
+            calibrationTransform = computeCalibrationTransform(calibrationSamples);
+            if (!calibrationTransform) {
+                log('⚠️ Calibration incomplète - recalibration recommandée');
+                setCalibrationStatus('Calibration incomplète. Recalibrez pour de meilleurs résultats.');
+                setCalibrationActionsVisible(true);
+                return;
+            }
+
+            log('🎉 ✅ Calibration terminée (transform affine)');
+            startValidation();
+        }
+
+        function startValidation() {
+            isValidating = true;
+            isCalibrating = false;
+            validationIndex = 0;
+            validationErrors = [];
+            setCalibrationActionsVisible(false);
+            updateCalibrationProgress();
+            setCalibrationStatus('Validation: fixez le point puis cliquez pour démarrer la capture');
+
+            // Hide calibration points
+            calibrationPoints.forEach(p => p.el.style.display = 'none');
+            showValidationPoint(validationIndex);
+        }
+
+        function showValidationPoint(index) {
+            const grid = document.getElementById('calibration-grid');
+            let point = document.getElementById('validation-point');
+            if (!point) {
+                point = document.createElement('div');
+                point.id = 'validation-point';
+                point.className = 'calibration-point active-target';
+                point.innerHTML = '●';
+                grid.appendChild(point);
+                point.addEventListener('click', () => {
+                    if (!isValidating || isSamplingPoint) return;
+                    samplePoint(point, 'validation');
+                });
+            }
+
+            const gridRect = grid.getBoundingClientRect();
+            const width = gridRect.width;
+            const height = gridRect.height;
+            const pos = VALIDATION_POINTS[index];
+
+            point.style.left = (pos.x * width - 25) + 'px';
+            point.style.top = (pos.y * height - 25) + 'px';
+            point.style.display = 'flex';
+        }
+
+        function finishValidation() {
+            const avgError = validationErrors.length
+                ? validationErrors.reduce((a, b) => a + b, 0) / validationErrors.length
+                : Infinity;
+
+            if (avgError > VALIDATION_ERROR_THRESHOLD_PX) {
+                setCalibrationStatus(`Précision faible (≈ ${Math.round(avgError)}px). Recalibrez.`);
+                setCalibrationActionsVisible(true);
+                log(`⚠️ Validation échouée: erreur moyenne ${Math.round(avgError)}px`);
+                return;
+            }
+
+            setCalibrationStatus(`Validation OK (≈ ${Math.round(avgError)}px).`);
+            finalizeCalibration();
+        }
+
+        function finalizeCalibration() {
+            calibrationComplete = true;
+            isRecording = true;
+            document.getElementById('calibration-overlay').style.display = 'none';
+            document.getElementById('webcam-container').style.display = 'block';
+            document.getElementById('survey-container').style.display = 'block';
+            startGazeTracking();
+            log('✅ Enregistrement des données démarré.');
+        }
+
+        // ===== INITIALIZE FACE LANDMARKS MODEL =====
+        async function initializeFaceModel() {
+            log('🔧 Initialisation du modèle face-landmarks...');
+
+            if (typeof faceLandmarksDetection === 'undefined') {
+                log('❌ ERROR: face-landmarks-detection non chargé');
+                return false;
+            }
+
+            // Essayer d'abord le runtime Mediapipe (plus léger et fiable)
+            try {
+                faceModel = await faceLandmarksDetection.load(
+                    faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
+                    {
+                        runtime: 'mediapipe',
+                        solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1646424915',
+                        maxFaces: 1,
+                        refineLandmarks: true,
+                        shouldLoadIrisModel: true,
+                        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1646424915/${file}`
+                    }
+                );
+                log('✅ Modèle face-landmarks chargé (runtime mediapipe)');
+                return true;
+            } catch (error) {
+                log('⚠️ Mediapipe runtime a échoué, tentative TFJS...', error.message);
+            }
+
+            // Fallback TFJS runtime
+            try {
+                if (typeof tf !== 'undefined') {
+                    await tf.setBackend('webgl');
+                    await tf.ready();
+                }
+                faceModel = await faceLandmarksDetection.load(
+                    faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
+                    {
+                        runtime: 'tfjs',
+                        maxFaces: 1,
+                        refineLandmarks: true,
+                        shouldLoadIrisModel: true
+                    }
+                );
+                log('✅ Modèle face-landmarks chargé (runtime tfjs)');
+                return true;
+            } catch (error) {
+                log('❌ ERROR lors du chargement du modèle face-landmarks (mediapipe & tfjs):', error.message);
+                alert('Erreur modèle face-landmarks: ' + error.message + '\nVérifiez l\'accès CDN, HTTPS/localhost, et désactivez les bloqueurs.');
+                return false;
+            }
+        }
+
+        // ===== START CAMERA =====
+        async function startCamera() {
+            log('📹 Demande d\'accès à la webcam...');
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+                videoElement = document.getElementById('gaze-video');
+                videoElement.srcObject = stream;
+                await videoElement.play();
+                webcamActive = true;
+                document.getElementById('webcam-container').style.display = 'block';
+                log('✅ Webcam démarrée');
+                return true;
+            } catch (error) {
+                log('❌ ERROR: Permission webcam REFUSÉE ou webcam indisponible', error.message);
+                alert('Erreur: Vous devez autoriser l\'accès à la webcam pour utiliser l\'eye-tracker.\n\nErreur: ' + error.message);
+                return false;
+            }
+        }
+
+        // ===== START CALIBRATION =====
+        function startCalibration() {
+            log('🎯 Démarrage calibration manuelle (grille 4x4 + validation)');
+            calibrationComplete = false;
+            isRecording = false;
+            isCalibrating = true;
+            isValidating = false;
+            isSamplingPoint = false;
+            calibrationIndex = 0;
+            validationIndex = 0;
+            validationErrors = [];
+            calibrationSamples = [];
+            calibrationTransform = null;
+
+            document.getElementById('calibration-overlay').style.display = 'flex';
+            document.getElementById('webcam-container').style.display = 'block';
+            document.getElementById('survey-container').style.display = 'none';
+
+            setCalibrationActionsVisible(false);
+            const validationPoint = document.getElementById('validation-point');
+            if (validationPoint) validationPoint.remove();
+            setupCalibrationGrid();
+            setActiveCalibrationPoint(calibrationIndex);
+            updateCalibrationProgress();
+            setCalibrationStatus('Cliquez pour démarrer la capture du premier point');
+        }
+
+        // ===== START GAZE TRACKING =====
+        function startGazeTracking() {
+            const gazePoint = document.getElementById('gaze-point');
+            gazePoint.style.display = 'none';
+            startDetectionLoop();
+            startGazeSampling();
+        }
+
+        function startGazeSampling() {
+            if (gazeSamplingInterval) return;
+            gazeSamplingInterval = setInterval(() => {
+                if (!isRecording) return;
+                
+                if (!lastGazePoint) {
+                    log('⚠️ lastGazePoint est NULL - aucune prédiction face-landmarks pour le moment');
+                    return;
+                }
+
+                gazeData.push({
+                    type: 'gaze',
+                    x: Math.round(lastGazePoint.x),
+                    y: Math.round(lastGazePoint.y),
+                    timestamp: Date.now(),
+                    pageId: getCurrentPageId()
+                });
+            }, GAZE_SAMPLE_RATE_MS);
+            log(`▶️ Échantillonnage regard toutes les ${GAZE_SAMPLE_RATE_MS} ms`);
+            
+            // Mise à jour de l'overlay debug
+            setInterval(() => {
+                const debugListener = document.getElementById('debug-listener');
+                const debugPosition = document.getElementById('debug-position');
+                const debugRecording = document.getElementById('debug-recording');
+                const debugEvents = document.getElementById('debug-events');
+                const debugWebgazer = document.getElementById('debug-webgazer');
+                
+                if (debugListener) {
+                    debugListener.textContent = `Polling: ${gazeListenerCallCount} prédictions, lastPoint: ${lastGazePoint ? 'OK' : 'NULL'}`;
+                    
+                    // Alerte si pas d'appels après 5 secondes
+                    if (isRecording && gazeListenerCallCount === 0) {
+                        debugListener.style.color = 'red';
+                        debugListener.style.fontWeight = 'bold';
+                    } else if (gazeListenerCallCount > 0) {
+                        debugListener.style.color = 'lime';
+                    }
+                }
+                if (debugPosition && lastGazePoint) {
+                    debugPosition.textContent = `Position: (${Math.round(lastGazePoint.x)}, ${Math.round(lastGazePoint.y)})`;
+                    debugPosition.style.color = 'lime';
+                } else if (debugPosition) {
+                    debugPosition.textContent = `Position: ⚠️ AUCUNE PRÉDICTION`;
+                    debugPosition.style.color = 'orange';
+                }
+                if (debugRecording) {
+                    debugRecording.textContent = `Enregistrement: ${isRecording ? 'OUI ✅' : 'Non ❌'}`;
+                }
+                if (debugEvents) {
+                    const gazeCount = gazeData.filter(e => e.type === 'gaze').length;
+                    const clickCount = gazeData.filter(e => e.type === 'click').length;
+                    debugEvents.textContent = `Événements: ${gazeCount} gaze / ${clickCount} clics`;
+                }
+                if (debugWebgazer) {
+                    if (faceModel && lastGazePoint) {
+                        debugWebgazer.textContent = 'FaceModel: ✅ prédiction OK';
+                        debugWebgazer.style.color = 'lime';
+                    } else if (faceModel) {
+                        debugWebgazer.textContent = 'FaceModel: chargé, en attente de prédiction';
+                        debugWebgazer.style.color = 'orange';
+                    } else {
+                        debugWebgazer.textContent = 'FaceModel: non chargé';
+                        debugWebgazer.style.color = 'red';
+                    }
+                }
+                
+                if (isRecording) {
+                    const gazeCount = gazeData.filter(e => e.type === 'gaze').length;
+                    if (gazeCount === 0 && gazeListenerCallCount === 0) {
+                        log(`🔴 DIAGNOSTIC: Aucune donnée gaze!`);
+                    }
+                }
+            }, 1000);
+        }
+
+        function stopGazeSampling() {
+            if (!gazeSamplingInterval) return;
+            clearInterval(gazeSamplingInterval);
+            gazeSamplingInterval = null;
+            log('⏹️ Échantillonnage regard arrêté');
+        }
+
+        // ===== ENGINE: MEDIAPIPE FACE MESH (AUTO-GENERATED) =====
+        function startDetectionLoop() { /* MediaPipe uses internal loop via Camera Utils */ }
+        
+        let faceMesh;
+        let camera;
+
+        async function loadMediaPipe() {
+            return new Promise((resolve, reject) => {
+                 log("⏳ Chargement de MediaPipe FaceMesh...");
+                 const script = document.createElement('script');
+                 script.src = "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js";
+                 script.crossOrigin = "anonymous";
+                 script.onload = () => {
+                     log("✅ Script FaceMesh chargé.");
+                     const script2 = document.createElement('script');
+                     script2.src = "https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js";
+                     script2.crossOrigin = "anonymous";
+                     script2.onload = () => {
+                         log("✅ Script Camera Utils chargé.");
+                         resolve(true); 
+                     };
+                     script2.onerror = reject;
+                     document.head.appendChild(script2);
+                 };
+                 script.onerror = (e) => reject(new Error("Impossible de charger FaceMesh.js"));
+                 document.head.appendChild(script);
+            });
+        }
+
+        async function initializeFaceModel() {
+            try {
+                await loadMediaPipe();
+                
+                // Initialize FaceMesh Global
+                faceMesh = new FaceMesh({locateFile: (file) => {
+                    return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+                }});
+                
+                faceMesh.setOptions({
+                    maxNumFaces: 1,
+                    refineLandmarks: true, // Needed for iris
+                    minDetectionConfidence: 0.5,
+                    minTrackingConfidence: 0.5
+                });
+                
+                faceMesh.onResults(onResults);
+                
+                // Initialize Camera
+                videoElement = document.getElementById('webgazerVideoFeed');
+                if (!videoElement) {
+                     videoElement = document.createElement('video');
+                     videoElement.id = 'webgazerVideoFeed';
+                     videoElement.style.visibility = 'hidden'; 
+                     videoElement.style.position = 'absolute';
+                     videoElement.style.top = '-9999px';
+                     document.body.appendChild(videoElement);
+                }
+
+                camera = new Camera(videoElement, {
+                    onFrame: async () => {
+                        await faceMesh.send({image: videoElement});
+                    },
+                    width: 640,
+                    height: 480
+                });
+                
+                await camera.start();
+                log("✅ Camera & MediaPipe démarrés.");
+                webcamActive = true;
+                return true;
+            } catch (e) {
+                log("❌ Erreur init MediaPipe: " + e.message);
+                alert("Erreur critique caméra/IA: " + e.message);
+                return false;
+            }
+        }
+
+        function onResults(results) {
+            if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+                 const landmarks = results.multiFaceLandmarks[0];
+                 const pupil = calculatePupil(landmarks);
+                 
+                 if (pupil) {
+                     gazeListenerCallCount++;
+                     
+                     // Coordinates are normalized 0-1
+                     // Mirror X axis because it's a webcam
+                     const x = (1 - pupil.x); 
+                     const y = pupil.y;
+
+                     updatePupilHistory(x, y);
+                     lastPupilNormalized = { x, y };
+                     
+                     let sx;
+                     let sy;
+                     const calibrated = applyCalibrationTransform(x, y);
+                     if (calibrated) {
+                         sx = calibrated.x;
+                         sy = calibrated.y;
+                     } else {
+                         // Fallback sensitivity mapping
+                         const sensitivityX = 2.5;
+                         const sensitivityY = 3.5;
+                         const offsetX = 0.5; // Center
+                         const offsetY = 0.45; // Slightly above center usually
+                         sx = (x - offsetX) * sensitivityX + 0.5;
+                         sy = (y - offsetY) * sensitivityY + 0.5;
+                         sx = Math.max(0, Math.min(1, sx));
+                         sy = Math.max(0, Math.min(1, sy));
+                     }
+                     
+                     // Clamp to screen
+                     sx = sx * window.innerWidth;
+                     sy = sy * window.innerHeight;
+                     
+                     lastGazePoint = { x: sx, y: sy, timestamp: Date.now() };
+                     
+                     updateVisuals(sx, sy, true);
+                 }
+            } else {
+                updateVisuals(0,0, false);
+            }
+        }
+        
+        function updateVisuals(x, y, active) {
+             const dot = document.getElementById('gaze-point');
+             if (dot) {
+                 if (active && calibrationComplete) {
+                     dot.style.left = x + 'px';
+                     dot.style.top = y + 'px';
+                     dot.style.display = 'block';
+                 } else {
+                     dot.style.display = 'none';
+                 }
+             }
+             
+             // Update Debug Text
+             const dw = document.getElementById('debug-webgazer');
+             if(dw) { 
+                 if(active) {
+                     dw.textContent = "MediaPipe: Tracking Active"; 
+                     dw.style.color="lime"; 
+                 } else {
+                     dw.textContent = "MediaPipe: No Face"; 
+                     dw.style.color="red";
+                 }
+             }
+        }
+        
+        function calculatePupil(mesh) {
+            // Refined landmarks: 468 is left iris center, 473 is right iris center
+            const left = mesh[468];
+            const right = mesh[473];
+            if (left && right) {
+                return { 
+                    x: (left.x + right.x) / 2, 
+                    y: (left.y + right.y) / 2 
+                };
+            }
+            return null;
+        }
+
+        function updatePupilHistory(x, y) {
+            pupilHistory.push({ x, y });
+            if (pupilHistory.length > CALIBRATION_HISTORY_SIZE) {
+                pupilHistory.shift();
+            }
+        }
+
+        function getSmoothedPupil() {
+            if (pupilHistory.length === 0) return null;
+            const sum = pupilHistory.reduce((acc, p) => {
+                acc.x += p.x;
+                acc.y += p.y;
+                return acc;
+            }, { x: 0, y: 0 });
+            return {
+                x: sum.x / pupilHistory.length,
+                y: sum.y / pupilHistory.length
+            };
+        }
+
+        function computeCalibrationTransform(samples) {
+            if (!samples || samples.length < 6) return null;
+
+            // Build normal equations for affine transform
+            let s00 = 0, s01 = 0, s02 = 0, s11 = 0, s12 = 0, s22 = 0;
+            let tx0 = 0, tx1 = 0, tx2 = 0;
+            let ty0 = 0, ty1 = 0, ty2 = 0;
+
+            samples.forEach(s => {
+                const x = s.px;
+                const y = s.py;
+                const b = 1;
+
+                s00 += x * x;
+                s01 += x * y;
+                s02 += x * b;
+                s11 += y * y;
+                s12 += y * b;
+                s22 += b * b;
+
+                tx0 += x * s.tx;
+                tx1 += y * s.tx;
+                tx2 += b * s.tx;
+
+                ty0 += x * s.ty;
+                ty1 += y * s.ty;
+                ty2 += b * s.ty;
+            });
+
+            const coeffX = solveSymmetric3x3(s00, s01, s02, s11, s12, s22, tx0, tx1, tx2);
+            const coeffY = solveSymmetric3x3(s00, s01, s02, s11, s12, s22, ty0, ty1, ty2);
+
+            if (!coeffX || !coeffY) return null;
+
+            return {
+                ax: coeffX[0],
+                ay: coeffX[1],
+                cx: coeffX[2],
+                bx: coeffY[0],
+                by: coeffY[1],
+                cy: coeffY[2]
+            };
+        }
+
+        function applyCalibrationTransform(x, y) {
+            if (!calibrationTransform) return null;
+            const tx = calibrationTransform.ax * x + calibrationTransform.ay * y + calibrationTransform.cx;
+            const ty = calibrationTransform.bx * x + calibrationTransform.by * y + calibrationTransform.cy;
+            return {
+                x: Math.max(0, Math.min(1, tx)),
+                y: Math.max(0, Math.min(1, ty))
+            };
+        }
+
+        function solveSymmetric3x3(a00, a01, a02, a11, a12, a22, b0, b1, b2) {
+            const m = [
+                [a00, a01, a02, b0],
+                [a01, a11, a12, b1],
+                [a02, a12, a22, b2]
+            ];
+
+            for (let i = 0; i < 3; i++) {
+                // Pivot
+                let maxRow = i;
+                for (let r = i + 1; r < 3; r++) {
+                    if (Math.abs(m[r][i]) > Math.abs(m[maxRow][i])) maxRow = r;
+                }
+                if (Math.abs(m[maxRow][i]) < 1e-10) return null;
+                if (maxRow !== i) {
+                    const tmp = m[i];
+                    m[i] = m[maxRow];
+                    m[maxRow] = tmp;
+                }
+
+                // Normalize row
+                const pivot = m[i][i];
+                for (let c = i; c < 4; c++) m[i][c] /= pivot;
+
+                // Eliminate
+                for (let r = 0; r < 3; r++) {
+                    if (r === i) continue;
+                    const factor = m[r][i];
+                    for (let c = i; c < 4; c++) {
+                        m[r][c] -= factor * m[i][c];
+                    }
+                }
+            }
+
+            return [m[0][3], m[1][3], m[2][3]];
+        }
+
+        // ===== RECORD CLICK =====
+        function recordClick(event) {
+            if (!isRecording) return;
+
+            gazeData.push({
+                type: 'click',
+                x: Math.round(event.clientX),
+                y: Math.round(event.clientY),
+                timestamp: Date.now(),
+                pageId: getCurrentPageId()
+            });
+        }
+
+        // ===== PAGE MANAGEMENT =====
+        function getCurrentPageId() {
+            const activePage = document.querySelector('.survey-page.active');
+            return activePage ? activePage.dataset.pageId : 'unknown';
+        }
+
+        function showPage(index) {
+            if (index < 0 || index >= totalPages) return;
+
+            const pages = document.querySelectorAll('.survey-page');
+            pages.forEach((page, i) => {
+                page.classList.toggle('active', i === index);
+            });
+
+            currentPageIndex = index;
+
+            // Update counter
+            document.getElementById('page-counter-text').textContent = `Page ${index + 1}/${totalPages}`;
+
+            // Update buttons
+            document.getElementById('prev-btn').disabled = index === 0;
+            document.getElementById('prev-btn').style.display = index === 0 ? 'none' : 'block';
+            document.getElementById('next-btn').style.display = index === totalPages - 1 ? 'none' : 'block';
+            document.getElementById('finish-btn').style.display = index === totalPages - 1 ? 'block' : 'none';
+
+            console.log(`📄 Affichage de la page ${index + 1}/${totalPages}`);
+        }
+
+        function showNextPage() {
+            if (currentPageIndex < totalPages - 1) {
+                showPage(currentPageIndex + 1);
+            }
+        }
+
+        function showPrevPage() {
+            if (currentPageIndex > 0) {
+                showPage(currentPageIndex - 1);
+            }
+        }
+
+        // ===== FINISH SURVEY =====
+        function finishSurvey() {
+            isRecording = false;
+            stopGazeSampling();
+            log('🛑 Enregistrement ARRÊTÉ');
+            
+            // Hide gaze point
+            document.getElementById('gaze-point').style.display = 'none';
+            log('➡️ Red dot caché');
+            
+            // Hide survey
+            document.getElementById('survey-container').style.display = 'none';
+            log('➡️ Survey container caché');
+            
+            // Show completion screen
+            const completionScreen = document.getElementById('completion-screen');
+            completionScreen.classList.add('active');
+            log('✅ Écran de complétion affiché');
+
+            // Display stats
+            const gazeEvents = gazeData.filter(e => e.type === 'gaze').length;
+            const clickEvents = gazeData.filter(e => e.type === 'click').length;
+            document.getElementById('data-stats').innerHTML = 
+                `📊 Données enregistrées: ${gazeEvents} événements gaze + ${clickEvents} clics = ${gazeData.length} événements total`;
+
+            log('✅ ENQUÊTE TERMINÉE!');
+            log(`📊 Données enregistrées: ${gazeData.length} événements (${gazeEvents} gaze + ${clickEvents} clics)`);
+            
+            // Afficher un aperçu des données
+            console.log('📋 Aperçu complet des données:', gazeData);
+            
+            // Sauvegarde automatique immédiate via téléchargement
+            autoSaveData();
+        }
+
+        // ===== DOWNLOAD DATA =====
+        function formatDateStamp() {
+            const d = new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`;
+        }
+
+        async function saveJsonToDirectory(filename, json) {
+            if (!window.showDirectoryPicker) {
+                log('ℹ️ File System Access API non supportée par ce navigateur, fallback sur téléchargement.');
+                return false;
+            }
+
+            try {
+                if (!directoryHandle) {
+                    directoryHandle = await window.showDirectoryPicker();
+                    log('✅ Dossier sélectionné pour la sauvegarde locale');
+                }
+
+                const fileHandle = await directoryHandle.getFileHandle(filename, { create: true });
+                const writable = await fileHandle.createWritable();
+                await writable.write(json);
+                await writable.close();
+                log(`✅ Fichier écrit dans le répertoire choisi: ${filename}`);
+                return true;
+            } catch (error) {
+                log('⚠️ Sauvegarde locale impossible, fallback sur téléchargement', error.message);
+                directoryHandle = null;
+                return false;
+            }
+        }
+
+        function triggerDownload(filename, json, silent = false) {
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            log(`✅ Fichier téléchargé: ${filename} (${gazeData.length} événements)`);
+            if (!silent) {
+                alert('Fichier téléchargé dans votre dossier de téléchargements par défaut.');
+            }
+        }
+
+        function autoSaveData() {
+            log('💾 Sauvegarde automatique des données...');
+            const filename = `gaze-data-${formatDateStamp()}.json`;
+            const json = JSON.stringify(gazeData, null, 2);
+            triggerDownload(filename, json, true);
+            log(`✅ Fichier téléchargé automatiquement: ${filename}`);
+        }
+
+        async function downloadData() {
+            log('📥 Téléchargement manuel des données...');
+            const filename = `gaze-data-${formatDateStamp()}.json`;
+            const json = JSON.stringify(gazeData, null, 2);
+
+            // Essayer d'abord la sauvegarde dans un dossier choisi
+            const saved = await saveJsonToDirectory(filename, json);
+            if (saved) {
+                alert(`Données sauvegardées dans le dossier sélectionné (${filename}).`);
+                return;
+            }
+
+            // Fallback: téléchargement classique
+            triggerDownload(filename, json, false);
+        }
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', async () => {
+            log('🚀 ═══════════════════════════════════════════════════');
+            log('🚀 INITIALISATION DE L\'APPLICATION (MediaPipe)');
+            log('🚀 ═══════════════════════════════════════════════════');
+            
+            document.getElementById('calibration-overlay').style.display = 'flex';
+
+            const restartBtn = document.getElementById('calibration-restart');
+            const continueBtn = document.getElementById('calibration-continue');
+            if (restartBtn) {
+                restartBtn.addEventListener('click', () => startCalibration());
+            }
+            if (continueBtn) {
+                continueBtn.addEventListener('click', () => {
+                    if (!calibrationTransform) {
+                        setCalibrationStatus('Calibration incomplète. Recalibrez pour continuer.');
+                        return;
+                    }
+                    finalizeCalibration();
+                });
+            }
+
+            document.addEventListener('click', recordClick);
+            log('✅ Event listener pour clics ajouté');
+            
+            showPage(0);
+            log('✅ Première page affichée');
+
+            // Initialize Camera & AI
+            const ok = await initializeFaceModel();
+
+            if (ok) {
+                log('✅ Camera + modèle prêts');
+                startCalibration();
+            } else {
+                log('❌ Initialisation incomplète');
+            }
+            
+            log('✅ Application prête! Consultez la console (F12) pour le debug.');
+        });
+    </script>
+</body>
+
+</html>
